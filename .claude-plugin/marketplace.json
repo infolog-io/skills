@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "infolog-io",
+  "owner": {
+    "name": "Information Logistics",
+    "url": "https://github.com/infolog-io"
+  },
+  "metadata": {
+    "description": "Information Logistics skill plugins for Claude Code.",
+    "version": "0.1.0"
+  },
+  "plugins": []
+}
