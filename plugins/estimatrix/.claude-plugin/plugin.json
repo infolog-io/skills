@@ -1,0 +1,6 @@
+{
+  "name": "estimatrix",
+  "version": "0.1.0",
+  "description": "Effort and complexity sizing rule. Express estimates as T-shirt sizes (XS / S / M / L / XL / XXL), never as hours or days.",
+  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
+}

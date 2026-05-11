@@ -1,0 +1,6 @@
+{
+  "name": "learn2kern",
+  "version": "0.0.1",
+  "description": "Stub: typography skill. Includes a TypeScale generator (base size + modular ratio → scale), kerning and tracking rules, line-height defaults, and typographic-pair recommendations.",
+  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
+}

@@ -33,6 +33,30 @@
       "version": "0.1.0",
       "category": "engineering",
       "author": { "name": "Information Logistics" }
+    },
+    {
+      "name": "estimatrix",
+      "description": "Effort and complexity sizing rule. Express estimates as T-shirt sizes (XS / S / M / L / XL / XXL), never as hours or days.",
+      "source": "./plugins/estimatrix",
+      "version": "0.1.0",
+      "category": "engineering",
+      "author": { "name": "Information Logistics" }
+    },
+    {
+      "name": "mrkrabs",
+      "description": "STUB. Model cost routing and telemetry. Tracks LLM spend across tiers, routes by confidence, persists sessions, exposes a terminal dashboard.",
+      "source": "./plugins/mrkrabs",
+      "version": "0.0.1",
+      "category": "engineering",
+      "author": { "name": "Information Logistics" }
+    },
+    {
+      "name": "learn2kern",
+      "description": "STUB. Typography skill. Generates modular type scales from a base size and ratio, recommends pairings, audits kerning and tracking, emits token files in CSS / Swift / Compose / W3C.",
+      "source": "./plugins/learn2kern",
+      "version": "0.0.1",
+      "category": "design",
+      "author": { "name": "Information Logistics" }
     }
   ]
 }
