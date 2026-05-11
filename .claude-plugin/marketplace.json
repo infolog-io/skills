@@ -57,6 +57,14 @@
       "version": "0.0.1",
       "category": "design",
       "author": { "name": "Information Logistics" }
+    },
+    {
+      "name": "semantic-organization",
+      "description": "Meta-skill that governs how every skill is structured. Codifies folder roles, naming rules, and migration triggers. Scaffolds new skills, audits existing ones, recommends when a folder should become a sibling skill.",
+      "source": "./plugins/semantic-organization",
+      "version": "0.1.0",
+      "category": "engineering",
+      "author": { "name": "Information Logistics" }
     }
   ]
 }

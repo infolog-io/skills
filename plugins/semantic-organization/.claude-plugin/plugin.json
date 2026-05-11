@@ -1,0 +1,6 @@
+{
+  "name": "semantic-organization",
+  "version": "0.1.0",
+  "description": "Governs how every skill is structured. Codifies folder roles, naming rules, and migration triggers. Scaffolds new skills, audits existing ones, and recommends when a folder should become a sibling skill.",
+  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
+}

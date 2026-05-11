@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infolog.io/schemas/skill-structure.json",
+  "title": "Skill Structure",
+  "description": "Validates the canonical structure of a skill in the infolog-io marketplace.",
+  "type": "object",
+  "required": ["plugin_name", "plugin_root", "skill_root", "manifest", "readme", "tests_md", "skill_md", "folders"],
+  "additionalProperties": false,
+  "properties": {
+    "plugin_name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,28}[a-z0-9]$",
+      "description": "kebab-case, 3-30 chars, starts with a letter, ends with a letter or digit"
+    },
+    "plugin_root": {
+      "type": "string",
+      "pattern": "^plugins/[a-z][a-z0-9-]+$",
+      "description": "Path relative to repo root, e.g., plugins/jtbd-prd"
+    },
+    "skill_root": {
+      "type": "string",
+      "pattern": "^plugins/[a-z][a-z0-9-]+/skills/[a-z][a-z0-9-]+$"
+    },
+    "manifest": {
+      "type": "object",
+      "required": ["name", "version", "description"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "description": { "type": "string", "minLength": 20 },
+        "author": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "url": { "type": "string", "format": "uri" }
+          }
+        }
+      }
+    },
+    "readme": {
+      "type": "object",
+      "required": ["exists", "word_count"],
+      "additionalProperties": false,
+      "properties": {
+        "exists": { "const": true },
+        "word_count": { "type": "integer", "maximum": 200 }
+      }
+    },
+    "tests_md": {
+      "type": "object",
+      "required": ["exists", "has_end_conditions", "has_test_cases"],
+      "additionalProperties": false,
+      "properties": {
+        "exists": { "const": true },
+        "has_end_conditions": { "const": true },
+        "has_test_cases": { "const": true }
+      }
+    },
+    "skill_md": {
+      "type": "object",
+      "required": ["exists", "frontmatter_name_matches", "has_triggers"],
+      "additionalProperties": false,
+      "properties": {
+        "exists": { "const": true },
+        "frontmatter_name_matches": { "const": true },
+        "has_triggers": { "const": true }
+      }
+    },
+    "folders": {
+      "type": "object",
+      "required": ["references", "prompts", "templates", "schemas", "fixtures"],
+      "additionalProperties": false,
+      "properties": {
+        "references": { "$ref": "#/$defs/folder_check" },
+        "prompts": { "$ref": "#/$defs/folder_check" },
+        "templates": { "$ref": "#/$defs/folder_check" },
+        "schemas": { "$ref": "#/$defs/folder_check" },
+        "fixtures": { "$ref": "#/$defs/folder_check" },
+        "tools": { "$ref": "#/$defs/folder_check" },
+        "assets": { "$ref": "#/$defs/folder_check" },
+        "migrations": { "$ref": "#/$defs/folder_check" }
+      }
+    },
+    "forbidden_folders_present": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of forbidden folder names found in the skill (must be empty for a healthy skill)"
+    }
+  },
+  "$defs": {
+    "folder_check": {
+      "type": "object",
+      "required": ["exists"],
+      "additionalProperties": false,
+      "properties": {
+        "exists": { "type": "boolean" },
+        "file_count": { "type": "integer", "minimum": 0 },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*(\\.[a-z0-9]+)?$"
+          }
+        }
+      }
+    }
+  }
+}
