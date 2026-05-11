@@ -22,7 +22,7 @@
       "name": "tufte-love",
       "description": "Tufte-style audits, redesigns, and reviews for data visualizations, dashboards, and quantitative UI.",
       "source": "./plugins/tufte-love",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "category": "design",
       "author": { "name": "Information Logistics" }
     },

@@ -159,6 +159,8 @@ Tufte Love Audit
 - Visual noise: [1-5] — [reason]
 - Chart-type fit: [1-5] — [reason]
 - Interaction: [1-5] — [reason]
+- Color: [1-5] — [reason]
+- Formatting: [1-5] — [reason]
 - Recommended next change: [single highest-leverage fix]
 - Confidence: [High / Medium / Low]
 ```
@@ -297,3 +299,7 @@ Use the reference files when deeper guidance is needed:
   - Scored audit checklist.
 - `references/chart-patterns.md`
   - Chart selection and replacement patterns.
+- `references/color-palette.md`
+  - Default palettes (Okabe-Ito, viridis, ColorBrewer), color rules, accessibility checks.
+- `references/chart-rules-extras.md`
+  - Number formatting, typography, time axes, mobile/responsive, interaction, and the publishability gate.

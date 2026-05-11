@@ -127,6 +127,45 @@ Score:
 - 3: Interaction is usable.
 - 5: Interaction deepens understanding without becoming necessary.
 
+## 8. Color
+
+Questions:
+
+- Does color carry information, or is it decoration?
+- Is the palette color-blind safe?
+- Does meaning survive a monochrome conversion?
+- Is most of the chart gray, with saturation reserved for the mark that carries the comparison?
+- Is hue used for ordinal data (failure) or only for categorical?
+- Are brand colors masquerading as data colors?
+
+Score:
+
+- 1: Color misleads, decorates, or fails CB simulation.
+- 3: Color is acceptable but doing more decoration than encoding.
+- 5: Color earns its place. Mono test passes. Highlight is purposeful.
+
+See `references/color-palette.md`.
+
+## 9. Formatting and Detail
+
+Questions:
+
+- Are numbers right-aligned, decimal-aligned, and consistently formatted within the chart?
+- Are units in the axis title rather than repeated on every tick?
+- Are reference lines subtle (dashed, light gray, labeled inline)?
+- Are the highest and lowest marks directly labeled?
+- Is typography consistent in family and hierarchy?
+- Are date and time axes unambiguous about unit and time zone?
+- Does the chart pass the "60% size, grayscale, no legend" publishability check?
+
+Score:
+
+- 1: Formatting inconsistencies undermine readability.
+- 3: Formatting is acceptable but not polished.
+- 5: Every detail honors the data; the chart is publication-ready.
+
+See `references/chart-rules-extras.md`.
+
 ## Final Audit Summary
 
 Use this format:
@@ -140,6 +179,8 @@ Tufte Love Audit
 - Visual noise: [1-5] — [reason]
 - Chart-type fit: [1-5] — [reason]
 - Interaction: [1-5] — [reason]
+- Color: [1-5] — [reason]
+- Formatting: [1-5] — [reason]
 - Recommended next change: [single highest-leverage fix]
 - Confidence: [High / Medium / Low]
 ```

@@ -1,6 +1,6 @@
 {
   "name": "tufte-love",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Tufte-style audits, redesigns, and reviews for data visualizations, dashboards, and quantitative UI.",
   "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
 }
