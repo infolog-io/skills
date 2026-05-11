@@ -25,6 +25,14 @@
       "version": "0.2.0",
       "category": "design",
       "author": { "name": "Information Logistics" }
+    },
+    {
+      "name": "jtbd-prd",
+      "description": "Validate customer need before you build. Produces a Job Article that functions as PRD framing, grounded in Jobs-to-be-Done evidence.",
+      "source": "./plugins/jtbd-prd",
+      "version": "0.1.0",
+      "category": "engineering",
+      "author": { "name": "Information Logistics" }
     }
   ]
 }

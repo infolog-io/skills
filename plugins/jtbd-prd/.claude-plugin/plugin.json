@@ -1,0 +1,6 @@
+{
+  "name": "jtbd-prd",
+  "version": "0.1.0",
+  "description": "Validate customer need before you build. Produces a Job Article that functions as PRD framing, grounded in Jobs-to-be-Done evidence.",
+  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
+}

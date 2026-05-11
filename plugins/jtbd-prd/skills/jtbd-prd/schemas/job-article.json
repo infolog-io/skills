@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infolog.io/schemas/job-article.json",
+  "title": "Job Article",
+  "description": "PRD-framing artifact produced by jtbd-prd. Single canonical job, evidence, dimensions, outcomes, verdict.",
+  "type": "object",
+  "required": [
+    "label",
+    "verdict",
+    "confidence",
+    "last_updated",
+    "primary_job",
+    "evidence",
+    "dimensions",
+    "outcome_statements",
+    "underserved",
+    "build_implication"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "label": { "type": "string", "minLength": 3, "maxLength": 80 },
+    "verdict": { "enum": ["validated", "under-evidenced", "unvalidated"] },
+    "confidence": { "enum": ["high", "medium", "low"] },
+    "last_updated": { "type": "string", "format": "date" },
+    "primary_job": {
+      "type": "object",
+      "required": ["context", "motivation", "outcome"],
+      "additionalProperties": false,
+      "properties": {
+        "context": { "type": "string", "minLength": 20 },
+        "motivation": { "type": "string", "minLength": 10 },
+        "outcome": { "type": "string", "minLength": 15 }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["source_id", "quote", "confidence"],
+        "additionalProperties": false,
+        "properties": {
+          "source_id": { "type": "string" },
+          "role": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "quote": { "type": "string", "minLength": 1 },
+          "confidence": { "enum": ["high", "medium", "low"] }
+        }
+      }
+    },
+    "evidence_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "n_quotes": { "type": "integer", "minimum": 1 },
+        "n_sources": { "type": "integer", "minimum": 1 },
+        "n_roles": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "required": ["functional"],
+      "additionalProperties": false,
+      "properties": {
+        "functional": { "type": "string", "minLength": 10 },
+        "emotional": { "type": ["string", "null"] },
+        "social": { "type": ["string", "null"] }
+      }
+    },
+    "outcome_statements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["direction", "unit_of_measure", "object_of_control"],
+        "additionalProperties": false,
+        "properties": {
+          "direction": { "enum": ["Minimize", "Increase", "Reduce"] },
+          "unit_of_measure": { "type": "string" },
+          "object_of_control": { "type": "string" },
+          "contextual_clarifier": { "type": "string" }
+        }
+      }
+    },
+    "underserved": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 5 }
+    },
+    "overserved": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 5 }
+    },
+    "hire_fire": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fires": { "type": "string" },
+        "hires": { "type": "string" },
+        "trigger": { "type": "string" }
+      }
+    },
+    "build_implication": {
+      "type": "object",
+      "required": ["must_address", "must_avoid", "must_measure"],
+      "additionalProperties": false,
+      "properties": {
+        "must_address": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "must_avoid": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "must_measure": { "type": "string" },
+        "verbatim_constraint": { "type": "string" }
+      }
+    },
+    "next_research": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["question", "whom_to_ask"],
+        "additionalProperties": false,
+        "properties": {
+          "question": { "type": "string" },
+          "whom_to_ask": { "type": "string" }
+        }
+      }
+    },
+    "revision_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "note"],
+        "additionalProperties": false,
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "note": { "type": "string" }
+        }
+      }
+    }
+  }
+}
