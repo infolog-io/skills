@@ -3,140 +3,147 @@
 A file name is a contract. The reader infers the file's purpose from its
 name without opening it. These rules make that contract reliable.
 
-## Case
+The spec rules below come from https://agentskills.io/specification and are
+non-negotiable. Convention rules are marketplace-specific and apply across
+infolog-io plugins.
 
-**Always kebab-case.** Never `snake_case`, `camelCase`, `PascalCase`, or
-`Title-Case`. Across every file, folder, and identifier in the skill.
+## Skill name (spec-mandated)
+
+| Rule | Source |
+|---|---|
+| 1–64 characters | Spec |
+| Lowercase alphanumeric (`a-z`, `0-9`) and hyphens only | Spec |
+| Must not start or end with a hyphen | Spec |
+| Must not contain consecutive hyphens (`--`) | Spec |
+| Must match the parent directory name exactly | Spec |
+
+| Pass | Fail | Why |
+|---|---|---|
+| `pdf-processing` | `PDF-Processing` | uppercase forbidden |
+| `code-review` | `-pdf` | leading hyphen |
+| `data-analysis` | `pdf--processing` | consecutive hyphens |
+| `jtbd-prd` | `jtbd_prd` | underscores forbidden |
+
+The same name appears in four places — all must match:
+1. Parent directory name (`plugins/<name>/skills/<name>/`)
+2. `plugin.json` `name` field
+3. `SKILL.md` frontmatter `name` field
+4. The directory under `skills/`
+
+## Description (spec-mandated)
+
+| Rule | Source |
+|---|---|
+| 1–1024 characters | Spec |
+| Names what the skill does AND when to use it | Spec |
+| Includes keywords agents look for | Spec recommendation |
+
+**Good:** "Extracts text and tables from PDF files, fills PDF forms, and
+merges multiple PDFs. Use when working with PDF documents or when the user
+mentions PDFs, forms, or document extraction."
+
+**Bad:** "Helps with PDFs."
+
+## SKILL.md body (spec-recommended)
+
+| Rule | Source |
+|---|---|
+| Under 500 lines | Spec recommendation |
+| File references one level deep from SKILL.md | Spec recommendation |
+| No restrictions on internal format | Spec |
+
+## File naming inside `references/`, `scripts/`, `assets/`
+
+Convention rules (marketplace, not spec).
+
+### Case
+
+Kebab-case throughout. Never `snake_case`, `camelCase`, `PascalCase`, or
+`Title-Case`.
+
+Exception: platform-required names keep their case (`SKILL.md`,
+`README.md`, `TESTS.md`, `LICENSE`, `LICENSE.txt`).
 
 | Pass | Fail |
 |---|---|
-| `extract-from-interview.md` | `ExtractFromInterview.md` |
-| `job-statement-grammar.md` | `job_statement_grammar.md` |
 | `tufte-principles.md` | `TuftePrinciples.md` |
+| `chart-patterns.md` | `chart_patterns.md` |
 
-Exception: configuration files that the platform demands in another case
-(`SKILL.md`, `README.md`, `TESTS.md`). Their case is fixed; the rest is yours.
+### Inside `references/` — nouns
 
-## Role-noun for artifacts; verb-led for actions
-
-The file name reflects the folder's role.
-
-### In `references/` — nouns
-
-Files name a concept, framework, or rule set. Read-only knowledge.
+Files name a concept, framework, or rule set.
 
 | Pass | Fail | Why |
 |---|---|---|
 | `tufte-principles.md` | `apply-tufte.md` | reference is the principles, not the action |
-| `job-statement-grammar.md` | `validate-grammar.md` | reference is the grammar, not the act of validating |
-| `color-palette.md` | `pick-colors.md` | reference is the palette, not the picking |
+| `job-statement-grammar.md` | `validate-grammar.md` | reference is the grammar, not the act |
+| `color-palette.md` | `pick-colors.md` | reference is the palette |
 
-### In `prompts/` — verb-led
+### Inside `scripts/` — verb-led or named for the operation
 
-Files name an action. Each file is one operation.
-
-| Pass | Fail | Why |
-|---|---|---|
-| `extract-from-interview.md` | `interview-prompt.md` | name the action, not the input |
-| `cluster-and-score.md` | `clustering.md` | verbs are precise; gerunds are vague |
-| `audit-existing-skill.md` | `audit.md` | name the target too — "audit what?" |
-
-### In `templates/` — noun, prefixed `template-` or named for the artifact
-
-The artifact's shape. Use `template-<artifact>.md` or just `<artifact>.md` if
-unambiguous.
+Files name the action the script performs.
 
 | Pass | Fail |
 |---|---|
-| `job-article.md` | `template.md` |
-| `template-audit-report.md` | `audit.md` |
+| `extract-text.py` | `extract.py` |
+| `validate-schema.sh` | `script.sh` |
 
-### In `schemas/` — noun, named for what is validated
+### Inside `assets/` — named for the artifact
 
-The schema validates a specific artifact; use that artifact's name.
-
-| Pass | Fail |
-|---|---|
-| `job-article.json` | `schema.json` |
-| `audit-report.json` | `validator.json` |
-
-### In `fixtures/` — paired prefixes `input-` and `expected-`
-
-Every input has a matching expected output (or expected-fail flag).
+Templates and schemas use the artifact's name.
 
 | Pass | Fail |
 |---|---|
-| `input-interview-sample.md` + `expected-job-article.md` | `sample1.md` + `out1.md` |
-| `input-broken-skill/` + `expected-audit.md` | `bad-example/` + `result.md` |
+| `job-article-template.md` | `template.md` |
+| `audit-report-schema.json` | `schema.json` |
 
 ## Specificity
 
-Every name must distinguish itself from its siblings.
-
-| Pass | Fail | Why |
-|---|---|---|
-| `extract-from-interview.md` vs. `extract-from-tickets.md` | `extract1.md` vs. `extract2.md` | numbers carry no meaning |
-| `audit-rubric.md` vs. `audit-summary.md` | `audit.md` + a second file you can't tell apart | the suffix encodes the difference |
-
-## Length
-
-| Length | Meaning |
-|---|---|
-| 1 word | Reserved for canonical artifacts: `SKILL.md`, `README.md`, `TESTS.md` |
-| 2–4 hyphen-separated words | Default. `job-statement-grammar.md`, `extract-from-interview.md` |
-| 5+ words | Acceptable if the precision matters. `evaluate-folder-migration-readiness.md` |
-| 1 generic word like `prompt.md` or `template.md` | Always wrong |
-
-## Skill name = plugin name
-
-The plugin name in `.claude-plugin/plugin.json`, the directory under
-`plugins/`, the directory under `skills/`, and the `name` field in
-`SKILL.md` frontmatter must all match exactly.
+Every name distinguishes itself from its siblings.
 
 | Pass | Fail |
 |---|---|
-| `plugins/jtbd-prd/skills/jtbd-prd/` with `name: jtbd-prd` everywhere | `plugins/jtbd_prd/skills/JTBD/` with mismatched names |
+| `extract-from-interview.md` vs. `extract-from-tickets.md` | `extract1.md` vs. `extract2.md` |
+| `tufte-principles.md` vs. `chart-patterns.md` | `ref-a.md` vs. `ref-b.md` |
 
-## Reserved names
+## Length
 
-These names mean specific things; never use them for something else:
-
-| Name | Meaning |
+| Length | Use |
 |---|---|
-| `SKILL.md` | The skill's entry point |
-| `README.md` | The plugin's overview |
-| `TESTS.md` | The plugin's test plan |
-| `plugin.json` | The plugin manifest |
-| `marketplace.json` | The marketplace manifest |
+| 1 word | Reserved for platform names: `SKILL.md`, `README.md`, `TESTS.md`, `LICENSE` |
+| 2–4 hyphenated words | Default |
+| 5+ hyphenated words | Acceptable when the precision matters |
+| 1 generic word like `template.md` | Always wrong |
 
-## Forbidden in names
+## Forbidden tokens
 
 | Token | Why |
 |---|---|
-| `_v1`, `_v2`, `_old`, `_new` | Use git history, not filename suffixes |
+| `_v1`, `_v2`, `_old`, `_new` | Use git history |
 | `_final`, `_draft`, `_wip` | Same |
 | `_copy`, `_backup` | Same |
-| Dates in names like `audit-2026-04-12.md` | Unless the file is genuinely time-bound (logs, dated reports) |
-| `temp`, `tmp`, `scratch` | If it's worth committing, name it properly |
+| `temp`, `tmp`, `scratch` | If worth committing, name it properly |
 
-## Worked transformations
+## Reserved names
 
-| Before | After |
+These names mean specific things; never use them for something else.
+
+| Name | Meaning |
 |---|---|
-| `helpers/utils.md` | Split into role folders; each file gets a verb-led or noun-led name |
-| `prompt.md` | `extract-from-interview.md` (or whatever the actual action is) |
-| `MyTemplate.md` | `my-template.md` then move to `templates/` |
-| `code/extract.py` | `tools/extract-from-interview.py` |
-| `examples/sample1.md` | `fixtures/input-interview-sample.md` + matching `expected-*.md` |
+| `SKILL.md` | Skill entry point (spec-required) |
+| `README.md` | Plugin overview (marketplace convention) |
+| `TESTS.md` | Plugin test plan (marketplace convention) |
+| `LICENSE` / `LICENSE.txt` | Standard license file |
+| `plugin.json` | Plugin manifest |
+| `marketplace.json` | Marketplace manifest |
 
 ## Self-check before commit
 
-Before committing a new file, ask:
-
-1. Is the case kebab-case?
-2. Does the name match the role of its folder (noun for knowledge, verb for action)?
-3. Is the name specific — would a reader guess its purpose?
+1. Is the case kebab-case (or a reserved platform name)?
+2. Does the name match the role of its folder?
+3. Is the name specific?
 4. Is the name unique among its siblings?
-5. Does the name include any forbidden tokens?
+5. Does the name contain forbidden tokens?
+6. If this is a skill name, does it match the parent directory and all four declared locations?
 
 If any answer is no, rename before commit.

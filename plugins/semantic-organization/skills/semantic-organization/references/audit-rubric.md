@@ -1,6 +1,6 @@
 # Semantic Organization Audit Rubric
 
-Score each dimension from 1 to 5.
+Two layers, two rubrics. Score each dimension from 1 to 5.
 
 - 1 = broken or misleading
 - 2 = weak
@@ -8,136 +8,177 @@ Score each dimension from 1 to 5.
 - 4 = strong
 - 5 = excellent
 
-## 1. Folder Role Clarity
+## Skill-layer rubric (spec compliance)
 
-Questions:
+Per https://agentskills.io/specification.
 
-- Does every folder name a role (knowledge, action, artifact, contract, test data)?
-- Could a reader who knows the role taxonomy find any file without exploring?
-- Are forbidden folders (`src/`, `utils/`, `helpers/`, `common/`, `misc/`) absent?
+### S1. SKILL.md presence and validity
 
-Score:
-
-- 1: Folders name implementation, not role. Reader must explore.
-- 3: Most folders name roles; a few are vague.
-- 5: Every folder name maps to a canonical role.
-
-## 2. Folder Responsibility Purity
-
-Questions:
-
-- Does each folder hold exactly one kind of thing?
-- Are references and prompts mixed? Schemas and templates?
-- Are there orphan files at the skill root that belong in a folder?
+- File exists at the skill root.
+- Has YAML frontmatter.
+- `name` and `description` are present and valid.
 
 Score:
+- 1: Missing, invalid frontmatter, or naming rules violated.
+- 3: Present but underdeveloped.
+- 5: Compliant; description names both what and when.
 
-- 1: Folders mix knowledge, actions, and artifacts.
-- 3: One or two folders mix concerns.
-- 5: Every folder is pure — one role, one responsibility.
+### S2. Naming conformance
 
-## 3. Common Shape Conformance
-
-Questions:
-
-- Does the plugin root contain `.claude-plugin/plugin.json`, `README.md`, `TESTS.md`?
-- Does the skill have `SKILL.md` at its root?
-- Does the skill have at minimum `references/`, `prompts/`, `templates/`, `schemas/`, `fixtures/` (or justified absence)?
-- Does the plugin name match across `plugin.json`, the directory name, and `SKILL.md` frontmatter?
+- `name` matches parent directory.
+- `name` is 1-64 chars, kebab-case, no leading/trailing/consecutive hyphens.
+- All four name locations agree (parent dir, `plugin.json`, `SKILL.md` frontmatter, skill subdir).
 
 Score:
+- 1: Name violates spec or names disagree across files.
+- 3: Mostly compliant; minor disagreement.
+- 5: Fully compliant.
 
-- 1: Skill is missing core files (no SKILL.md, no README, no TESTS.md).
-- 3: Most files present; minor mismatches.
-- 5: Full canonical shape. Names match. All required files present.
+### S3. Body discipline
 
-## 4. Naming Consistency
-
-Questions:
-
-- Is everything kebab-case (folders, files, except platform-required `SKILL.md`, `README.md`, `TESTS.md`)?
-- Are references named as nouns? Prompts named with verbs?
-- Are templates and schemas named for the artifact they shape?
-- Are fixtures paired with `input-` / `expected-` prefixes?
-- Are forbidden tokens (`_v1`, `_old`, `_final`, `temp`) absent?
+- SKILL.md body under 500 lines.
+- File references one level deep.
+- No format restrictions, but structured for activation-time loading.
 
 Score:
+- 1: SKILL.md exceeds 1000 lines or references deeply nested files.
+- 3: 500-1000 lines, or references go two levels deep.
+- 5: Under 500 lines, references shallow.
 
-- 1: Mixed cases throughout. Generic names like `prompt.md` or `template.md`.
-- 3: Mostly kebab-case; some misnamed files.
-- 5: Every file follows the role-noun or verb-led naming rule.
+### S4. Optional folder discipline
 
-## 5. Migration Health
+- If any optional folders exist, they are `scripts/`, `references/`, or `assets/`.
+- Non-canonical folder names exist only when no spec folder fits.
+- Forbidden folders (`src/`, `utils/`, `docs/`, etc.) absent.
 
-Questions:
+Score:
+- 1: Forbidden folders present.
+- 3: Non-canonical folders present without clear justification.
+- 5: Only spec-named folders, or non-canonical folders are documented in SKILL.md with rationale.
 
-- Does any folder meet the migration triggers (≥5 prompts, own rubric, own verdict semantics, installable independently)?
-- Has the skill outgrown its scope without spinning out siblings?
+## Plugin-layer rubric (marketplace conventions)
+
+For shipping in this marketplace. Not part of the spec.
+
+### P1. Plugin manifest
+
+- `.claude-plugin/plugin.json` exists at plugin root.
+- `name`, `version`, `description` fields present.
+- `name` matches the directory under `plugins/`.
+- Description ≥20 characters.
+
+Score:
+- 1: Missing or invalid.
+- 3: Present but description is thin.
+- 5: Complete and matches all other declared names.
+
+### P2. README discipline
+
+- `README.md` at plugin root.
+- ≤200 words.
+- States what, when, install.
+
+Score:
+- 1: Missing or far over budget.
+- 3: Present but verbose or unclear.
+- 5: Under 200 words with clear what / when / install.
+
+### P3. TESTS.md presence and quality
+
+- `TESTS.md` at plugin root.
+- Lists explicit end conditions ("ships when X is true").
+- Enumerates concrete test cases.
+- Declares out-of-scope items.
+
+Score:
+- 1: Missing, or contains only aspirations.
+- 3: Present but thin on specifics.
+- 5: ≥3 test cases with inputs and outputs, end conditions unambiguous, out-of-scope listed.
+
+### P4. Migration health
+
 - Are there sub-skills hidden inside this skill (folders with their own `plugin.json`)?
+- Does any folder meet the migration triggers (≥5 prompts, own rubric, own verdicts, installable independently)?
 
 Score:
-
 - 1: Multiple folders should be sibling skills but remain trapped.
 - 3: One overgrown folder identified; migration plan pending.
 - 5: Every folder is correctly sized — none over-promoted, none under-promoted.
 
-## 6. README Discipline
+## Skill profiles
 
-Questions:
+Not every skill needs the full plugin layer. Two profiles:
 
-- Is the plugin's README ≤200 words?
-- Does it state: what the skill does, when to use it, and how to install it?
-- Is it free of marketing copy, history, and changelogs?
+### Full-shape skill
 
-Score:
+A skill with multiple operating modes, prompts, references, and outputs.
+Examples in infolog-io: jtbd-prd, tufte-love, semantic-organization.
 
-- 1: README missing, or far over the word budget, or buries the install command.
-- 3: README is present and accurate but verbose.
-- 5: Exactly the right size; clear what / when / install in under 200 words.
+Required at minimum:
+- Spec layer: SKILL.md + references/ (recommended) + assets/ (recommended) when content warrants
+- Plugin layer: plugin.json, README.md, TESTS.md
 
-## 7. TESTS.md Presence and Quality
+### Single-rule skill
 
-Questions:
+A meta-skill that states one durable rule. The skill IS the rule. No
+modes, no prompts, no templates.
 
-- Is `TESTS.md` present at the plugin root?
-- Does it list explicit end conditions ("skill ships when X is true")?
-- Does it enumerate concrete test cases with inputs and expected outputs?
-- Are out-of-scope items declared, so reviewers know what is intentionally absent?
+Examples in infolog-io: claude-pip, estimatrix.
 
-Score:
+Required at minimum:
+- Spec layer: SKILL.md only
+- Plugin layer: plugin.json, README.md, TESTS.md
 
-- 1: No TESTS.md, or TESTS.md is aspirational with no specifics.
-- 3: TESTS.md exists but is thin on concrete cases.
-- 5: End conditions are unambiguous; ≥5 test cases with inputs and outputs; out-of-scope explicitly listed.
+The audit must not penalize single-rule skills for not having `scripts/`,
+`references/`, or `assets/`. The body of SKILL.md carries all the content.
+
+Recognize single-rule profile when:
+- SKILL.md is under 200 lines
+- The skill names exactly one rule, principle, or rubric
+- No mode-switching is needed
 
 ## Final Audit Summary
 
 Use this format:
 
 ```text
-Semantic Organization Audit
-- Folder role clarity:        [1-5] — [reason]
-- Folder responsibility:      [1-5] — [reason]
-- Common shape conformance:   [1-5] — [reason]
-- Naming consistency:         [1-5] — [reason]
-- Migration health:           [1-5] — [reason]
-- README discipline:          [1-5] — [reason]
-- TESTS.md presence/quality:  [1-5] — [reason]
-- Recommended next change:    [single highest-leverage fix]
-- Verdict:                    semantically-healthy | drifting | broken
-- Confidence:                 High | Medium | Low
+Semantic Organization Audit — <skill-name>
+
+Profile: full-shape | single-rule
+
+Skill-layer (spec):
+- S1. SKILL.md presence/validity:  [1-5] — [reason]
+- S2. Naming conformance:          [1-5] — [reason]
+- S3. Body discipline:             [1-5] — [reason]
+- S4. Folder discipline:           [1-5] — [reason]
+
+Plugin-layer (marketplace):
+- P1. Plugin manifest:             [1-5] — [reason]
+- P2. README discipline:           [1-5] — [reason]
+- P3. TESTS.md presence/quality:   [1-5] — [reason]
+- P4. Migration health:            [1-5] — [reason]
+
+Recommended next change:           [single highest-leverage fix]
+Verdict:                           spec-compliant + marketplace-ready
+                                   | spec-compliant, marketplace-drift
+                                   | spec-drift
+                                   | broken
+Confidence:                        High | Medium | Low
 ```
 
 ## Verdict thresholds
 
 | Verdict | Rule |
 |---|---|
-| `semantically-healthy` | All dimensions ≥ 4; no dimension < 3 |
-| `drifting` | One or more dimensions at 2–3; no dimension at 1 |
-| `broken` | Any dimension at 1, OR ≥3 dimensions at 2 |
+| `spec-compliant + marketplace-ready` | All 4 skill-layer dims ≥4 AND all 4 plugin-layer dims ≥4 |
+| `spec-compliant, marketplace-drift` | All 4 skill-layer dims ≥4, but ≥1 plugin-layer dim at 2-3 |
+| `spec-drift` | ≥1 skill-layer dim at 2-3, none at 1 |
+| `broken` | Any dim at 1 |
 
 ## Priority rule
 
-If a skill is well-named but missing TESTS.md, score it low.
-If it has TESTS.md but folders mix roles, score it low.
-Semantic organization is a system property — every dimension matters.
+Spec violations are always worse than marketplace drift. A skill that
+ships without TESTS.md is fixable in five minutes. A skill that violates
+the spec breaks composability with other agents.
+
+When prioritizing fixes, address skill-layer drift first.

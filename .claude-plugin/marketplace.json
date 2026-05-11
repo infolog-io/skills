@@ -60,9 +60,9 @@
     },
     {
       "name": "semantic-organization",
-      "description": "Meta-skill that governs how every skill is structured. Codifies folder roles, naming rules, and migration triggers. Scaffolds new skills, audits existing ones, recommends when a folder should become a sibling skill.",
+      "description": "Meta-skill that governs how every skill is structured. Two layers: Agent Skills spec compliance and infolog-io marketplace conventions. Scaffolds new skills, audits existing ones, recommends when a folder should become a sibling skill. Grounded in the Anthropic Agent Skills spec and Unix philosophy.",
       "source": "./plugins/semantic-organization",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "engineering",
       "author": { "name": "Information Logistics" }
     }

@@ -1,183 +1,168 @@
 # Folder Roles
 
-Every folder in a skill has exactly one role. The folder name declares that
-role. A reader who knows the role taxonomy can find what they need without
-opening anything.
+The Agent Skills spec at https://agentskills.io/specification is the source
+of truth for what a skill is. This reference applies that spec to the
+infolog-io marketplace, distinguishes spec-level rules from
+marketplace-level conventions, and names every folder's role.
 
-## Canonical folders
+## The two layers
 
-### `references/`
+A plugin in this marketplace has two layers:
 
-Knowledge. Theory, frameworks, distillations, principles. Read-only for the
-model. Files describe how something works, not what to do.
+- **Skill layer** — governed by the Agent Skills spec. Anyone can read a
+  skill and recognize it as compliant.
+- **Plugin layer** — marketplace wrapper. Adds installation manifest,
+  marketplace-listing README, and a test plan. Not part of the spec.
 
-Belongs:
-- Framework distillations (Christensen + Ulwick, Tufte principles)
-- Naming conventions
-- Glossary entries
-- Background context that supports prompts
+Treat the two layers separately. Spec rules are non-negotiable. Plugin
+conventions can evolve.
 
-Does not belong:
-- Step-by-step operations (those go in `prompts/`)
-- Canonical output shapes (those go in `templates/`)
-- Schemas (those go in `schemas/`)
+## Skill layer (Anthropic spec)
 
-### `prompts/`
+### Required
 
-Actions. Mode-specific operations. Each file is one purpose, callable by a
-single triggering condition. Files describe what to do and how to do it.
+| File | Purpose |
+|---|---|
+| `SKILL.md` | YAML frontmatter (`name`, `description`) + markdown body. The only required file. |
 
-Belongs:
-- One prompt file per operating mode
-- Input/output contracts
-- Worked examples
-- Negative cases
+### Optional canonical folders
 
-Does not belong:
-- Theory or framework grounding (`references/`)
-- Output structure definitions (`templates/`)
-- Test data (`fixtures/`)
+These three folders are named in the spec. If a folder fits one of these
+roles, use the spec name.
 
-### `templates/`
+| Folder | Holds | Loaded |
+|---|---|---|
+| `scripts/` | Executable code the skill runs (Python, Bash, JS, etc.) | On demand |
+| `references/` | Additional documentation. Domain context, frameworks, lookup tables, glossaries | On demand |
+| `assets/` | Static resources. Templates, images, schemas, sample data, fonts | On demand |
 
-Canonical output shapes. The structure the skill emits, with placeholder
-slots. One template per kind of artifact the skill produces.
+### Other folders are allowed but discouraged
 
-Belongs:
-- Markdown templates with `{{slot}}` placeholders
-- Renderable canonical artifacts
-- Empty/skeleton versions of skill outputs
+The spec allows "any additional files or directories." Use that latitude
+sparingly. If new role names creep in (`prompts/`, `templates/`,
+`fixtures/`, `schemas/`), each one is one more thing readers must learn
+before navigating the skill.
 
-Does not belong:
-- Live examples filled with data (those go in `fixtures/`)
-- Schemas that validate the template (those go in `schemas/`)
+Default behavior: put templates and schemas in `assets/`. Put test fixtures
+in `assets/` or omit (the SKILL.md often includes examples inline).
 
-### `schemas/`
+### Accepted non-spec folders in this marketplace
 
-Validation contracts. JSON Schema (draft 2020-12 preferred) for any
-structured output the skill emits. Used to validate that the skill's output
-is well-formed.
+These folders are used by existing skills and accepted by the audit when
+documented in the skill's SKILL.md. See `references/spec-vs-conventions.md`
+for the full list and rationale.
 
-Belongs:
-- One schema per structured artifact
-- Field-level constraints
-- Required vs. optional declarations
+| Folder | Convention purpose |
+|---|---|
+| `prompts/` | Mode-specific instruction files |
+| `templates/` | Canonical output templates |
+| `schemas/` | JSON Schema contracts |
+| `fixtures/` | Test inputs and expected outputs |
 
-Does not belong:
-- Templates (those are presentation; schemas are validation)
-- Test data (`fixtures/`)
+New skills should prefer spec folders. Use convention folders only when
+the content does not fit `references/`, `assets/`, or `scripts/`.
 
-### `fixtures/`
+## Plugin layer (marketplace conventions)
 
-Test inputs and expected outputs. Concrete examples used to verify the
-skill works. Pair each input with its expected output.
+### Required at plugin root
 
-Belongs:
-- `input-*.md` — example inputs the skill should handle
-- `expected-*.md` — what the skill should produce for that input
-- Labeled known cases (good / drifted / broken)
+| File | Purpose |
+|---|---|
+| `.claude-plugin/plugin.json` | Plugin manifest. Required by Claude Code. |
+| `README.md` | Marketplace listing. ≤200 words. What + when + install. |
+| `TESTS.md` | End conditions and test cases. Forces "definition of done" before build. |
 
-Does not belong:
-- Test runners (test definitions go in `TESTS.md`)
-- Production data (fixtures are synthetic; never real PII)
+### Required structure
 
-## Optional folders
+```
+plugins/<plugin-name>/
+├── .claude-plugin/
+│   └── plugin.json
+├── README.md
+├── TESTS.md
+└── skills/<skill-name>/      ← the spec-compliant skill lives here
+    └── SKILL.md
+```
 
-### `tools/`
+The `skills/<skill-name>/` wrapper lets a plugin host more than one skill
+in the future without restructuring.
 
-Runnable scripts bundled with the skill. Use when the skill performs work
-that requires real computation, not just prompt logic.
+## Forbidden folder names
 
-Belongs:
-- Python, JS, shell scripts
-- A `README.md` in `tools/` explaining each script's purpose
-
-Trigger to add: the skill cannot reasonably do its job in prompt alone.
-
-### `assets/`
-
-Non-text artifacts. Images, fonts, binary samples needed by the skill.
-
-Belongs:
-- PNG, SVG, WOFF2, sample binaries
-- Reference images for visual audits
-
-Trigger to add: the skill consumes or emits non-text content.
-
-### `migrations/`
-
-Version-bump migration notes. One file per breaking change.
-
-Belongs:
-- `0.1.0-to-0.2.0.md` — what changed, how consumers adapt
-
-Trigger to add: the skill is shipping a breaking change.
-
-## Forbidden folders
+These name implementation or are catch-alls. Reject on sight.
 
 | Folder | Why forbidden | Replacement |
 |---|---|---|
-| `src/` | Names implementation, not intent | `prompts/` or `tools/` |
-| `lib/` | Same — implementation | `tools/` |
-| `utils/` | Catch-all for "stuff I don't know where to put" | Split by role |
-| `helpers/` | Same | Split by role |
-| `common/` | Same | Split by role |
-| `docs/` | Documentation belongs at the boundary (README) or inside a role folder | `README.md` or `references/` |
-| `tests/` | Test definitions go in TESTS.md; test data in `fixtures/` | `TESTS.md` + `fixtures/` |
-| `examples/` | Examples live inside the file that uses them | Inline in prompt or reference |
-| `misc/` | Always wrong | Split by role |
-| `legacy/` | Use `migrations/` or git history | `migrations/` or delete |
+| `src/`, `lib/` | Implementation, not role | `scripts/` for executable code |
+| `utils/`, `helpers/`, `common/`, `misc/` | Catch-alls; hide poor organization | Split by role |
+| `docs/` | Skill body is the docs; references go in `references/` | `references/` or inline |
+| `tests/` | Test definitions go in plugin's `TESTS.md` | `TESTS.md` |
+| `examples/` | Examples live inline or in `assets/` | inline or `assets/` |
+| `legacy/` | Use git history | git history |
+
+## When to create a non-spec folder
+
+If you need something the spec doesn't name, ask in this order:
+
+1. Can it go in `references/`? (knowledge) → use `references/`
+2. Can it go in `assets/`? (static resource) → use `assets/`
+3. Can it go in `scripts/`? (executable) → use `scripts/`
+4. Could the content live inline in SKILL.md or a single reference file?
+5. If still no — name the new folder by its role, document the role in
+   SKILL.md, and accept the cost of one more folder concept.
 
 ## Naming a folder
 
 Ask: "What is the role of every file in this folder?"
 
-- If the answer is "they're all knowledge" → `references/`
-- If the answer is "they're all actions" → `prompts/`
-- If the answer is "they're all output shapes" → `templates/`
-- If the answer is "they're all validation contracts" → `schemas/`
-- If the answer is "they're all test data" → `fixtures/`
-- If the answer is "they're all different things" → split the folder
+- If they're all docs → `references/`
+- If they're all executables → `scripts/`
+- If they're all static resources → `assets/`
+- If they're a mix → split the folder
 
-## Worked example
+## Worked examples
 
-### Bad
+### Spec-minimum skill
 
 ```
-my-skill/
-├── code/
-├── stuff/
-├── examples/
-└── docs/
+brand-guidelines/
+├── SKILL.md
+└── LICENSE.txt
 ```
 
-Audit verdict: `broken`. No folder names a role. Reader cannot guess what
-lives where.
+Two files. Compliant.
 
-### Drifted
-
-```
-my-skill/
-├── references/
-├── prompts/
-├── utils/              ← forbidden
-└── tests/              ← forbidden
-```
-
-Audit verdict: `drifting`. Two role-named folders, two forbidden. Action:
-move `utils/` content into the role that fits; move `tests/` content into
-`fixtures/` + `TESTS.md`.
-
-### Healthy
+### Skill with references
 
 ```
-my-skill/
-├── references/
-├── prompts/
-├── templates/
-├── schemas/
-└── fixtures/
+algorithmic-art/
+├── SKILL.md
+└── templates/         ← strictly speaking should be `assets/`, but spec is permissive
 ```
 
-Audit verdict: `semantically-healthy`. Every folder names a role; reader
-can predict where any file lives.
+### Skill with scripts
+
+```
+docx/
+├── SKILL.md
+└── scripts/
+    └── office/        ← sub-folders inside scripts/ are fine
+        ├── helpers/
+        ├── schemas/
+        └── validators/
+```
+
+### Full plugin in this marketplace
+
+```
+plugins/jtbd-prd/
+├── .claude-plugin/
+│   └── plugin.json
+├── README.md          ← plugin layer
+├── TESTS.md           ← plugin layer
+└── skills/jtbd-prd/   ← spec-compliant skill begins here
+    ├── SKILL.md
+    ├── references/
+    ├── assets/        ← templates, schemas, fixtures all live here in revised standard
+    └── scripts/       (optional, only if needed)
+```

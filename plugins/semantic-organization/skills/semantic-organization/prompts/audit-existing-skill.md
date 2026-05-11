@@ -1,13 +1,14 @@
 # Prompt — Audit an existing skill
 
-**Purpose:** Walk a skill's file tree, score it against the 7-dimension
-rubric in `references/audit-rubric.md`, and emit a Semantic Organization
-Audit with a verdict.
+**Purpose:** Walk a plugin's file tree, classify the skill profile,
+score against the two-layer rubric in `references/audit-rubric.md`, and
+emit a Semantic Organization Audit with a verdict.
 
 ## Input contract
 
-A path to a skill directory. The skill is expected to live under
-`plugins/<plugin-name>/` and contain `skills/<skill-name>/` internally.
+A path to a plugin directory (e.g., `plugins/jtbd-prd/`). The plugin
+contains a `skills/<skill-name>/` subdirectory holding the spec-compliant
+skill.
 
 ## Output contract
 
@@ -16,131 +17,196 @@ A markdown audit report following the format in
 
 ## Procedure
 
-1. **List the file tree.** Walk every file and folder under
-   `plugins/<plugin-name>/`. Stop at depth 5.
+### 1. Walk the file tree
 
-2. **Score each of the 7 dimensions** by checking against
-   `references/folder-roles.md`, `references/naming-rules.md`, and
-   `references/migration-triggers.md`.
+List every file and folder under `plugins/<plugin-name>/`. Stop at depth 5.
 
-3. **For each dimension**, write a one-sentence reason citing specific
-   files. "Score 3 — `helpers/` folder violates folder-role rule; rename
-   or split."
+### 2. Detect profile
 
-4. **Apply verdict thresholds** from `references/audit-rubric.md`:
-   - All dimensions ≥4 → `semantically-healthy`
-   - Any dimension at 2–3, none at 1 → `drifting`
-   - Any dimension at 1, or ≥3 dimensions at 2 → `broken`
+- **Single-rule skill**: SKILL.md is under 200 lines AND has no
+  sub-folders (no `references/`, `scripts/`, `assets/`, or convention
+  folders).
+- **Full-shape skill**: anything else.
 
-5. **List specific actionable findings** by category:
-   - Renames (file or folder)
-   - Deletions (forbidden folders)
-   - Migrations (folders that should be sibling skills)
-   - Additions (missing required files like TESTS.md, README.md)
+The profile changes which dimensions are scored strictly. Single-rule
+skills are not penalized for absent sub-folders.
 
-6. **Pick one recommended next change** — the highest-leverage fix. If
-   verdict is `broken`, this is the fix that moves it to `drifting`. If
-   `drifting`, the fix that moves it to `semantically-healthy`.
+### 3. Score skill-layer dimensions (spec)
 
-## Worked example
+| Dimension | Check |
+|---|---|
+| S1. SKILL.md presence/validity | File exists; YAML frontmatter; `name` and `description` valid per spec |
+| S2. Naming conformance | `name` matches parent dir; agrees with `plugin.json`; kebab-case; 1-64 chars; no leading/trailing/consecutive hyphens |
+| S3. Body discipline | Under 500 lines; references one level deep |
+| S4. Folder discipline | Only spec folders, OR non-spec folders documented and accepted per `references/spec-vs-conventions.md` |
 
-### Input
+### 4. Score plugin-layer dimensions (marketplace)
 
-```
-plugins/example-skill/
-├── README.md           (450 words, includes a changelog)
-├── src/                (Python helpers)
-├── examples/
-│   ├── sample1.md
-│   └── output1.md
-└── skills/example-skill/
-    ├── SKILL.md
-    ├── references/
-    └── prompts/
-        ├── do-stuff.md
-        └── helpers.md
-```
+| Dimension | Check |
+|---|---|
+| P1. Plugin manifest | `.claude-plugin/plugin.json` present; `name`/`version`/`description` valid |
+| P2. README discipline | `README.md` present; ≤200 words; what/when/install |
+| P3. TESTS.md presence/quality | `TESTS.md` present; end conditions; ≥3 test cases; out-of-scope listed |
+| P4. Migration health | No folders meeting migration triggers without action |
 
-### Output
+### 5. Apply verdict thresholds
 
-```markdown
-# Semantic Organization Audit — example-skill
+| Verdict | Rule |
+|---|---|
+| `spec-compliant + marketplace-ready` | All 4 skill-layer dims ≥4 AND all 4 plugin-layer dims ≥4 |
+| `spec-compliant, marketplace-drift` | Skill-layer all ≥4, plugin-layer has ≥1 at 2-3 |
+| `spec-drift` | ≥1 skill-layer dim at 2-3, none at 1 |
+| `broken` | Any dim at 1 |
 
-- Folder role clarity:        2 — `src/` and `examples/` are forbidden folder names
-- Folder responsibility:      3 — `helpers.md` inside prompts/ mixes action with utility
-- Common shape conformance:   2 — missing `TESTS.md`, `templates/`, `schemas/`, `fixtures/`
-- Naming consistency:         3 — files mostly kebab-case but `sample1.md` is generic
-- Migration health:           5 — no overgrown folders; sized appropriately
-- README discipline:          1 — 450 words including a changelog
-- TESTS.md presence/quality:  1 — file is absent
-- Recommended next change:    Create TESTS.md and trim README to ≤200 words
-- Verdict:                    broken
-- Confidence:                 High
+### 6. Emit findings
+
+For each dim scoring <5, list specific actions:
+- Renames (file or folder)
+- Deletions (forbidden folders)
+- Migrations (folders meeting promotion triggers)
+- Additions (missing required files)
+
+### 7. Pick one recommended next change
+
+The highest-leverage fix. If verdict is `broken`, this is the fix that
+moves it to `spec-drift`. If `spec-drift`, the fix that moves to
+`spec-compliant`. If `spec-compliant, marketplace-drift`, the fix that
+moves to `marketplace-ready`.
+
+## Output format
+
+```text
+Semantic Organization Audit — <skill-name>
+
+Profile: full-shape | single-rule
+
+Skill-layer (spec):
+- S1. SKILL.md presence/validity:  [1-5] — [reason]
+- S2. Naming conformance:          [1-5] — [reason]
+- S3. Body discipline:             [1-5] — [reason]
+- S4. Folder discipline:           [1-5] — [reason]
+
+Plugin-layer (marketplace):
+- P1. Plugin manifest:             [1-5] — [reason]
+- P2. README discipline:           [1-5] — [reason]
+- P3. TESTS.md presence/quality:   [1-5] — [reason]
+- P4. Migration health:            [1-5] — [reason]
+
+Recommended next change:           [single highest-leverage fix]
+Verdict:                           [one of four]
+Confidence:                        High | Medium | Low
 
 ## Findings
 
 ### Renames
-- `prompts/do-stuff.md` → `prompts/do-<the-actual-thing>.md` (name the action)
-- `prompts/helpers.md` → split into role folders; "helpers" is forbidden
-- `examples/sample1.md` → `fixtures/input-<descriptive-name>.md`
-- `examples/output1.md` → `fixtures/expected-<descriptive-name>.md`
+- ...
 
-### Deletions / moves
-- `src/` → move contents to `tools/` if scripts are needed, otherwise delete
-- `examples/` → forbidden; move contents to `fixtures/`
+### Deletions
+- ...
 
 ### Migrations
-- None (no folder meets migration triggers).
+- ...
 
 ### Additions
-- Create `TESTS.md` at the plugin root with end conditions
-- Create `skills/example-skill/templates/` (empty or with first canonical template)
-- Create `skills/example-skill/schemas/` (empty or with first schema)
-- Create `skills/example-skill/fixtures/` with paired input/expected files
-
-### README rewrite
-Strip changelog. Cut to ≤200 words. Sections: what, when to use, install, triggers.
+- ...
 ```
 
-## Negative example
+## Worked examples
 
-### Input
+### Full-shape skill, marketplace-ready
 
+Input: a skill matching jtbd-prd's shape (SKILL.md + references/ + prompts/
++ templates/ + schemas/ + fixtures/ + plugin.json + README + TESTS).
+
+Output:
+
+```text
+Profile: full-shape
+
+Skill-layer:
+- S1. SKILL.md presence/validity:  5 — Frontmatter valid; name + description compliant
+- S2. Naming conformance:          5 — All four name locations agree
+- S3. Body discipline:             5 — SKILL.md is 280 lines; refs shallow
+- S4. Folder discipline:           5 — Uses spec references/; non-spec prompts/templates/schemas/fixtures all documented and accepted
+
+Plugin-layer:
+- P1. Plugin manifest:             5 — Valid
+- P2. README discipline:           5 — 199 words; clear sections
+- P3. TESTS.md presence/quality:   5 — End conditions + 7 test cases + out-of-scope
+- P4. Migration health:            5 — Sized appropriately
+
+Recommended next change:           none — skill is canonical
+Verdict:                           spec-compliant + marketplace-ready
+Confidence:                        High
 ```
-A skill that is fully canonical (matches jtbd-prd or tufte-love patterns)
+
+### Single-rule skill, marketplace-drift
+
+Input: a skill matching estimatrix's shape (SKILL.md + plugin.json +
+README only).
+
+Output:
+
+```text
+Profile: single-rule
+
+Skill-layer:
+- S1. SKILL.md presence/validity:  5 — Frontmatter valid
+- S2. Naming conformance:          5 — Names agree
+- S3. Body discipline:             5 — Under 200 lines
+- S4. Folder discipline:           5 — No sub-folders, appropriate for single-rule
+
+Plugin-layer:
+- P1. Plugin manifest:             5 — Valid
+- P2. README discipline:           5 — 195 words
+- P3. TESTS.md presence/quality:   1 — File does not exist
+- P4. Migration health:            5 — No folders to evaluate
+
+Recommended next change:           Add TESTS.md with end conditions and test cases
+Verdict:                           spec-compliant + marketplace-drift
+Confidence:                        High
+
+## Findings
+
+### Additions
+- TESTS.md at plugin root: end conditions, ≥3 test cases, out-of-scope list
 ```
 
-### Output
+### Spec-drift example
 
-```markdown
-- Folder role clarity:        5
-- Folder responsibility:      5
-- Common shape conformance:   5
-- Naming consistency:         5
-- Migration health:           5
-- README discipline:          5
-- TESTS.md presence/quality:  5
-- Recommended next change:    none — skill is canonical
-- Verdict:                    semantically-healthy
-- Confidence:                 High
+Input: a skill where SKILL.md `name` is `MyPDFSkill` but parent dir is `pdf-skill`.
+
+Output:
+
+```text
+Profile: full-shape
+
+Skill-layer:
+- S1. SKILL.md presence/validity:  3 — Frontmatter valid except name field
+- S2. Naming conformance:          1 — Name violates spec (uppercase); does not match parent dir
+- S3. Body discipline:             5
+- S4. Folder discipline:           5
+
+[plugin-layer scores omitted for brevity]
+
+Verdict:                           broken (S2 at 1)
+Recommended next change:           Rename to comply with spec; update all four name locations
 ```
-
-Even healthy skills should be audited periodically — drift creeps in with
-each feature addition.
 
 ## Edge cases
 
 | Situation | Handling |
 |---|---|
-| Skill has `tools/` with scripts | Acceptable optional folder; pass with score 5 on dim 1 if usage is justified |
-| Skill has `assets/` with images | Acceptable optional folder |
-| Skill has `migrations/` because v0.2 was a breaking change | Acceptable optional folder; verify content is migration notes |
-| Skill is missing one required folder but the omission is reasoned in TESTS.md | Score 4 instead of 1 on common shape conformance |
-| Skill mixes English and another language in file names | Score 3 on naming consistency; flag for normalization |
+| Skill is missing one optional spec folder it doesn't need | Score 5 — optional folders are optional |
+| Skill uses non-spec folder documented in SKILL.md with rationale | Score 5 on S4 |
+| Skill uses non-spec folder with no rationale | Score 3 on S4; recommend documenting or moving to spec folder |
+| Single-rule skill has SKILL.md over 200 lines | Re-classify as full-shape; re-score |
+| Plugin has no `skills/<name>/` wrapper, SKILL.md is at plugin root | Score 3 on P1; plugin layer assumes wrapper |
 
 ## Verification before returning output
 
-- All 7 dimensions scored with a one-sentence reason
+- All 8 dimensions scored with a one-sentence reason
 - Verdict matches the threshold rules exactly
-- Findings cite specific file paths, not vague pointers
+- Findings cite specific file paths
 - Recommended next change is concrete and immediately actionable
+- Profile (single-rule vs. full-shape) is declared upfront
