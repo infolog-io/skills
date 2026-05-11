@@ -26,7 +26,8 @@ List what is available:
 
 | Plugin | Description | Install |
 |--------|-------------|---------|
-| **claude-pip** | Performance Improvement Plan for Claude. Type `CLAUDE PIP` to lock in a behavioral discipline (TDD, plan mode, sub-agents, adversarial review) as a deterministic rule. | `/plugin install claude-pip@infolog-io` |
+| `claude-pip` | Performance Improvement Plan for Claude. Type `CLAUDE PIP` to lock in a behavioral discipline (TDD, plan mode, sub-agents, adversarial review) as a deterministic rule. | `/plugin install claude-pip@infolog-io` |
+| `tufte-love` | Tufte-style audits, redesigns, and reviews for data visualizations and dashboards. | `/plugin install tufte-love@infolog-io` |
 
 New plugins land via PRs that follow [CONTRIBUTING.md](CONTRIBUTING.md).
 
