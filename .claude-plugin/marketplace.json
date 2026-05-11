@@ -7,7 +7,16 @@
   },
   "metadata": {
     "description": "Information Logistics skill plugins for Claude Code.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "claude-pip",
+      "description": "Performance Improvement Plan for Claude. Type CLAUDE PIP to lock in a behavioral discipline (TDD, plan mode, sub-agents, adversarial review) as a deterministic rule in the project's CLAUDE.md.",
+      "source": "./plugins/claude-pip",
+      "version": "0.1.0",
+      "category": "engineering",
+      "author": { "name": "Information Logistics" }
+    }
+  ]
 }
