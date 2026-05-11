@@ -26,9 +26,9 @@ List what is available:
 
 | Plugin | Description | Install |
 |--------|-------------|---------|
-| _none yet_ | First plugin lands here | — |
+| **claude-pip** | Performance Improvement Plan for Claude. Type `CLAUDE PIP` to lock in a behavioral discipline (TDD, plan mode, sub-agents, adversarial review) as a deterministic rule. | `/plugin install claude-pip@infolog-io` |
 
-The marketplace ships empty at v0.1.0. New plugins land via PRs that follow [CONTRIBUTING.md](CONTRIBUTING.md).
+New plugins land via PRs that follow [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Repo layout
 
