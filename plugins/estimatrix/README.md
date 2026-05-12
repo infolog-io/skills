@@ -1,29 +1,28 @@
 # estimatrix
 
-Effort and complexity sizing rule. Express estimates as T-shirt sizes
-(**XS / S / M / L / XL / XXL**) — never as hours, never as days.
+Sizing rubric for **effort and complexity**. Two axes, never hours.
 
-## Why
+## The two rules
 
-Hour estimates from LLMs anchor to training-data assumptions that rarely match
-the user's actual work pace. T-shirt sizes encode effort, complexity, and
-uncertainty together and stay calibrated against real history.
+- **Effort** is a T-shirt size: XS / S / M / L / XL / XXL
+- **Complexity** is low / medium / high
 
-## Sizes
+A task can be small but complex (race-condition fix). A task can be large
+but simple (mechanical rename across 200 files). Collapsing the two loses
+signal.
 
-| Size | What it means |
-|---|---|
-| XS | Trivial — one decision, one file, no unknowns |
-| S | Localized — one component or one prompt |
-| M | Multi-file feature, light integration, some unknowns |
-| L | Cross-cutting change, multiple systems |
-| XL | Major work requiring architecture decisions |
-| XXL | Epic — decompose before sizing |
+## Karpathy's four rules apply before sizing
+
+1. **Think Before Coding** — state assumptions; refuse to size if ambiguous; list interpretations if multiple
+2. **Simplicity First** — propose smaller scope if it satisfies the goal
+3. **Surgical Changes** — size only what was asked, not adjacent improvements
+4. **Goal-Driven Execution** — no size without a success criterion
 
 ## When it applies
 
-Any "effort", "duration", "how long", or scoping question. Skip it for
-wall-clock scheduling, runtime metrics, or SLO measurements.
+Any "effort", "complexity", "duration", or "how long" question. Skip
+wall-clock scheduling and runtime metrics — those are measurements, not
+estimates.
 
 ## Install
 
@@ -34,7 +33,7 @@ claude plugin install estimatrix@infolog-io
 
 ## Triggers
 
-`estimate` · `scope` · `how long` · `effort` · `size this` · `/estimatrix`
+`estimate` · `scope` · `how long` · `effort` · `complexity` · `size this` · `/estimatrix`
 
-Also activates automatically when a table column is named effort, time,
-duration, or hours.
+Also activates automatically when a table column is named effort,
+time, duration, hours, or complexity.

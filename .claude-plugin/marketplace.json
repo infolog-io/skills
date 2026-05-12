@@ -36,9 +36,9 @@
     },
     {
       "name": "estimatrix",
-      "description": "Effort and complexity sizing rule. Express estimates as T-shirt sizes (XS / S / M / L / XL / XXL), never as hours or days.",
+      "description": "Two-axis sizing rubric for effort AND complexity. Effort as T-shirt (XS / S / M / L / XL / XXL); complexity as low / medium / high. Applies Karpathy's four code rules before sizing: state assumptions, ask if ambiguous, prefer simpler scope, require a success criterion.",
       "source": "./plugins/estimatrix",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "engineering",
       "author": { "name": "Information Logistics" }
     },
