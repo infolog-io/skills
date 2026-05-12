@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infolog.io/schemas/github-issues-kanban-event.json",
+  "title": "Event marker schema",
+  "description": "Structured comment events posted to GitHub Issues as the event bus.",
+  "type": "object",
+  "required": ["type", "agent", "ts"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "enum": [
+        "claimed",
+        "released",
+        "progress",
+        "blocked",
+        "result",
+        "error",
+        "yolo-dispatch",
+        "yolo-triage",
+        "yolo-disabled",
+        "stale-release"
+      ]
+    },
+    "agent": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Agent identifier — usually <host>-<user>-<sequence>"
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp from the emitting agent (may drift from GitHub's created_at; use created_at as canonical)"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Optional JSON payload (in addition to the markdown body of the comment); shape depends on type",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "result_payload": {
+      "type": "object",
+      "required": ["outcome"],
+      "additionalProperties": true,
+      "properties": {
+        "outcome": { "enum": ["success", "partial", "deferred"] },
+        "pr_url": { "type": "string", "format": "uri" },
+        "tests_passed": { "type": "integer" },
+        "tests_failed": { "type": "integer" },
+        "disposition": { "enum": ["ready-for-review", "done"] }
+      }
+    },
+    "blocked_payload": {
+      "type": "object",
+      "required": ["reason"],
+      "additionalProperties": true,
+      "properties": {
+        "reason": { "type": "string", "minLength": 5 },
+        "needs": { "type": "string", "description": "What's needed to unblock" }
+      }
+    },
+    "yolo_dispatch_payload": {
+      "type": "object",
+      "required": ["reason", "worker", "ttl", "output"],
+      "additionalProperties": true,
+      "properties": {
+        "reason": { "type": "string", "minLength": 10 },
+        "worker": { "type": "string" },
+        "ttl": { "type": "string" },
+        "output": { "enum": ["pr", "comment", "both"] }
+      }
+    },
+    "stale_release_payload": {
+      "type": "object",
+      "required": ["previous_claimant", "expired_at"],
+      "additionalProperties": true,
+      "properties": {
+        "previous_claimant": { "type": "string" },
+        "expired_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

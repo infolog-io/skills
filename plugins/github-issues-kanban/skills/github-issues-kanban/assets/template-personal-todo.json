@@ -1,0 +1,35 @@
+{
+  "archetype": "personal-todo",
+  "title_pattern": "{name}",
+  "description": "Generic GTD-style capture board. Inbox-driven: new issues land in Inbox; you triage to Next; agents claim from Next; Doing is where work happens; Waiting for human/external response; Done is closed.",
+  "columns": [
+    { "name": "Inbox",   "status_label": null,                       "description": "Unprocessed new items" },
+    { "name": "Next",    "status_label": "status:claimable",         "description": "Triaged; ready for an agent or you" },
+    { "name": "Doing",   "status_label": "status:in-progress",       "description": "Active work" },
+    { "name": "Waiting", "status_label": "status:blocked",           "description": "Blocked or waiting on external" },
+    { "name": "Done",    "status_label": "status:done",              "description": "Closed" }
+  ],
+  "wip_limits": {
+    "Doing": 3,
+    "Waiting": 5
+  },
+  "default_labels_for_new_issues": [
+    "priority:p2",
+    "complexity:medium",
+    "agent-output:comment"
+  ],
+  "automation": [
+    { "trigger": "new-issue", "action": "add-to-column", "args": "Inbox" },
+    { "trigger": "label-status:claimable", "action": "move-to-column", "args": "Next" },
+    { "trigger": "label-status:in-progress", "action": "move-to-column", "args": "Doing" },
+    { "trigger": "label-status:blocked", "action": "move-to-column", "args": "Waiting" },
+    { "trigger": "label-status:done", "action": "move-to-column", "args": "Done" },
+    { "trigger": "label-status:done", "action": "close-issue" }
+  ],
+  "default_yolo": false,
+  "notes": [
+    "Best for personal capture; not designed for teams.",
+    "WIP limit on Doing prevents over-commitment.",
+    "Waiting column tracks external blockers; review weekly to unblock."
+  ]
+}

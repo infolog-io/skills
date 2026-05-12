@@ -65,6 +65,14 @@
       "version": "0.1.0",
       "category": "design",
       "author": { "name": "Information Logistics" }
+    },
+    {
+      "name": "github-issues-kanban",
+      "description": "Agent orchestration substrate built on GitHub Issues + Projects V2. Defines three concurrency primitives (access lock with TTL, dependency chain DAG, comment-based event bus) so multiple agents can claim and work tasks in parallel without conflict. Includes audit, triage, generate, list, and dispatch modes. Confirm-first by default; YOLO bypass available. Four archetype templates: personal-todo, writing-pipeline, oss-triage, sprint-planning. Protocol is agent-agnostic.",
+      "source": "./plugins/github-issues-kanban",
+      "version": "0.1.0",
+      "category": "engineering",
+      "author": { "name": "Information Logistics" }
     }
   ]
 }

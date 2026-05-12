@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infolog.io/schemas/github-issues-kanban-audit-report.json",
+  "title": "Board Audit Report",
+  "description": "Canonical structured output of a board audit.",
+  "type": "object",
+  "required": ["board", "generated_at", "issues_counted", "scores", "verdict"],
+  "additionalProperties": false,
+  "properties": {
+    "board": {
+      "type": "object",
+      "required": ["title", "number"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "number": { "type": "integer" },
+        "url": { "type": "string", "format": "uri" },
+        "archetype": { "type": "string" }
+      }
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "issues_counted": { "type": "integer", "minimum": 0 },
+    "scores": {
+      "type": "object",
+      "required": ["lifecycle_hygiene", "dependency_health", "wip_discipline", "triage_completeness", "event_log_quality"],
+      "additionalProperties": false,
+      "properties": {
+        "lifecycle_hygiene": { "$ref": "#/$defs/score" },
+        "dependency_health": { "$ref": "#/$defs/score" },
+        "wip_discipline": { "$ref": "#/$defs/score" },
+        "triage_completeness": { "$ref": "#/$defs/score" },
+        "event_log_quality": { "$ref": "#/$defs/score" },
+        "multi_board_coherence": { "$ref": "#/$defs/score_or_na" }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["issue", "dimension", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "issue": { "type": "string", "description": "owner/repo#<n>" },
+          "dimension": {
+            "enum": [
+              "lifecycle_hygiene",
+              "dependency_health",
+              "wip_discipline",
+              "triage_completeness",
+              "event_log_quality",
+              "multi_board_coherence"
+            ]
+          },
+          "reason": { "type": "string", "minLength": 5 },
+          "fix": { "type": "string", "minLength": 5 }
+        }
+      }
+    },
+    "recommended_next_change": { "type": "string", "minLength": 5 },
+    "verdict": { "enum": ["board-healthy", "drifting", "broken"] },
+    "confidence": { "enum": ["high", "medium", "low"] }
+  },
+  "$defs": {
+    "score": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "reason": { "type": "string" }
+      }
+    },
+    "score_or_na": {
+      "anyOf": [
+        { "$ref": "#/$defs/score" },
+        { "type": "string", "const": "N/A" }
+      ]
+    }
+  }
+}

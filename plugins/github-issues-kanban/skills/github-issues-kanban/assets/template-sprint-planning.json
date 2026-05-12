@@ -1,0 +1,54 @@
+{
+  "archetype": "sprint-planning",
+  "title_pattern": "{name}",
+  "description": "Time-boxed sprint board. Sprints are 1 week (configurable). Backlog holds future work; Sprint is the current commitment; In-progress + Review enforce WIP limits. Sprint number tags issues for retro and velocity.",
+  "columns": [
+    { "name": "Backlog",     "status_label": null,                       "description": "Triaged, not yet committed" },
+    { "name": "Sprint",      "status_label": "status:claimable",         "description": "Committed to current sprint" },
+    { "name": "In-progress", "status_label": "status:in-progress",       "description": "Active work" },
+    { "name": "Review",      "status_label": "status:ready-for-review",  "description": "PR open or deliverable awaiting review" },
+    { "name": "Done",        "status_label": "status:done",              "description": "Closed within this sprint" }
+  ],
+  "wip_limits": {
+    "Sprint": 5,
+    "In-progress": 3,
+    "Review": 5
+  },
+  "default_labels_for_new_issues": [
+    "priority:p2",
+    "complexity:medium",
+    "agent-output:pr"
+  ],
+  "custom_labels": [
+    "sprint:0",
+    "sprint:1",
+    "sprint:2",
+    "sprint:3",
+    "sprint:current",
+    "carryover",
+    "velocity:1",
+    "velocity:2",
+    "velocity:3",
+    "velocity:5",
+    "velocity:8"
+  ],
+  "sprint_duration_days": 7,
+  "automation": [
+    { "trigger": "new-issue", "action": "add-to-column", "args": "Backlog" },
+    { "trigger": "label-sprint:current", "action": "move-to-column", "args": "Sprint" },
+    { "trigger": "label-sprint:current+label-status:claimable", "action": "stay-in-column", "args": "Sprint" },
+    { "trigger": "label-status:in-progress", "action": "move-to-column", "args": "In-progress" },
+    { "trigger": "label-status:ready-for-review", "action": "move-to-column", "args": "Review" },
+    { "trigger": "label-status:done", "action": "move-to-column", "args": "Done" },
+    { "trigger": "label-status:done", "action": "close-issue" },
+    { "trigger": "sprint-end+!label-status:done", "action": "add-label", "args": "carryover" }
+  ],
+  "default_yolo": false,
+  "notes": [
+    "Sprint number is the binding label — issues in 'sprint:current' belong to the active sprint.",
+    "Velocity labels (Fibonacci) replace size:* for sprint estimation; both can coexist.",
+    "Carryover label flags issues that didn't finish in their assigned sprint.",
+    "WIP limits enforced strictly — exceed and the conductor refuses to claim more.",
+    "Sprint planning is a human activity; the skill operates the board within a sprint."
+  ]
+}

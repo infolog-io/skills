@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infolog.io/schemas/github-issues-kanban-label-scheme.json",
+  "title": "Canonical label scheme",
+  "description": "The labels every agent-ready board must define. Hosts apply these labels when generating a board.",
+  "type": "object",
+  "required": ["status", "claim", "dependency", "agent_output", "sizing", "priority", "control"],
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "type": "array",
+      "items": { "type": "string" },
+      "const": [
+        "status:claimable",
+        "status:claimed",
+        "status:in-progress",
+        "status:ready-for-review",
+        "status:blocked",
+        "status:done"
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "claimed_by_prefix": { "const": "claimed-by:" },
+        "expires_prefix": { "const": "claim-expires:" },
+        "ttl_prefix": { "const": "claim-ttl:" },
+        "default_ttl": { "const": "30m" },
+        "max_ttl": { "const": "24h" }
+      },
+      "required": ["claimed_by_prefix", "expires_prefix", "ttl_prefix", "default_ttl", "max_ttl"]
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "prefix": { "const": "depends-on:#" },
+        "cross_repo_prefix": { "const": "depends-on:" }
+      },
+      "required": ["prefix"]
+    },
+    "agent_output": {
+      "type": "array",
+      "items": { "type": "string" },
+      "const": ["agent-output:pr", "agent-output:comment", "agent-output:both"]
+    },
+    "sizing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "size": {
+          "type": "array",
+          "items": { "type": "string" },
+          "const": ["size:xs", "size:s", "size:m", "size:l", "size:xl", "size:xxl"]
+        },
+        "complexity": {
+          "type": "array",
+          "items": { "type": "string" },
+          "const": ["complexity:low", "complexity:medium", "complexity:high"]
+        }
+      },
+      "required": ["size", "complexity"]
+    },
+    "priority": {
+      "type": "array",
+      "items": { "type": "string" },
+      "const": ["priority:p0", "priority:p1", "priority:p2", "priority:p3"]
+    },
+    "control": {
+      "type": "array",
+      "items": { "type": "string" },
+      "const": ["agent-skip", "yolo:enabled", "requires-review"]
+    }
+  }
+}

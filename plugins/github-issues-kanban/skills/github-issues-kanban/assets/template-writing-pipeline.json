@@ -1,0 +1,46 @@
+{
+  "archetype": "writing-pipeline",
+  "title_pattern": "{name}",
+  "description": "Long-form writing pipeline. Each issue represents one piece (essay, blog post, talk, chapter). Stages mirror the writing lifecycle. Agent work happens at Research (gather sources) and Drafting (compose); Review and Published require human judgment.",
+  "columns": [
+    { "name": "Drafts",    "status_label": null,                  "description": "Idea / pre-research notes" },
+    { "name": "Research",  "status_label": "status:claimable",    "description": "Gathering sources, evidence, examples" },
+    { "name": "Outline",   "status_label": "status:claimable",    "description": "Structure decided; ready to draft" },
+    { "name": "Drafting",  "status_label": "status:in-progress",  "description": "Composition" },
+    { "name": "Review",    "status_label": "status:ready-for-review", "description": "Awaiting editorial pass" },
+    { "name": "Published", "status_label": "status:done",         "description": "Shipped" }
+  ],
+  "wip_limits": {
+    "Drafting": 2,
+    "Review": 3
+  },
+  "default_labels_for_new_issues": [
+    "priority:p3",
+    "complexity:medium",
+    "agent-output:comment",
+    "writing-phase:drafts"
+  ],
+  "custom_labels": [
+    "writing-phase:drafts",
+    "writing-phase:research",
+    "writing-phase:outline",
+    "writing-phase:drafting",
+    "writing-phase:review",
+    "writing-phase:published"
+  ],
+  "automation": [
+    { "trigger": "new-issue", "action": "add-to-column", "args": "Drafts" },
+    { "trigger": "label-writing-phase:research", "action": "move-to-column", "args": "Research" },
+    { "trigger": "label-writing-phase:outline", "action": "move-to-column", "args": "Outline" },
+    { "trigger": "label-writing-phase:drafting", "action": "move-to-column", "args": "Drafting" },
+    { "trigger": "label-writing-phase:review", "action": "move-to-column", "args": "Review" },
+    { "trigger": "label-status:done", "action": "move-to-column", "args": "Published" }
+  ],
+  "default_yolo": false,
+  "notes": [
+    "Agent-output:comment is the default — drafts post as comments for human review.",
+    "Stages are sequential per piece (one piece walks Drafts → Published).",
+    "Multiple pieces can be at different stages simultaneously.",
+    "Outline column is optional; skip for short-form."
+  ]
+}

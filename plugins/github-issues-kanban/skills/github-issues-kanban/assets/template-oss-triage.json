@@ -1,0 +1,51 @@
+{
+  "archetype": "oss-triage",
+  "title_pattern": "{name}",
+  "description": "Open-source triage board for bug reports, feature requests, and questions. Agents handle reproduction (write failing test), fix (open PR), and label hygiene. Humans own decisions on wontfix and good-first-issue tagging.",
+  "columns": [
+    { "name": "New",         "status_label": null,                   "description": "Just filed; un-triaged" },
+    { "name": "Triaged",     "status_label": "status:claimable",     "description": "Categorized; ready to work" },
+    { "name": "Reproducing", "status_label": "status:in-progress",   "description": "Writing failing test or reproducing the issue" },
+    { "name": "Fix",         "status_label": "status:in-progress",   "description": "Coding the fix; PR in progress" },
+    { "name": "Review",      "status_label": "status:ready-for-review", "description": "PR open; awaiting human review" },
+    { "name": "Closed",      "status_label": "status:done",          "description": "Merged or closed (resolved/wontfix)" }
+  ],
+  "wip_limits": {
+    "Reproducing": 5,
+    "Fix": 5,
+    "Review": 10
+  },
+  "default_labels_for_new_issues": [
+    "priority:p2",
+    "complexity:medium",
+    "agent-output:pr"
+  ],
+  "custom_labels": [
+    "type:bug",
+    "type:feature",
+    "type:question",
+    "type:docs",
+    "wontfix",
+    "good-first-issue",
+    "needs-reproduction",
+    "needs-decision"
+  ],
+  "automation": [
+    { "trigger": "new-issue", "action": "add-to-column", "args": "New" },
+    { "trigger": "new-issue", "action": "add-label", "args": "needs-reproduction" },
+    { "trigger": "label-status:claimable", "action": "move-to-column", "args": "Triaged" },
+    { "trigger": "label-type:bug+label-status:in-progress", "action": "move-to-column", "args": "Reproducing" },
+    { "trigger": "label-status:ready-for-review", "action": "move-to-column", "args": "Review" },
+    { "trigger": "label-status:done", "action": "move-to-column", "args": "Closed" },
+    { "trigger": "label-status:done", "action": "close-issue" },
+    { "trigger": "label-wontfix", "action": "move-to-column", "args": "Closed" },
+    { "trigger": "label-wontfix", "action": "close-issue" }
+  ],
+  "default_yolo": false,
+  "notes": [
+    "Agent-output:pr is the default — bugs and features want code.",
+    "needs-reproduction acts as an agent-skip until a failing test exists.",
+    "wontfix is a human decision; agents flag for review, humans label.",
+    "good-first-issue is the only auto-skippable agent-output:none signal."
+  ]
+}
