@@ -155,7 +155,7 @@ Confidence: <high | medium | low>
 
 - Hour-to-size conversion lookup
 - 4-tier complexity scale (low/medium/high is sufficient; finer granularity adds noise)
-- Calibration history database (would belong in mrkrabs)
+- Calibration history database (belongs in a future telemetry skill, not estimatrix)
 - Multi-rater Delphi sizing
 - Python script to compute complexity from description (skill stays prompt-only)
 - Cross-skill sizing aggregation

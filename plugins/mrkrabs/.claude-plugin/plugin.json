@@ -1,6 +1,0 @@
-{
-  "name": "mrkrabs",
-  "version": "0.0.1",
-  "description": "Stub: model cost routing + telemetry dashboard. Tracks LLM spend across tiers (Haiku / Sonnet / Opus / external), routes tasks by confidence, persists sessions, exposes a terminal dashboard.",
-  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
-}
