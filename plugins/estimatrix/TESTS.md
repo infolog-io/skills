@@ -108,6 +108,42 @@ Confidence: <high | medium | low>
 - Input: a task that sizes to XXL
 - Expected: skill flags XXL as a decomposition signal, then breaks into L-or-smaller pieces, each with its own size + complexity
 
+## Test cases — conversational intake (the main behavior)
+
+### K13 — Active question-asking, not passive refusal
+
+- Input: any ambiguous or underspecified task (e.g., "estimate the dashboard work")
+- Expected: skill runs an active intake interview, like jtbd-prd does:
+  1. Identifies which blanks must be filled (scope, success criterion, dependencies, constraints)
+  2. Asks ONE focused question at a time (or a tight numbered list of 2-4)
+  3. Waits for the user's answer
+  4. Updates its understanding
+  5. Asks the next blank
+  6. Loops until enough info exists to size
+  7. Emits Size + Complexity + Confidence
+- Negative: skill does NOT just list "I need to know X, Y, Z" and stop. It must run the back-and-forth.
+
+### K14 — Blank-detection ordering
+
+- Input: a task where multiple blanks exist (e.g., scope is clear but success criterion is missing AND adjacent cleanup is mentioned)
+- Expected: skill asks about the highest-leverage blank first:
+  - Missing success criterion (rule 4) before complexity-affecting blanks
+  - Scope ambiguity (rule 1) before adjacent-work questions (rule 3)
+  - Adjacent work (rule 3) is asked LAST as a separate row, not folded in
+- Negative: skill does not ask about every blank in random order
+
+### K15 — Stop-asking signal
+
+- Input: user, after one or two clarifications, says "just give me a rough size"
+- Expected: skill emits size + complexity with what it knows; flags `Confidence: low` and states the remaining blanks
+- Negative: skill does not keep asking questions when user has signaled they want a rough answer
+
+### K16 — Single-turn happy path
+
+- Input: a task that is fully specified ("rename `getUserData` to `fetchUser` across our 80-file Next.js app; success = all tests pass and grep returns 0 hits for the old name")
+- Expected: skill skips the conversational intake; emits estimate in one response
+- Negative: skill does not ask unnecessary questions when the request already states scope + success criterion
+
 ## Acceptance rubric per artifact
 
 | Artifact | Must |

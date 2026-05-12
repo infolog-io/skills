@@ -1,6 +1,6 @@
 {
   "name": "estimatrix",
-  "version": "0.2.0",
-  "description": "Two-axis sizing rubric for effort AND complexity. Effort as T-shirt (XS / S / M / L / XL / XXL); complexity as low / medium / high. Applies Karpathy's four code rules before sizing: state assumptions, ask if ambiguous, prefer simpler scope, require a success criterion.",
+  "version": "0.3.0",
+  "description": "Two-axis sizing rubric for effort AND complexity. Effort as T-shirt (XS / S / M / L / XL / XXL); complexity as low / medium / high. Runs active conversational intake (jtbd-style) to fill missing scope and success criteria before sizing. Applies Karpathy's four code rules: state assumptions, ask if ambiguous, prefer simpler scope, require a success criterion.",
   "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
 }

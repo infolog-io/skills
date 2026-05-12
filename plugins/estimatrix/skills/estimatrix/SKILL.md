@@ -51,7 +51,7 @@ estimatrix does not emit a size until these four rules are satisfied.
 ### Rule 1 — Think Before Coding (no silent assumptions)
 
 - State assumptions explicitly before sizing
-- If the request is ambiguous, refuse to size; ask
+- If the request is ambiguous, run the **Conversational Intake** below — do not just refuse and stop
 - If multiple interpretations exist, list them with separate sizings; do not silently pick one
 
 ### Rule 2 — Simplicity First
@@ -71,6 +71,160 @@ estimatrix does not emit a size until these four rules are satisfied.
 - Do not size a task without a success criterion
 - Transform vague requests: "fix the bug" → "write a test that reproduces it, then make it pass"
 - For multi-step tasks, state the plan with verify steps before sizing the whole
+
+## Conversational Intake (the main behavior)
+
+When a task is underspecified, estimatrix runs an active intake — it asks
+the user questions, ONE focused question at a time (or a tight numbered
+list of 2-4), and loops until enough information exists to emit a
+defensible estimate. This is the same pattern jtbd-prd uses for
+interviews.
+
+### Blank-Detection Checklist
+
+Walk this list before sizing. Each unchecked blank becomes a question.
+
+1. **Scope** (rule 1) — Is the boundary of "done" defined? What's in, what's out?
+2. **Success criterion** (rule 4) — Is there a test, behavior, or observable output that confirms done?
+3. **Simpler alternative** (rule 2) — Could a smaller scope satisfy the same goal?
+4. **Adjacent work** (rule 3) — Is the user lumping in nearby improvements?
+5. **Constraints** — Deadline, performance target, compatibility floor, security floor?
+6. **Dependencies** — External APIs, other teams, sequencing with other work?
+7. **Sizing inputs for complexity** — Known/unknown ratio? Familiar pattern or novel?
+8. **Calibration anchor** — Comparable past work to anchor against?
+
+A blank is "filled" when the user's answer is concrete enough to size against.
+
+### Intake ordering
+
+Ask blanks in this priority:
+
+1. **Scope ambiguity** (rule 1) — without this, every other question is premature
+2. **Success criterion** (rule 4) — without this, "done" is undefined
+3. **Simpler alternative** (rule 2) — only after scope is known
+4. **Constraints + dependencies** — affects complexity
+5. **Adjacent work** (rule 3) — asked last, as a separate row
+
+Stop asking when:
+- All material blanks are filled, OR
+- The user signals "just give me a rough size" — emit with `Confidence: low` and flag the remaining blanks
+
+### Question style
+
+| Do | Don't |
+|---|---|
+| Ask one focused question per turn, or a tight numbered list of 2-4 | Dump a bullet list of 8 questions |
+| Quote the user's exact phrase when probing ambiguity | Paraphrase in ways that drift from intent |
+| Offer 2-4 concrete options when scope is open | Ask open-ended "what do you want?" |
+| Confirm understanding back to the user before sizing | Estimate against assumptions the user never confirmed |
+
+### Single-turn happy path
+
+If the user's request already states scope AND success criterion AND has
+no ambiguity, skip intake. Emit the estimate directly.
+
+A request is "happy path" when:
+- The action verb is unambiguous (rename, add, replace, delete, integrate)
+- The object is specified (which function, which page, which API)
+- The outcome is testable (grep returns 0, all tests pass, X renders Y)
+
+### Multi-turn worked example
+
+User: "estimate the dashboard work"
+
+Skill (turn 1): I need to disambiguate scope before sizing. Which dashboard?
+
+  A. The internal admin dashboard
+  B. The customer-facing usage dashboard
+  C. A new dashboard not yet built
+
+Which?
+
+User: "B"
+
+Skill (turn 2): For the customer-facing usage dashboard, what's the scope?
+
+  A. Add one new metric tile
+  B. Redesign the layout
+  C. Migrate from one charting library to another
+  D. Rebuild from scratch
+
+Which?
+
+User: "A — adding a tile for monthly active sessions"
+
+Skill (turn 3): Good — scope is clear. What's the success criterion?
+
+  A. The tile renders the value pulled from the existing API
+  B. Same as A, plus a sparkline of the last 12 weeks
+  C. Same as B, plus drill-down to per-day data
+
+Which?
+
+User: "B"
+
+Skill (turn 4): Any adjacent improvements you want sized at the same time?
+For example, refactoring the existing tile component or updating the
+analytics pipeline that feeds it?
+
+User: "no, just the tile"
+
+Skill (final):
+
+```
+Task: Add a monthly-active-sessions tile with 12-week sparkline to the customer-facing usage dashboard
+
+Assumptions:
+- The existing API exposes the metric (no new endpoint needed)
+- The dashboard's tile component pattern accepts a sparkline addition
+- 12-week data is already retained
+
+Success criterion:
+- Tile renders the current MAS value
+- Sparkline shows the last 12 weekly data points
+- Tile passes the existing dashboard tile tests
+
+Size: S
+Complexity: low
+Confidence: medium (pending confirmation that the API exposes the metric)
+```
+
+### Refusal-style intake (anti-pattern)
+
+Wrong:
+
+> User: "estimate the dashboard work"
+> Skill: "I cannot size this without knowing scope, success criterion, constraints, dependencies, and complexity inputs. Please provide:
+> - Scope
+> - Success criterion
+> - Constraints
+> - ...
+> [end of response]"
+
+This is passive. The user has to do all the work. estimatrix should
+drive the conversation, not block on it.
+
+Right:
+
+> User: "estimate the dashboard work"
+> Skill: [asks ONE focused question with concrete options]
+
+### Stop-asking signal
+
+If the user says "just give me a rough size" or similar after one or two
+questions, emit the estimate with whatever information is in hand:
+
+```
+Size: M (best guess given what I know)
+Complexity: medium
+Confidence: low
+Remaining blanks (would tighten this if filled):
+- Which dashboard
+- Whether to include adjacent refactor
+```
+
+Confidence is `low` because blanks remain. That's an honest signal, not a
+hedge.
 
 ## Output format
 
@@ -109,17 +263,20 @@ For tables:
 
 ## Worked examples
 
-### K1 — Ambiguity (rule 1 refusal)
+### K1 — Ambiguity (rule 1, active intake)
 
 User: "estimate adding a feature flag"
 
-Skill response: refuses to size; asks:
-- Which flag system (GrowthBook, LaunchDarkly, custom)?
-- Which feature does the flag gate?
-- Server-side, client-side, or both?
-- Targeting rules: user attributes, percentage rollout, both?
+Skill (turn 1): Before sizing, two things to nail down. Which flag system?
 
-No size emits until clarified.
+  A. GrowthBook (already in the codebase)
+  B. LaunchDarkly
+  C. A custom toggle in env vars
+  D. Other — name it
+
+(Once you pick, I'll ask about the feature being gated.)
+
+[Intake continues until scope + success criterion are filled, then emits estimate.]
 
 ### K2 — Multiple interpretations (rule 1)
 
@@ -159,16 +316,18 @@ Simpler alternative (rule 2):
 Which scope?
 ```
 
-### K4 — Missing success criterion (rule 4 refusal)
+### K4 — Missing success criterion (rule 4, active intake)
 
 User: "estimate fixing the bug"
 
-Skill response: refuses to size; asks:
-- What is the failing test or reproduction case?
-- What is the observed (broken) behavior?
-- What is the expected (fixed) behavior?
+Skill (turn 1): Which bug, and what does "fixed" look like?
 
-No size emits without a success criterion.
+  Quick triage:
+  1. Is there a failing test, error log, or reproduction case I can anchor to?
+  2. What's the observed (broken) behavior, in one sentence?
+  3. What's the expected (fixed) behavior, in one sentence?
+
+Once those three are filled, I can size.
 
 ### K5 — Surgical scope (rule 3)
 
