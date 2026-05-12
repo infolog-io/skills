@@ -7,13 +7,13 @@
   },
   "metadata": {
     "description": "Information Logistics plugin marketplace. Eight plugins across engineering and design: process discipline, JTBD validation, sizing, structural audit, agent orchestration, type scales, brand audits, data viz audits.",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "plugins": [
     {
       "name": "claude-pip",
       "description": "Performance Improvement Plan for Claude. Type CLAUDE PIP to lock in a behavioral discipline (TDD, plan mode, sub-agents, adversarial review) as a deterministic rule in the project's CLAUDE.md.",
-      "source": "./plugins/claude-pip",
+      "source": "./skills/claude-pip",
       "version": "0.1.0",
       "category": "engineering",
       "author": {
@@ -23,7 +23,7 @@
     {
       "name": "tufte-love",
       "description": "Tufte-style audits, redesigns, and reviews for data visualizations, dashboards, and quantitative UI.",
-      "source": "./plugins/tufte-love",
+      "source": "./skills/tufte-love",
       "version": "0.3.0",
       "category": "design",
       "author": {
@@ -33,7 +33,7 @@
     {
       "name": "jtbd-prd",
       "description": "Validate customer need before you build. Produces a Job Article that functions as PRD framing, grounded in Jobs-to-be-Done evidence.",
-      "source": "./plugins/jtbd-prd",
+      "source": "./skills/jtbd-prd",
       "version": "0.1.0",
       "category": "engineering",
       "author": {
@@ -43,7 +43,7 @@
     {
       "name": "estimatrix",
       "description": "Two-axis sizing rubric for effort AND complexity. Effort as T-shirt (XS / S / M / L / XL / XXL); complexity as low / medium / high. Runs active conversational intake (jtbd-style) to fill missing scope and success criteria before sizing. Applies Karpathy's four code rules: state assumptions, ask if ambiguous, prefer simpler scope, require a success criterion.",
-      "source": "./plugins/estimatrix",
+      "source": "./skills/estimatrix",
       "version": "0.3.0",
       "category": "engineering",
       "author": {
@@ -53,7 +53,7 @@
     {
       "name": "learn2kern",
       "description": "Typography skill. Generates modular type scales (eight named ratios from Minor Second to Golden Ratio) with BODY and HEADINGS as separate token families, line-height bands, letter-spacing per band. Emits CSS custom properties and Tailwind theme.fontSize. Color slots reference atomic-brand tokens. Runs conversational intake when inputs are missing.",
-      "source": "./plugins/learn2kern",
+      "source": "./skills/learn2kern",
       "version": "0.1.0",
       "category": "design",
       "author": {
@@ -63,7 +63,7 @@
     {
       "name": "semantic-organization",
       "description": "Meta-skill that governs how every skill is structured. Two layers: Agent Skills spec compliance and infolog-io marketplace conventions. Scaffolds new skills, audits existing ones, recommends when a folder should become a sibling skill. Grounded in the Anthropic Agent Skills spec and Unix philosophy.",
-      "source": "./plugins/semantic-organization",
+      "source": "./skills/semantic-organization",
       "version": "0.2.0",
       "category": "engineering",
       "author": {
@@ -73,7 +73,7 @@
     {
       "name": "atomic-brand",
       "description": "Audits web projects against atomic design discipline and brand-token coherence. Detects token violations, atomic hierarchy drift, naming by appearance, scattered components, brand drift, and scale violations. Emits a scored audit plus a refactor plan or build-out plan. Failover chain: explicit tokens \u2192 image parse \u2192 URL scrape. Web medium first; native and other mediums spin out as sibling skills.",
-      "source": "./plugins/atomic-brand",
+      "source": "./skills/atomic-brand",
       "version": "0.1.0",
       "category": "design",
       "author": {
@@ -83,7 +83,7 @@
     {
       "name": "github-issues-kanban",
       "description": "Agent orchestration substrate built on GitHub Issues + Projects V2. Defines three concurrency primitives (access lock with TTL, dependency chain DAG, comment-based event bus) so multiple agents can claim and work tasks in parallel without conflict. Includes audit, triage, generate, list, and dispatch modes. Confirm-first by default; YOLO bypass available. Four archetype templates: personal-todo, writing-pipeline, oss-triage, sprint-planning. Protocol is agent-agnostic.",
-      "source": "./plugins/github-issues-kanban",
+      "source": "./skills/github-issues-kanban",
       "version": "0.1.0",
       "category": "engineering",
       "author": {
