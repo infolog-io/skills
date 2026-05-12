@@ -1,0 +1,75 @@
+/* learn2kern v0.1.0 — fixture output
+ * Inputs: base=16px, ratio=Major Third (1.250), steps_up=6, steps_down=2
+ * Body family: Inter; Heading family: inherit
+ * Weights: body 400, heading 700
+ *
+ * This file is the round-trip target for TESTS.md T12.
+ */
+
+:root {
+  /* Type scale (Major Third, base 16px) */
+  --font-size-2xs:  0.640rem;   /* 10.24px / 7.68pt */
+  --font-size-xs:   0.800rem;   /* 12.80px / 9.60pt */
+  --font-size-base: 1.000rem;   /* 16.00px / 12.00pt — base */
+  --font-size-lg:   1.250rem;   /* 20.00px / 15.00pt */
+  --font-size-xl:   1.563rem;   /* 25.00px / 18.75pt */
+  --font-size-2xl:  1.953rem;   /* 31.25px / 23.44pt */
+  --font-size-3xl:  2.441rem;   /* 39.06px / 29.30pt */
+  --font-size-4xl:  3.052rem;   /* 48.83px / 36.62pt */
+  --font-size-5xl:  3.815rem;   /* 61.04px / 45.78pt */
+
+  /* Line-height bands */
+  --line-height-normal: 1.5;
+  --line-height-tight: 1.25;
+  --line-height-display: 1.10;
+
+  /* Letter-spacing per band */
+  --letter-spacing-body: 0em;
+  --letter-spacing-heading: -0.011em;
+  --letter-spacing-display: -0.022em;
+
+  /* BODY family */
+  --font-body-family: 'Inter', system-ui, sans-serif;
+  --font-body-weight: 400;
+  --font-body-line-height: var(--line-height-normal);
+  --font-body-letter-spacing: var(--letter-spacing-body);
+  --font-body-color: var(--color-text, #222);
+
+  /* HEADINGS family */
+  --font-heading-family: inherit;
+  --font-heading-weight: 700;
+  --font-heading-line-height: var(--line-height-tight);
+  --font-heading-letter-spacing: var(--letter-spacing-heading);
+  --font-heading-color: var(--color-text, #222);
+
+  /* Page background (composes with atomic-brand) */
+  --bg-page: var(--color-bg, #fff);
+}
+
+/* Suggested element bindings — apply where conventional */
+body {
+  font-family: var(--font-body-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-body-weight);
+  line-height: var(--font-body-line-height);
+  letter-spacing: var(--font-body-letter-spacing);
+  color: var(--font-body-color);
+  background: var(--bg-page);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  line-height: var(--font-heading-line-height);
+  letter-spacing: var(--font-heading-letter-spacing);
+  color: var(--font-heading-color);
+}
+
+h1 { font-size: var(--font-size-2xl); }
+h2 { font-size: var(--font-size-xl);  }
+h3 { font-size: var(--font-size-lg);  }
+h4 { font-size: var(--font-size-base);}
+h5 { font-size: var(--font-size-xs);  }
+h6 { font-size: var(--font-size-2xs); }
+
+small { font-size: var(--font-size-xs); }

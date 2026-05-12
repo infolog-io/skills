@@ -52,9 +52,9 @@
     },
     {
       "name": "learn2kern",
-      "description": "STUB. Typography skill. Generates modular type scales from a base size and ratio, recommends pairings, audits kerning and tracking, emits token files in CSS / Swift / Compose / W3C.",
+      "description": "Typography skill. Generates modular type scales (eight named ratios from Minor Second to Golden Ratio) with BODY and HEADINGS as separate token families, line-height bands, letter-spacing per band. Emits CSS custom properties and Tailwind theme.fontSize. Color slots reference atomic-brand tokens. Runs conversational intake when inputs are missing.",
       "source": "./plugins/learn2kern",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "category": "design",
       "author": { "name": "Information Logistics" }
     },

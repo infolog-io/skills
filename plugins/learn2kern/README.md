@@ -1,38 +1,40 @@
 # learn2kern
 
-**Status: stub.** Typography skill with a TypeScale generator at its core.
+Typography skill. Generates a complete modular type scale from a base
+size and one of eight named ratios.
 
-## v1 cornerstone — TypeScale generator
+## What you get
 
-Given a base size and a modular ratio, emit a full type scale with:
+- Type scale across 9 steps (-2 to +6)
+- Eight named ratios: Minor Second (1.067) → Golden Ratio (1.618)
+- Three line-height bands (body 1.5, heading 1.25, display 1.10)
+- Letter-spacing per band: tighter at display, normal at body
+- BODY + HEADINGS as separate token families
+- Emissions: CSS custom properties + Tailwind theme.fontSize
+- Color slots reference atomic-brand tokens via `var()` with fallbacks
 
-- Named steps (-2 through +6 by default)
-- Line-height defaults per scale band
-- Token emissions for CSS, Tailwind, Swift, Compose, W3C design tokens
+## Composition
 
-## Named ratios supported
+`atomic-brand` owns color. `learn2kern` owns typography. They thread
+together via `var(--color-text, #222)` references.
 
-Minor Second (1.067) · Major Second (1.125) · Minor Third (1.200) ·
-Major Third (1.250) · Perfect Fourth (1.333) · Augmented Fourth (1.414) ·
-Perfect Fifth (1.500) · Golden Ratio (1.618).
+## Modes
 
-## Deferred to v2
+- **Single-turn happy path** when inputs are stated
+- **Conversational intake** (jtbd-style) when inputs are missing
 
-Pair recommender, kerning audit, tracking rules by size band, optical
-alignment, vertical rhythm to a baseline grid, variable-font axis
-constraints, accessibility checks.
+## Scope (v0.1.0)
 
-## Sizing (per estimatrix)
+CSS + Tailwind emission. Responsive scales, Swift/Compose/W3C emissions,
+kerning audit, and font-pair recommender deferred to v0.2+.
 
-| Phase | Size |
-|---|---|
-| Scaffold (this stub) | XS |
-| TypeScale generator (CSS + Tailwind) | M |
-| Swift + Compose + W3C targets | S |
-
-## Install (stub)
+## Install
 
 ```bash
 claude plugin marketplace add infolog-io/skills
 claude plugin install learn2kern@infolog-io
 ```
+
+## Triggers
+
+`type scale` · `typography` · `font sizes` · `modular scale` · `/learn2kern`
