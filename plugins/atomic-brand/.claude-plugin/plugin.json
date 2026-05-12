@@ -1,0 +1,6 @@
+{
+  "name": "atomic-brand",
+  "version": "0.1.0",
+  "description": "Audits and refactors web projects against atomic design discipline and brand-token coherence. Detects token drift, scattered components, naming violations, and identity drift. Emits a scored audit, a refactor plan, and (when the system is broken) a build-out plan listing missing tokens and patterns. Web medium first; native and other mediums spin out as sibling skills.",
+  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
+}

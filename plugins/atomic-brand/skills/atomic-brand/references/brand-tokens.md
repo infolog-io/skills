@@ -1,0 +1,169 @@
+# Brand Tokens
+
+A brand token is a named value that represents a design decision. Tokens
+are the single source of truth for color, type, spacing, and other design
+primitives. The audit's first job is to know what tokens exist and
+whether the codebase uses them.
+
+## Token categories
+
+### Color
+
+| Sub-category | Examples |
+|---|---|
+| Brand | `--color-primary`, `--color-secondary`, `--color-accent` |
+| Neutral | `--color-text`, `--color-text-muted`, `--color-bg`, `--color-bg-elevated`, `--color-border` |
+| Semantic | `--color-success`, `--color-warning`, `--color-danger`, `--color-info` |
+| Interactive | `--color-link`, `--color-link-hover`, `--color-focus-ring` |
+
+Color tokens come in pairs (default + dark mode) when the brand supports
+both modes.
+
+### Spacing
+
+| Form | Why |
+|---|---|
+| `--space-0`, `--space-1`, `--space-2`, ... `--space-12` | Numbered scale; t-shirt sizing also acceptable (xs/s/m/l/xl) |
+
+Convention: each step is a multiple of the previous (geometric scale) or
+follows a defined modular ratio (1.5x, 2x, golden ratio).
+
+### Type
+
+| Sub-category | Examples |
+|---|---|
+| Family | `--font-sans`, `--font-mono`, `--font-display` |
+| Size | `--font-size-0` through `--font-size-9` (or named: `--font-size-body`, `--font-size-h1`) |
+| Weight | `--font-weight-regular`, `--font-weight-medium`, `--font-weight-bold` |
+| Line-height | `--line-height-tight`, `--line-height-normal`, `--line-height-loose` |
+| Letter-spacing | `--letter-spacing-tight`, `--letter-spacing-normal`, `--letter-spacing-wide` |
+
+Type tokens often come from a modular scale (see `learn2kern`).
+
+### Border
+
+| Token | Examples |
+|---|---|
+| Width | `--border-width-1`, `--border-width-2` |
+| Radius | `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-full` |
+| Style | usually fixed (solid) — tokens not always needed |
+
+### Shadow / Elevation
+
+| Token | Examples |
+|---|---|
+| Elevation | `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--shadow-xl` |
+| Focus | `--shadow-focus` (focus rings) |
+
+### Motion
+
+| Token | Examples |
+|---|---|
+| Duration | `--duration-instant` (0ms), `--duration-fast` (150ms), `--duration-normal` (300ms), `--duration-slow` (500ms) |
+| Easing | `--ease-in-out`, `--ease-out`, `--ease-linear` |
+
+### Z-index
+
+| Token | Examples |
+|---|---|
+| Layer | `--z-base`, `--z-dropdown`, `--z-modal`, `--z-toast` |
+
+### Breakpoints
+
+| Token | Examples |
+|---|---|
+| Width | `--bp-sm`, `--bp-md`, `--bp-lg`, `--bp-xl` |
+
+## Token naming conventions
+
+| Rule | Pass | Fail |
+|---|---|---|
+| kebab-case | `--color-primary` | `--colorPrimary` |
+| Prefix by category | `--color-*`, `--space-*` | `--primary`, `--big` |
+| Role-based, not appearance-based | `--color-primary` | `--color-blue` |
+| Numbered or T-shirt for scale | `--space-2`, `--font-size-md` | `--space-medium-large` |
+| Semantic aliases over raw values | `--color-text-muted: var(--color-neutral-600)` | direct `#666666` reuse |
+
+## Token sources (failover chain)
+
+Tokens can live in different files. The audit looks in this order:
+
+| Step | File patterns | Convention |
+|---|---|---|
+| 1 | `tokens.css`, `tokens.scss`, `vars.css` | CSS custom properties |
+| 2 | `tailwind.config.{js,ts}` | Tailwind theme extension |
+| 3 | `theme.ts`, `theme.js`, `tokens.ts` | CSS-in-JS, design-token JS |
+| 4 | `tokens.json` | W3C design tokens |
+| 5 | `*.css-module` files with custom-property declarations | inline |
+
+If none exist, fall through to image parsing or URL scraping (see
+`failover-chain.md`).
+
+## What "token compliance" means
+
+For each value in the codebase, the audit asks: is this a token reference
+or a literal?
+
+```css
+/* Compliant */
+.button {
+  background: var(--color-primary);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+}
+
+/* Token violation */
+.button {
+  background: #0066FF;        /* should be var(--color-primary) */
+  padding: 8px 12px;          /* should be var(--space-2) var(--space-3) */
+  border-radius: 6px;         /* should be var(--radius-md) */
+}
+```
+
+Token compliance score:
+
+| % values using tokens | Score |
+|---|---|
+| ≥95% | 5 |
+| 85-94% | 4 |
+| 70-84% | 3 |
+| 50-69% | 2 |
+| <50% | 1 |
+
+## Token-less projects
+
+If a project has no token file, the audit cannot enforce compliance. It
+falls back to:
+
+1. Image-parse path: extract dominant colors and type pairings from a
+   brand asset
+2. URL-scrape path: extract computed styles from rendered pages
+
+In both fallback paths, the audit's confidence is `low` and the verdict
+favors `broken` with a build-out plan that starts: "define `tokens.css`."
+
+## Exceptions
+
+Some values legitimately resist tokenization:
+
+- Computed values (grid columns derived from container width)
+- Third-party widget overrides (when the widget hardcodes)
+- One-off page-specific colors that explicitly do not belong in the system
+
+Document these in a `tokens-exceptions.md` next to your tokens file. The
+audit reads it and exempts the listed cases.
+
+## Token migration order
+
+When a project lacks tokens, build them in this order:
+
+1. **Color** — biggest leverage; touches every component
+2. **Spacing** — high leverage; reveals layout inconsistency
+3. **Type** — depends on font choice and may need pair recommendations
+4. **Border + radius** — small effort, big consistency win
+5. **Shadow** — usually 3-5 tokens cover everything
+6. **Motion** — only when interactions exist
+7. **Z-index** — only when stacking conflicts emerge
+
+Sizes per estimatrix: token bootstrap is typically M total; per category
+ranges XS to S.

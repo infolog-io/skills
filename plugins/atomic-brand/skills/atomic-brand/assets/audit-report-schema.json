@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infolog.io/schemas/atomic-brand-audit-report.json",
+  "title": "Atomic Brand Audit Report",
+  "description": "Canonical structured output of an atomic-brand audit.",
+  "type": "object",
+  "required": [
+    "project_name",
+    "brand_source",
+    "confidence",
+    "audited_at",
+    "scores",
+    "verdict",
+    "recommended_next_change"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "project_name": { "type": "string", "minLength": 1 },
+    "brand_source": { "enum": ["explicit-tokens", "image-parsed", "url-scraped", "none"] },
+    "confidence": { "enum": ["high", "medium", "low"] },
+    "audited_at": { "type": "string", "format": "date" },
+    "scores": {
+      "type": "object",
+      "required": [
+        "token_compliance",
+        "atomic_discipline",
+        "naming_integrity",
+        "brand_coherence",
+        "scale_discipline",
+        "composition_health",
+        "duplication",
+        "variant_clarity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "token_compliance": { "$ref": "#/$defs/score" },
+        "atomic_discipline": { "$ref": "#/$defs/score" },
+        "naming_integrity": { "$ref": "#/$defs/score" },
+        "brand_coherence": { "$ref": "#/$defs/score" },
+        "scale_discipline": { "$ref": "#/$defs/score" },
+        "composition_health": { "$ref": "#/$defs/score" },
+        "duplication": { "$ref": "#/$defs/score" },
+        "variant_clarity": { "$ref": "#/$defs/score" }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tag", "file", "found"],
+        "additionalProperties": false,
+        "properties": {
+          "tag": {
+            "enum": [
+              "token_violation",
+              "atomic_violation",
+              "naming_violation",
+              "brand_drift",
+              "inconsistency",
+              "composition_violation",
+              "scale_violation",
+              "duplication_violation"
+            ]
+          },
+          "file": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "found": { "type": "string" },
+          "expected": { "type": "string" },
+          "confidence": { "enum": ["high", "medium", "low"] }
+        }
+      }
+    },
+    "verdict": { "enum": ["system-healthy", "drifting", "broken"] },
+    "recommended_next_change": { "type": "string", "minLength": 5 },
+    "downstream_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["refactor-plan", "build-out-plan", "none"] },
+        "path": { "type": "string" }
+      }
+    },
+    "exceptions_consulted": {
+      "type": "boolean",
+      "description": "True if tokens-exceptions.md (or equivalent) was loaded and applied"
+    }
+  },
+  "$defs": {
+    "score": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "reason": { "type": "string" }
+      }
+    }
+  }
+}

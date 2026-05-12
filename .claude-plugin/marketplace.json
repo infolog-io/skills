@@ -65,6 +65,14 @@
       "version": "0.2.0",
       "category": "engineering",
       "author": { "name": "Information Logistics" }
+    },
+    {
+      "name": "atomic-brand",
+      "description": "Audits web projects against atomic design discipline and brand-token coherence. Detects token violations, atomic hierarchy drift, naming by appearance, scattered components, brand drift, and scale violations. Emits a scored audit plus a refactor plan or build-out plan. Failover chain: explicit tokens → image parse → URL scrape. Web medium first; native and other mediums spin out as sibling skills.",
+      "source": "./plugins/atomic-brand",
+      "version": "0.1.0",
+      "category": "design",
+      "author": { "name": "Information Logistics" }
     }
   ]
 }
