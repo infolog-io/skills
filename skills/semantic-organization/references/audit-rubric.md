@@ -56,25 +56,26 @@ Score:
 - 3: Non-canonical folders present without clear justification.
 - 5: Only spec-named folders, or non-canonical folders are documented in SKILL.md with rationale.
 
-## Plugin-layer rubric (marketplace conventions)
+## Marketplace-layer rubric (conventions)
 
-For shipping in this marketplace. Not part of the spec.
+For shipping in this marketplace. Not part of the spec. All marketplace
+files live INSIDE the skill folder, not in a wrapper.
 
 ### P1. Plugin manifest
 
-- `.claude-plugin/plugin.json` exists at plugin root.
+- `.claude-plugin/plugin.json` exists inside the skill folder (`skills/<name>/.claude-plugin/plugin.json`).
 - `name`, `version`, `description` fields present.
-- `name` matches the directory under `plugins/`.
+- `name` matches the skill's directory name and the SKILL.md frontmatter name.
 - Description ≥20 characters.
 
 Score:
-- 1: Missing or invalid.
+- 1: Missing, invalid, or located at the wrong path (e.g., in a `plugins/<name>/` wrapper).
 - 3: Present but description is thin.
-- 5: Complete and matches all other declared names.
+- 5: Complete; located inside the skill; matches all other declared names.
 
 ### P2. README discipline
 
-- `README.md` at plugin root.
+- `README.md` inside the skill folder (`skills/<name>/README.md`).
 - ≤200 words.
 - States what, when, install.
 
@@ -85,7 +86,7 @@ Score:
 
 ### P3. TESTS.md presence and quality
 
-- `TESTS.md` at plugin root.
+- `TESTS.md` inside the skill folder (`skills/<name>/TESTS.md`).
 - Lists explicit end conditions ("ships when X is true").
 - Enumerates concrete test cases.
 - Declares out-of-scope items.
@@ -107,7 +108,7 @@ Score:
 
 ## Skill profiles
 
-Not every skill needs the full plugin layer. Two profiles:
+Not every skill needs every folder. Two profiles:
 
 ### Full-shape skill
 
@@ -115,9 +116,9 @@ A skill with multiple operating modes, prompts, references, and outputs.
 Skills with multiple operating modes, multiple references, and optional
 scripts and assets fall in this profile.
 
-Required at minimum:
+Required at minimum (all inside `skills/<name>/`):
 - Spec layer: SKILL.md + references/ (recommended) + assets/ (recommended) when content warrants
-- Plugin layer: plugin.json, README.md, TESTS.md
+- Marketplace layer: `.claude-plugin/plugin.json`, README.md, TESTS.md
 
 ### Single-rule skill
 
@@ -127,9 +128,9 @@ modes, no prompts, no templates.
 A skill that states a single durable rule via SKILL.md alone — no
 sub-folders required.
 
-Required at minimum:
+Required at minimum (all inside `skills/<name>/`):
 - Spec layer: SKILL.md only
-- Plugin layer: plugin.json, README.md, TESTS.md
+- Marketplace layer: `.claude-plugin/plugin.json`, README.md, TESTS.md
 
 The audit must not penalize single-rule skills for not having `scripts/`,
 `references/`, or `assets/`. The body of SKILL.md carries all the content.
@@ -154,7 +155,7 @@ Skill-layer (spec):
 - S3. Body discipline:             [1-5] — [reason]
 - S4. Folder discipline:           [1-5] — [reason]
 
-Plugin-layer (marketplace):
+Marketplace-layer:
 - P1. Plugin manifest:             [1-5] — [reason]
 - P2. README discipline:           [1-5] — [reason]
 - P3. TESTS.md presence/quality:   [1-5] — [reason]
@@ -172,10 +173,10 @@ Confidence:                        High | Medium | Low
 
 | Verdict | Rule |
 |---|---|
-| `spec-compliant + marketplace-ready` | All 4 skill-layer dims ≥4 AND all 4 plugin-layer dims ≥4 |
-| `spec-compliant, marketplace-drift` | All 4 skill-layer dims ≥4, but ≥1 plugin-layer dim at 2-3 |
+| `spec-compliant + marketplace-ready` | All 4 skill-layer dims ≥4 AND all 4 marketplace-layer dims ≥4 |
+| `spec-compliant, marketplace-drift` | All 4 skill-layer dims ≥4, but ≥1 marketplace-layer dim at 2-3 |
 | `spec-drift` | ≥1 skill-layer dim at 2-3, none at 1 |
-| `broken` | Any dim at 1 |
+| `broken` | Any dim at 1, OR a forbidden layout is present (`plugins/<name>/` wrapper, nested skills/, etc.) |
 
 ## Priority rule
 

@@ -3,7 +3,11 @@
 Two distinct sources of authority govern a skill in this marketplace.
 Confusing them produces over-engineered standards or non-portable skills.
 
-## The two layers
+The clean answer: **both live in the same folder.** There is no separate
+plugin-wrapper directory. A skill is simultaneously spec-compliant AND
+marketplace-installable from one location.
+
+## The two sources of authority
 
 ### Spec layer
 
@@ -26,40 +30,73 @@ What the spec does NOT define:
 - Audit rubrics
 - Verdict semantics
 
-### Convention layer
+### Marketplace layer
 
-Marketplace-specific rules layered on top of the spec. Conventions exist
-to make a marketplace coherent, not to validate a skill.
+Marketplace-specific files layered into the same skill folder.
+Conventions exist to make a marketplace coherent and to enable
+`claude plugin install`. They live next to spec-required files —
+not in a wrapper directory.
 
-Conventions in infolog-io:
-- Plugin wrapper: `plugins/<name>/skills/<name>/`
-- `.claude-plugin/plugin.json` at plugin root (required by Claude Code, not by spec)
-- `README.md` ≤200 words at plugin root (marketplace listing)
-- `TESTS.md` at plugin root (forces "definition of done")
-- Folder naming for non-spec folders if any (kebab-case)
+Conventions in infolog-io (all live inside `skills/<name>/`):
+- `.claude-plugin/plugin.json` — Claude Code plugin manifest
+- `README.md` ≤200 words — marketplace listing
+- `TESTS.md` — end conditions and test cases
+- Convention folders (`prompts/`, `templates/`, `schemas/`, `fixtures/`) when a skill has multiple modes
+- Folder naming rules (kebab-case throughout)
 - Semantic Organization audit rubric (this skill)
 
 Conventions can evolve. The spec is fixed (until Anthropic revises it).
 
-### Accepted non-spec folders in this marketplace
+## The canonical layout (both layers in one folder)
 
-Some skills in this marketplace use folders that the spec does not name.
-These are accepted as marketplace conventions and the audit does not
-penalize them when used per their stated purpose. They are non-canonical:
-new skills should prefer the spec folders unless a clear need arises.
+```
+<marketplace-repo>/
+├── .claude-plugin/
+│   └── marketplace.json                ← marketplace manifest
+├── skills/
+│   └── <skill-name>/                   ← spec + marketplace in one folder
+│       ├── .claude-plugin/
+│       │   └── plugin.json             ← marketplace
+│       ├── SKILL.md                    ← spec (required)
+│       ├── README.md                   ← marketplace
+│       ├── TESTS.md                    ← marketplace
+│       ├── scripts/                    ← spec (optional)
+│       ├── references/                 ← spec (optional)
+│       ├── assets/                     ← spec (optional)
+│       ├── prompts/                    ← convention (optional)
+│       ├── templates/                  ← convention (optional)
+│       ├── schemas/                    ← convention (optional)
+│       └── fixtures/                   ← convention (optional)
+└── ...
+```
 
-| Folder | Purpose | Spec equivalent (preferred) |
+This mirrors Anthropic's reference repo at
+https://github.com/anthropics/skills, with `.claude-plugin/plugin.json`
+added inside each skill folder to enable Claude Code plugin install.
+
+## Forbidden layouts
+
+The audit returns `broken` on these (regressions to old wrapper forms):
+
+| Forbidden | Why |
+|---|---|
+| `plugins/<name>/skills/<name>/SKILL.md` | Double-nested wrapper; not canonical |
+| `plugins/<name>/SKILL.md` | Wrong top-level folder name (should be `skills/`) |
+| `.claude-plugin/plugin.json` at marketplace repo root | Manifest belongs inside each skill folder |
+
+## Accepted convention folders
+
+| Folder | Purpose | Spec equivalent (preferred when fit) |
 |---|---|---|
-| `prompts/` | Mode-specific instruction files when a skill has many operating modes | Could fold into SKILL.md sections, or move to `references/` |
+| `prompts/` | Mode-specific instruction files | Could fold into SKILL.md sections or `references/` |
 | `templates/` | Canonical output markdown templates | `assets/` |
 | `schemas/` | JSON Schema validation contracts | `assets/` |
 | `fixtures/` | Input + expected-output test pairs | `assets/` or omitted |
 
 Skills that use these convention folders score 5 on folder discipline
-as long as they are documented in the skill's SKILL.md under a "Folder
-rationale" section or are referenced from SKILL.md.
+when each is used per its stated purpose.
 
-New skills should default to spec folders. Use the convention folders only
+New skills should default to spec folders. Use convention folders only
 when the content does not fit `references/`, `assets/`, or `scripts/`.
 
 ## Why the distinction matters
@@ -69,10 +106,10 @@ when the content does not fit `references/`, `assets/`, or `scripts/`.
 A skill that follows the spec works in:
 - Claude Code (via plugins)
 - Claude Apps (via skill upload)
-- Any agent that implements the spec
+- Any agent that implements the spec (Codex, Cursor, OpenHands, etc.)
 - Custom toolchains
 
-A skill that follows only your local marketplace conventions does not.
+A skill that requires a wrapper directory is harder to port.
 
 ### Convention drift is recoverable; spec drift is not
 
@@ -89,34 +126,35 @@ Spec compliance is the floor. Conventions are the polish.
 
 ## The contract per layer
 
-### Skill-layer contract (spec)
+### Spec-layer contract
 
 Every consumer can assume:
-- Top-level file `SKILL.md` exists
+- Top-level file `SKILL.md` exists at `skills/<name>/SKILL.md`
 - Frontmatter has valid `name` and `description`
 - Folder structure uses spec names where folders exist
 - Body content is under 500 lines (recommended) or has been broken into references
 
-### Plugin-layer contract (marketplace)
+### Marketplace-layer contract (infolog-io)
 
 Every consumer in this marketplace can assume:
-- `plugin.json` manifest exists for installation
+- `.claude-plugin/plugin.json` manifest exists inside the skill folder
 - `README.md` describes what + when + install in under 200 words
 - `TESTS.md` declares end conditions before ship
 
-## Where my earlier standard went wrong
+## Where the earlier standard went wrong
 
-The first version of this audit rubric required five sub-folders
-(`references/`, `prompts/`, `templates/`, `schemas/`, `fixtures/`) at the
-skill layer. Only `references/` is in the spec. The other four were
-invented and required for skills that had no need for them.
+The first version of this rubric required five sub-folders (`references/`,
+`prompts/`, `templates/`, `schemas/`, `fixtures/`) at the skill layer. Only
+`references/` is in the spec.
 
-The correction: spec mandates `SKILL.md`. The three optional spec folders
-are `scripts/`, `references/`, `assets/`. Anything else is a convention,
-and conventions cannot be required at the skill layer.
+The second version introduced a `plugins/<name>/skills/<name>/` wrapper
+"for marketplace clarity." That wrapper inverts the Anthropic convention
+and buries SKILL.md two levels deep.
 
-Single-rule meta-skills are spec-compliant with just `SKILL.md`. The
-marketplace adds plugin.json + README + TESTS. That is the minimum bar.
+**The correction:** spec mandates `SKILL.md`. The three optional spec
+folders are `scripts/`, `references/`, `assets/`. Marketplace files
+(`plugin.json`, `README.md`, `TESTS.md`) live in the SAME folder. No
+wrapper.
 
 ## When to escalate from convention to spec proposal
 
@@ -129,11 +167,11 @@ Until then, conventions stay local to this marketplace.
 
 The audit emits two scores per skill:
 - Skill-layer (spec compliance) — 4 dimensions
-- Plugin-layer (marketplace conventions) — 4 dimensions
+- Marketplace-layer (conventions) — 4 dimensions
 
 A skill can be `spec-compliant, marketplace-drift` — compliant with
-Anthropic's spec but missing infolog-io conventions. That is shippable
-outside this marketplace; not yet shippable inside it.
+Anthropic's spec but missing infolog-io marketplace files. That is
+shippable outside this marketplace; not yet shippable inside it.
 
-A skill that fails the skill layer is broken regardless of the plugin
+A skill that fails the spec layer is broken regardless of marketplace
 layer.

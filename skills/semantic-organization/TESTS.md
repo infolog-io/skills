@@ -11,23 +11,24 @@
 7. Audit prompt classifies the three fixture skills (good / drifted / broken) correctly
 8. Migration evaluator correctly identifies which sub-folders inside a multi-concern skill should become sibling skills
 9. README under 200 words
+10. **Canonical layout matches** the Anthropic Agent Skills repo at https://github.com/anthropics/skills: skills live at `skills/<skill-name>/` at the repo root; no `plugins/` wrapper directory; no `plugins/<name>/skills/<name>/` nesting
 
 ## Test cases
 
 ### T1 — Self-audit
 - Input: this skill's own structure
-- Expected: 5/5 across all 7 rubric dimensions
+- Expected: 5/5 across all 8 rubric dimensions
 - Fails if the skill that defines the standard cannot meet its own bar
 
 ### T2 — Scaffold validity
 - Input: scaffold prompt with name "test-skill"
-- Expected output: complete folder tree matching the canonical template
+- Expected output: complete folder tree at `skills/test-skill/` matching the canonical template (NOT nested under a `plugins/` wrapper)
 - Verify: the scaffold passes audit-existing-skill on first generation
 
 ### T3 — Audit classification
 | Fixture | Expected scores | Verdict |
 |---|---|---|
-| `fixtures/input-good-skill/` (canonical full-shape) | 5/5 across most dims | `semantically-healthy` |
+| `fixtures/input-good-skill/` (canonical flat shape) | 5/5 across most dims | `semantically-healthy` |
 | `fixtures/input-drifted-skill/` (mixed naming, missing TESTS.md) | 3 across half the dims | `drifting` |
 | `fixtures/input-broken-skill/` (no SKILL.md, code in src/) | 1-2 across most dims | `broken` |
 
@@ -49,8 +50,9 @@
 - Negative case: do not rename `references/` to `docs/` — references/ is canonical
 
 ### T6 — Schema validation
-- Canonical skill structure validates
-- Skill missing required folders fails validation with specific paths cited
+- Canonical skill structure validates against `assets/skill-structure.json`
+- Skill missing required files fails validation with specific paths cited
+- Negative test: a skill nested under `plugins/<name>/skills/<name>/` fails validation (the wrapper is forbidden)
 
 ### T7 — Naming-rule enforcement
 | Input filename | Expected verdict |
@@ -61,15 +63,20 @@
 | `extract_from_interview.md` | fail — snake_case rejected |
 | `prompt.md` | fail — too generic, needs intent |
 
+### T8 — Anthropic-convention enforcement (new in v0.3.0)
+- Input: a skill at `plugins/my-skill/skills/my-skill/SKILL.md` (the old wrapped form)
+- Expected: audit returns `broken` with the recommended fix "flatten to skills/my-skill/SKILL.md"
+- Negative: a skill at `skills/my-skill/SKILL.md` (flat) returns `semantically-healthy` (other dims permitting)
+
 ## Acceptance rubric per artifact
 
 | Artifact | Must |
 |---|---|
-| SKILL.md | Declare 7-dim rubric, name every reference file, name every prompt |
+| SKILL.md | Declare 8-dim rubric, name every reference file, name every prompt |
 | Each reference | Open with single-sentence purpose; close with worked example |
 | Each prompt | Input contract + output contract + ≥1 worked example + ≥1 negative case |
 | Template | Round-trips: scaffold → audit returns 5/5 |
-| Schema | Validates canonical example + rejects ≥3 known-bad shapes |
+| Schema | Validates canonical example + rejects ≥3 known-bad shapes including the wrapped form |
 | Fixtures | At least 3 (good / drifted / broken); each with expected audit output |
 
 ## Out of scope for v1

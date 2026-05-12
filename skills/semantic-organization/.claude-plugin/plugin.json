@@ -1,6 +1,9 @@
 {
   "name": "semantic-organization",
-  "version": "0.2.0",
-  "description": "Governs how every skill is structured. Two layers: Agent Skills spec (skill layer) and infolog-io marketplace conventions (plugin layer). Scaffolds new skills, audits existing ones, and recommends when a folder should become a sibling skill. Grounded in the Anthropic Agent Skills spec and Unix philosophy.",
-  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
+  "version": "0.3.0",
+  "description": "Meta-skill that governs how every skill is structured. Codifies the Anthropic Agent Skills directory convention (skills/<name>/SKILL.md flat \u2014 no plugin wrapper), folder roles, naming rules, migration triggers. Scaffolds, audits, recommends migrations.",
+  "author": {
+    "name": "Information Logistics",
+    "url": "https://github.com/infolog-io"
+  }
 }

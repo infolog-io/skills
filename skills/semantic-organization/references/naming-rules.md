@@ -24,11 +24,12 @@ infolog-io plugins.
 | `data-analysis` | `pdf--processing` | consecutive hyphens |
 | `my-skill` | `my_skill` | underscores forbidden |
 
-The same name appears in four places — all must match:
-1. Parent directory name (`plugins/<name>/skills/<name>/`)
-2. `plugin.json` `name` field
+The same name appears in three places — all must match:
+1. Directory name (`skills/<name>/`)
+2. `plugin.json` `name` field (inside `skills/<name>/.claude-plugin/plugin.json`)
 3. `SKILL.md` frontmatter `name` field
-4. The directory under `skills/`
+
+No wrapper directory means no fourth name to keep in sync.
 
 ## Description (spec-mandated)
 

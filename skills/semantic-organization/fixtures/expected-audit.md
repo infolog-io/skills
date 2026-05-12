@@ -7,16 +7,23 @@ For each fixture, here is the audit the skill should emit.
 ```
 Semantic Organization Audit — example-good
 
-- Folder role clarity:        5 — every folder names a canonical role
-- Folder responsibility:      5 — folders are pure; no mixing
-- Common shape conformance:   5 — full canonical layout, all required files present
-- Naming consistency:         5 — kebab-case throughout; role-noun rules followed
-- Migration health:           5 — no overgrown folders; no migration triggers met
-- README discipline:          5 — 180 words; clear what/when/install
-- TESTS.md presence/quality:  5 — end conditions stated; 6 concrete test cases; out-of-scope listed
-- Recommended next change:    none — skill is canonical
-- Verdict:                    semantically-healthy
-- Confidence:                 High
+Profile: full-shape
+
+Skill-layer (spec):
+- S1. SKILL.md presence/validity:  5 — frontmatter valid; name + description compliant
+- S2. Naming conformance:          5 — all three name locations agree
+- S3. Body discipline:             5 — SKILL.md under 500 lines; references shallow
+- S4. Folder discipline:           5 — spec folders + documented conventions; no forbidden
+
+Marketplace-layer:
+- P1. Plugin manifest:             5 — valid; inside skill folder at .claude-plugin/plugin.json
+- P2. README discipline:           5 — 180 words; clear what/when/install
+- P3. TESTS.md presence/quality:   5 — end conditions stated; 6 concrete test cases; out-of-scope listed
+- P4. Migration health:            5 — no overgrown folders; no migration triggers met
+
+Recommended next change:           none — skill is canonical
+Verdict:                           spec-compliant + marketplace-ready
+Confidence:                        High
 ```
 
 ## For `input-drifted-skill.md`
@@ -24,16 +31,23 @@ Semantic Organization Audit — example-good
 ```
 Semantic Organization Audit — example-drifted
 
-- Folder role clarity:        3 — utils/ folder is forbidden; replace or delete
-- Folder responsibility:      4 — folders mostly pure except utils/
-- Common shape conformance:   2 — missing templates/ and schemas/ folders
-- Naming consistency:         2 — PascalCase file (HelperFunctions.md), generic names (extract.md, sample1.md)
-- Migration health:           5 — no overgrown folders
-- README discipline:          2 — 340 words; includes changelog content
-- TESTS.md presence/quality:  3 — exists but thin on specific test cases
-- Recommended next change:    Delete utils/, add templates/ and schemas/, rename files per naming-rules.md
-- Verdict:                    drifting
-- Confidence:                 High
+Profile: full-shape
+
+Skill-layer (spec):
+- S1. SKILL.md presence/validity:  4 — frontmatter valid; references stale
+- S2. Naming conformance:          4 — names agree across the three locations
+- S3. Body discipline:             4 — under 500 lines but lists missing refs
+- S4. Folder discipline:           2 — utils/ is forbidden; missing templates/ and schemas/
+
+Marketplace-layer:
+- P1. Plugin manifest:             5 — valid, inside skill folder
+- P2. README discipline:           2 — 340 words; includes changelog content
+- P3. TESTS.md presence/quality:   3 — exists but thin on specific test cases
+- P4. Migration health:            5 — no overgrown folders
+
+Recommended next change:           Delete utils/, add templates/ and schemas/, rename files per naming-rules.md
+Verdict:                           spec-compliant, marketplace-drift
+Confidence:                        High
 
 Findings:
 
@@ -66,25 +80,33 @@ TESTS.md improvements:
 ```
 Semantic Organization Audit — example-broken
 
-- Folder role clarity:        1 — three forbidden folders (src/, docs/, examples/); zero canonical
-- Folder responsibility:      1 — folders mix implementation, documentation, and examples
-- Common shape conformance:   1 — missing plugin.json, README.md, TESTS.md, and skills/ subdirectory
-- Naming consistency:         1 — Skill.md (wrong case), README.txt (wrong extension)
-- Migration health:           N/A — skill is broken; migration evaluation deferred
-- README discipline:          1 — README is misnamed and misplaced
-- TESTS.md presence/quality:  1 — TESTS.md does not exist
-- Recommended next change:    Run scaffold-new-skill to generate the canonical structure, then migrate content
-- Verdict:                    broken
-- Confidence:                 High
+Profile: full-shape (attempted; broken)
+
+Skill-layer (spec):
+- S1. SKILL.md presence/validity:  1 — Skill.md (wrong case); will not be found by spec validators
+- S2. Naming conformance:          1 — no plugin.json; cannot verify name agreement
+- S3. Body discipline:             N/A — cannot evaluate; SKILL.md missing
+- S4. Folder discipline:           1 — three forbidden folders (src/, docs/, examples/) AND plugins/ wrapper
+
+Marketplace-layer:
+- P1. Plugin manifest:             1 — does not exist
+- P2. README discipline:           1 — README is misnamed (README.txt) and misplaced (in docs/)
+- P3. TESTS.md presence/quality:   1 — TESTS.md does not exist
+- P4. Migration health:            N/A — cannot evaluate; skill is broken
+
+Recommended next change:           Run scaffold-new-skill to generate the canonical flat structure at skills/example-broken/, then migrate content
+Verdict:                           broken (forbidden layout: plugins/ wrapper; multiple dims at 1)
+Confidence:                        High
 
 Repair plan:
-1. Run scaffold-new-skill for 'example-broken'
-2. Migrate content from existing tree:
-   - src/main.py + src/helpers.py → tools/ (if needed) or delete
-   - docs/README.txt → README.md at plugin root (≤200 words)
+1. Run scaffold-new-skill for 'example-broken' → produces canonical scaffold at skills/example-broken/
+2. Migrate content from the existing plugins/example-broken/ tree into the new flat structure:
+   - src/main.py + src/helpers.py → scripts/ (if needed) or delete
+   - docs/README.txt → skills/example-broken/README.md (≤200 words)
    - examples/ex1, examples/ex2 → fixtures/input-*.md with paired expected-*.md
    - Skill.md → skills/example-broken/SKILL.md (correct case)
-3. Author plugin.json: name=example-broken, version=0.1.0
+3. Author plugin.json at skills/example-broken/.claude-plugin/plugin.json (name=example-broken, version=0.1.0)
 4. Author TESTS.md with end conditions
-5. Re-audit; target ≥4 on every dimension before shipping
+5. Delete the old plugins/example-broken/ directory entirely
+6. Re-audit; target ≥4 on every dimension before shipping
 ```

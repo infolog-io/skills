@@ -10,32 +10,32 @@ The user provides (or the model asks for):
 
 - **`skill_name`** — kebab-case, unique within the marketplace, ≤30 chars
 - **`description`** — one sentence, what the skill does and when to use it
-- **`marketplace_path`** — default `infolog-io/skills` (the path under `plugins/`)
+- **`marketplace_path`** — default `infolog-io/skills` (the path under `skills/`)
 - **`triggers`** (optional) — list of activation phrases; default to a generic set
 - **`primary_artifact`** (optional) — name of the canonical output (e.g., "Job Article")
 
 ## Output contract
 
-A complete folder tree:
+A complete folder tree at `skills/<skill_name>/` — flat, matching the
+Anthropic Agent Skills convention. No `plugins/` wrapper.
 
 ```
-plugins/<skill_name>/
+skills/<skill_name>/
 ├── .claude-plugin/
 │   └── plugin.json                       # pre-filled manifest
+├── SKILL.md                              # frontmatter + flow skeleton
 ├── README.md                             # skeleton ≤200 words
 ├── TESTS.md                              # skeleton with end-conditions section
-└── skills/<skill_name>/
-    ├── SKILL.md                          # frontmatter + flow skeleton
-    ├── references/
-    │   └── .gitkeep                      # placeholder until first reference
-    ├── prompts/
-    │   └── .gitkeep
-    ├── templates/
-    │   └── .gitkeep
-    ├── schemas/
-    │   └── .gitkeep
-    └── fixtures/
-        └── .gitkeep
+├── references/
+│   └── .gitkeep                          # placeholder until first reference
+├── prompts/
+│   └── .gitkeep
+├── templates/
+│   └── .gitkeep
+├── schemas/
+│   └── .gitkeep
+└── fixtures/
+    └── .gitkeep
 ```
 
 ## Pre-filled content
@@ -149,7 +149,7 @@ description: A starter skill that prints a greeting.
 
 ### Output
 
-A new directory `plugins/hello-world/` with the full scaffold, pre-filled
+A new directory `skills/hello-world/` with the full scaffold, pre-filled
 with the skill name and description, ready for the author to add real
 references, prompts, templates, schemas, and fixtures.
 

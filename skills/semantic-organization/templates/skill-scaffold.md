@@ -5,24 +5,27 @@ Used by the scaffold prompt to generate a new skill skeleton.
 
 ## Tree
 
+Flat structure at `skills/<name>/` — matches the Anthropic Agent Skills
+convention. All marketplace files (plugin.json, README, TESTS) live in
+the same folder as SKILL.md. No wrapper.
+
 ```
-plugins/{{skill_name}}/
+skills/{{skill_name}}/
 ├── .claude-plugin/
 │   └── plugin.json
+├── SKILL.md
 ├── README.md
 ├── TESTS.md
-└── skills/{{skill_name}}/
-    ├── SKILL.md
-    ├── references/
-    │   └── .gitkeep
-    ├── prompts/
-    │   └── .gitkeep
-    ├── templates/
-    │   └── .gitkeep
-    ├── schemas/
-    │   └── .gitkeep
-    └── fixtures/
-        └── .gitkeep
+├── references/
+│   └── .gitkeep
+├── prompts/
+│   └── .gitkeep
+├── templates/
+│   └── .gitkeep
+├── schemas/
+│   └── .gitkeep
+└── fixtures/
+    └── .gitkeep
 ```
 
 ## File: `.claude-plugin/plugin.json`

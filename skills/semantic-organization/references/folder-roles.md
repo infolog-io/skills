@@ -1,34 +1,51 @@
 # Folder Roles
 
 The Agent Skills spec at https://agentskills.io/specification is the source
-of truth for what a skill is. This reference applies that spec to the
-infolog-io marketplace, distinguishes spec-level rules from
-marketplace-level conventions, and names every folder's role.
+of truth for what a skill is. The Anthropic reference repo at
+https://github.com/anthropics/skills shows the canonical directory shape.
+This reference applies both to the infolog-io marketplace.
 
-## The two layers
+## The canonical layout
 
-A plugin in this marketplace has two layers:
+Skills live at `skills/<skill-name>/` at the marketplace repo root. Each
+skill folder carries both its spec-required files AND its marketplace
+manifest. There is no wrapper directory.
 
-- **Skill layer** — governed by the Agent Skills spec. Anyone can read a
-  skill and recognize it as compliant.
-- **Plugin layer** — marketplace wrapper. Adds installation manifest,
-  marketplace-listing README, and a test plan. Not part of the spec.
+```
+<marketplace-repo>/
+├── .claude-plugin/
+│   └── marketplace.json                ← marketplace manifest (lists skills)
+├── skills/                             ← all skills live here
+│   └── <skill-name>/
+│       ├── .claude-plugin/
+│       │   └── plugin.json             ← plugin manifest (INSIDE the skill)
+│       ├── SKILL.md                    ← required by spec
+│       ├── README.md                   ← marketplace listing (≤200 words)
+│       ├── TESTS.md                    ← end conditions + test cases
+│       ├── scripts/                    ← spec-canonical, optional
+│       ├── references/                 ← spec-canonical, optional
+│       ├── assets/                     ← spec-canonical, optional
+│       ├── prompts/                    ← convention, optional
+│       ├── templates/                  ← convention, optional
+│       ├── schemas/                    ← convention, optional
+│       └── fixtures/                   ← convention, optional
+├── README.md
+└── LICENSE
+```
 
-Treat the two layers separately. Spec rules are non-negotiable. Plugin
-conventions can evolve.
+This mirrors Anthropic's reference repo. The only addition is
+`.claude-plugin/plugin.json` inside each skill folder for Claude Code
+plugin install.
 
-## Skill layer (Anthropic spec)
+## Spec-canonical folders (Agent Skills spec)
 
 ### Required
 
 | File | Purpose |
 |---|---|
-| `SKILL.md` | YAML frontmatter (`name`, `description`) + markdown body. The only required file. |
+| `SKILL.md` | YAML frontmatter (`name`, `description`) + markdown body. The only spec-required file. |
 
-### Optional canonical folders
-
-These three folders are named in the spec. If a folder fits one of these
-roles, use the spec name.
+### Optional
 
 | Folder | Holds | Loaded |
 |---|---|---|
@@ -36,56 +53,38 @@ roles, use the spec name.
 | `references/` | Additional documentation. Domain context, frameworks, lookup tables, glossaries | On demand |
 | `assets/` | Static resources. Templates, images, schemas, sample data, fonts | On demand |
 
-### Other folders are allowed but discouraged
+## Marketplace files (this repo's conventions)
 
-The spec allows "any additional files or directories." Use that latitude
-sparingly. If new role names creep in (`prompts/`, `templates/`,
-`fixtures/`, `schemas/`), each one is one more thing readers must learn
-before navigating the skill.
-
-Default behavior: put templates and schemas in `assets/`. Put test fixtures
-in `assets/` or omit (the SKILL.md often includes examples inline).
-
-### Accepted non-spec folders in this marketplace
-
-These folders are used by existing skills and accepted by the audit when
-documented in the skill's SKILL.md. See `references/spec-vs-conventions.md`
-for the full list and rationale.
-
-| Folder | Convention purpose |
-|---|---|
-| `prompts/` | Mode-specific instruction files |
-| `templates/` | Canonical output templates |
-| `schemas/` | JSON Schema contracts |
-| `fixtures/` | Test inputs and expected outputs |
-
-New skills should prefer spec folders. Use convention folders only when
-the content does not fit `references/`, `assets/`, or `scripts/`.
-
-## Plugin layer (marketplace conventions)
-
-### Required at plugin root
+These live IN THE SAME folder as the skill — not in a wrapper directory.
 
 | File | Purpose |
 |---|---|
-| `.claude-plugin/plugin.json` | Plugin manifest. Required by Claude Code. |
+| `.claude-plugin/plugin.json` | Plugin manifest. Required by Claude Code's plugin install. |
 | `README.md` | Marketplace listing. ≤200 words. What + when + install. |
 | `TESTS.md` | End conditions and test cases. Forces "definition of done" before build. |
 
-### Required structure
+## Accepted convention folders
 
-```
-plugins/<plugin-name>/
-├── .claude-plugin/
-│   └── plugin.json
-├── README.md
-├── TESTS.md
-└── skills/<skill-name>/      ← the spec-compliant skill lives here
-    └── SKILL.md
-```
+Used by full-shape skills. Documented here so the audit accepts them
+without penalty. New skills should prefer spec-canonical folders when
+the content fits; use these when it doesn't.
 
-The `skills/<skill-name>/` wrapper lets a plugin host more than one skill
-in the future without restructuring.
+| Folder | Convention purpose | Spec equivalent (if any) |
+|---|---|---|
+| `prompts/` | Mode-specific instruction files | Could fold into SKILL.md or `references/` |
+| `templates/` | Canonical output templates | `assets/` |
+| `schemas/` | JSON Schema contracts | `assets/` |
+| `fixtures/` | Test inputs and expected outputs | `assets/` or omitted |
+
+## Forbidden layouts
+
+The audit returns `broken` if any of these appear:
+
+| Forbidden | Why | Replacement |
+|---|---|---|
+| `plugins/<name>/` directory at repo root | Old wrapped form; not canonical | Move contents to `skills/<name>/` |
+| `plugins/<name>/skills/<name>/SKILL.md` | Double nesting; SKILL.md should be one level deep | Flatten to `skills/<name>/SKILL.md` |
+| `.claude-plugin/plugin.json` outside the skill folder | Plugin manifest belongs INSIDE the skill | Move to `skills/<name>/.claude-plugin/plugin.json` |
 
 ## Forbidden folder names
 
@@ -96,20 +95,19 @@ These name implementation or are catch-alls. Reject on sight.
 | `src/`, `lib/` | Implementation, not role | `scripts/` for executable code |
 | `utils/`, `helpers/`, `common/`, `misc/` | Catch-alls; hide poor organization | Split by role |
 | `docs/` | Skill body is the docs; references go in `references/` | `references/` or inline |
-| `tests/` | Test definitions go in plugin's `TESTS.md` | `TESTS.md` |
-| `examples/` | Examples live inline or in `assets/` | inline or `assets/` |
+| `tests/` | Test definitions go in `TESTS.md` | `TESTS.md` |
+| `examples/` | Examples live inline or in `assets/`/`fixtures/` | inline, `assets/`, or `fixtures/` |
 | `legacy/` | Use git history | git history |
 
-## When to create a non-spec folder
+## When to create a non-canonical folder
 
-If you need something the spec doesn't name, ask in this order:
+If you need something neither spec nor convention names, ask in this order:
 
 1. Can it go in `references/`? (knowledge) → use `references/`
 2. Can it go in `assets/`? (static resource) → use `assets/`
 3. Can it go in `scripts/`? (executable) → use `scripts/`
 4. Could the content live inline in SKILL.md or a single reference file?
-5. If still no — name the new folder by its role, document the role in
-   SKILL.md, and accept the cost of one more folder concept.
+5. If still no — name the new folder by its role, document it in SKILL.md, and accept the cost of one more concept.
 
 ## Naming a folder
 
@@ -122,29 +120,38 @@ Ask: "What is the role of every file in this folder?"
 
 ## Worked examples
 
-### Spec-minimum skill
+### Spec-minimum skill (single-rule)
 
 ```
-brand-guidelines/
+skills/brand-guidelines/
 ├── SKILL.md
-└── LICENSE.txt
+├── README.md
+├── TESTS.md
+├── LICENSE.txt
+└── .claude-plugin/plugin.json
 ```
 
-Two files. Compliant.
+Five files. Compliant. Installable via Claude Code marketplace.
 
 ### Skill with references
 
 ```
-algorithmic-art/
+skills/algorithmic-art/
 ├── SKILL.md
+├── README.md
+├── TESTS.md
+├── .claude-plugin/plugin.json
 └── templates/         ← strictly speaking should be `assets/`, but spec is permissive
 ```
 
 ### Skill with scripts
 
 ```
-docx/
+skills/docx/
 ├── SKILL.md
+├── README.md
+├── TESTS.md
+├── .claude-plugin/plugin.json
 └── scripts/
     └── office/        ← sub-folders inside scripts/ are fine
         ├── helpers/
@@ -152,17 +159,19 @@ docx/
         └── validators/
 ```
 
-### Full plugin in this marketplace
+### Full-shape skill in this marketplace
 
 ```
-plugins/<skill-name>/
+skills/<skill-name>/
 ├── .claude-plugin/
 │   └── plugin.json
-├── README.md              ← plugin layer
-├── TESTS.md               ← plugin layer
-└── skills/<skill-name>/   ← spec-compliant skill begins here
-    ├── SKILL.md
-    ├── references/
-    ├── assets/            ← templates, schemas, fixtures all live here in revised standard
-    └── scripts/           (optional, only if needed)
+├── SKILL.md
+├── README.md          ← ≤200 words
+├── TESTS.md
+├── references/        ← spec-canonical
+├── assets/            ← spec-canonical (templates, schemas, fixtures all live here in revised standard)
+├── prompts/           ← convention
+├── templates/         ← convention
+├── schemas/           ← convention
+└── fixtures/          ← convention
 ```

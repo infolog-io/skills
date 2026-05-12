@@ -1,14 +1,15 @@
 # Prompt — Audit an existing skill
 
-**Purpose:** Walk a plugin's file tree, classify the skill profile,
+**Purpose:** Walk a skill's file tree, classify the skill profile,
 score against the two-layer rubric in `references/audit-rubric.md`, and
 emit a Semantic Organization Audit with a verdict.
 
 ## Input contract
 
-A path to a plugin directory (e.g., `plugins/<skill-name>/`). The plugin
-contains a `skills/<skill-name>/` subdirectory holding the spec-compliant
-skill.
+A path to a skill directory (e.g., `skills/<skill-name>/`). The skill
+folder contains both the spec-required files (SKILL.md, optional
+scripts/references/assets) and the marketplace files (plugin.json,
+README.md, TESTS.md) in one place — no wrapper directory.
 
 ## Output contract
 
@@ -19,7 +20,14 @@ A markdown audit report following the format in
 
 ### 1. Walk the file tree
 
-List every file and folder under `plugins/<plugin-name>/`. Stop at depth 5.
+List every file and folder under `skills/<skill-name>/`. Stop at depth 5.
+
+Before scoring, check for forbidden layouts. If any of these appear,
+the verdict is `broken` regardless of other dimensions:
+
+- A `plugins/<name>/skills/<name>/SKILL.md` structure (old wrapper form)
+- `.claude-plugin/plugin.json` outside any skill folder
+- SKILL.md at the marketplace repo root (skills must live in `skills/<name>/`)
 
 ### 2. Detect profile
 

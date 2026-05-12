@@ -1,50 +1,72 @@
 ---
 name: semantic-organization
 description: >
-  Governs how every skill in this marketplace is structured. Distinguishes
-  the Anthropic Agent Skills spec (skill layer) from infolog-io marketplace
-  conventions (plugin layer). Scaffolds new skills against both, audits
-  existing skills, and recommends when a folder should become its own
-  sibling skill. Applies Unix philosophy: one skill = one purpose, compose
-  via plain text, prefer small over large. Activates on "scaffold a new
-  skill", "/new-skill", "audit this skill", "/semantic-audit", "should this
-  be a folder or its own skill", or any time a skill structure is being
-  designed or evaluated.
+  Governs how every skill in this marketplace is structured. Codifies the
+  Anthropic Agent Skills directory convention (skills/<name>/SKILL.md at
+  the repo root — no plugin wrapper), folder roles, naming rules, and
+  migration triggers. Scaffolds new skills against the canonical layout,
+  audits existing skills, and recommends when a folder should become its
+  own sibling skill. Applies Unix philosophy: one skill = one purpose,
+  compose via plain text, prefer small over large. Activates on "scaffold
+  a new skill", "/new-skill", "audit this skill", "/semantic-audit",
+  "should this be a folder or its own skill", or any time a skill
+  structure is being designed or evaluated.
 ---
 
 # semantic-organization
 
 ## Purpose
 
-Two layers govern a plugin in this marketplace:
-
-- **Skill layer** — the Agent Skills spec at https://agentskills.io/specification.
-  Non-negotiable. Mandates one file: `SKILL.md` with `name` and
-  `description` frontmatter. Allows three canonical optional folders:
-  `scripts/`, `references/`, `assets/`. Recommends SKILL.md under 500
-  lines and progressive disclosure.
-- **Plugin layer** — marketplace conventions. Adds `plugin.json`,
-  `README.md` (≤200 words), `TESTS.md`, and the `skills/<name>/` wrapper.
-  Evolvable; not part of the spec.
-
-This skill applies Unix philosophy to both layers: one skill per purpose,
-plain-text composition, small over large, no captive interfaces. See
-`references/unix-philosophy.md`.
+Every skill in this marketplace must match the Anthropic Agent Skills
+directory convention at https://github.com/anthropics/skills. This skill
+encodes that convention and audits against it.
 
 ## Canonical layout
 
 ```
-plugins/<plugin-name>/                  ← plugin layer (marketplace convention)
+<marketplace-repo>/
 ├── .claude-plugin/
-│   └── plugin.json                     ← plugin layer
-├── README.md                           ← plugin layer (≤200 words)
-├── TESTS.md                            ← plugin layer
-└── skills/<skill-name>/                ← plugin layer wrapper
-    ├── SKILL.md                        ← skill layer (spec-required)
-    ├── scripts/                        ← skill layer (spec optional)
-    ├── references/                     ← skill layer (spec optional)
-    └── assets/                         ← skill layer (spec optional)
+│   └── marketplace.json                ← marketplace manifest (lists skills)
+├── skills/                             ← all skills live here (mirrors anthropics/skills)
+│   └── <skill-name>/
+│       ├── .claude-plugin/
+│       │   └── plugin.json             ← plugin manifest (inside the skill)
+│       ├── SKILL.md                    ← required by spec
+│       ├── README.md                   ← marketplace listing (≤200 words)
+│       ├── TESTS.md                    ← end conditions + test cases
+│       ├── scripts/                    ← spec-canonical optional folder
+│       ├── references/                 ← spec-canonical optional folder
+│       ├── assets/                     ← spec-canonical optional folder
+│       ├── prompts/                    ← convention (mode-specific operations)
+│       ├── templates/                  ← convention (output shapes)
+│       ├── schemas/                    ← convention (JSON Schema contracts)
+│       └── fixtures/                   ← convention (test inputs + expected outputs)
+├── README.md
+└── LICENSE
 ```
+
+## Forbidden layouts
+
+These are NOT canonical. Audit returns `broken` if found:
+
+| Forbidden | Reason |
+|---|---|
+| `plugins/<name>/skills/<name>/SKILL.md` | Old wrapped form; double nesting |
+| `plugins/<name>/SKILL.md` | Wrong directory name; should be `skills/` |
+| `<repo-root>/SKILL.md` (skill at repo root) | Multi-skill repos must use `skills/<name>/` |
+
+## The two layers — same directory
+
+A skill carries both layers in the same folder:
+
+| Layer | Files | Source |
+|---|---|---|
+| **Spec layer** (Anthropic) | `SKILL.md`, optional `scripts/`, `references/`, `assets/` | https://agentskills.io/specification |
+| **Marketplace layer** (Claude Code) | `.claude-plugin/plugin.json`, `README.md`, `TESTS.md` | This skill's conventions |
+
+There is no separate plugin-wrapper directory. The plugin manifest lives
+INSIDE the skill folder, so the skill is simultaneously
+spec-compliant AND installable via `claude plugin install`.
 
 ## Skill profiles
 
@@ -54,7 +76,7 @@ Not every skill needs every folder. Two profiles:
 
 One durable rule or principle. SKILL.md body carries everything.
 
-Required: SKILL.md, plugin.json, README.md, TESTS.md.
+Required: `SKILL.md`, `.claude-plugin/plugin.json`, `README.md`, `TESTS.md`.
 No required sub-folders.
 
 A skill is single-rule when SKILL.md is under 200 lines and there are no
@@ -65,7 +87,7 @@ sub-folders.
 Multiple modes, references, optional scripts and assets. SKILL.md is the
 entry point; detail lives in `references/` and `assets/`.
 
-Required: SKILL.md + plugin layer + at least one of `references/`,
+Required: same as single-rule, plus at least one of `references/`,
 `scripts/`, `assets/` per actual need.
 
 A skill is full-shape when it has multiple operating modes, references
@@ -73,28 +95,27 @@ broken out from SKILL.md, and (usually) prompts or assets.
 
 ## The eight audit dimensions
 
-Four for the skill layer (spec compliance), four for the plugin layer
-(marketplace conventions). See `references/audit-rubric.md`.
+See `references/audit-rubric.md`.
 
 | Layer | Dimension |
 |---|---|
-| Skill (spec) | S1. SKILL.md presence and validity |
-| Skill (spec) | S2. Naming conformance (parent dir, plugin.json, frontmatter agree) |
-| Skill (spec) | S3. Body discipline (<500 lines; shallow references) |
-| Skill (spec) | S4. Folder discipline (only spec folders, or documented non-spec) |
-| Plugin | P1. Plugin manifest valid |
-| Plugin | P2. README discipline (≤200 words, what/when/install) |
-| Plugin | P3. TESTS.md presence and quality |
-| Plugin | P4. Migration health (no overgrown folders) |
+| Spec | S1. SKILL.md presence and validity |
+| Spec | S2. Naming conformance (parent dir, plugin.json, frontmatter agree) |
+| Spec | S3. Body discipline (<500 lines; shallow references) |
+| Spec | S4. Folder discipline (only spec or convention folders; no forbidden) |
+| Marketplace | P1. Plugin manifest valid (inside skill folder) |
+| Marketplace | P2. README discipline (≤200 words, what/when/install) |
+| Marketplace | P3. TESTS.md presence and quality |
+| Marketplace | P4. Migration health (no overgrown folders; no wrapper layers) |
 
 ## Verdicts
 
 | Verdict | Rule | Allowed downstream |
 |---|---|---|
 | `spec-compliant + marketplace-ready` | All 8 dims ≥4 | Ship |
-| `spec-compliant, marketplace-drift` | Skill layer ≥4, plugin layer has 2-3 | Fix conventions before ship |
-| `spec-drift` | One or more skill-layer dims at 2-3 | Fix spec violations first |
-| `broken` | Any dim at 1 | Halt; restore canonical shape |
+| `spec-compliant, marketplace-drift` | Spec ≥4, marketplace has 2-3 | Fix conventions before ship |
+| `spec-drift` | One or more spec dims at 2-3 | Fix spec violations first |
+| `broken` | Any dim at 1, OR a forbidden layout is present | Halt; restore canonical shape |
 
 ## Operating modes
 
@@ -106,7 +127,7 @@ Behavior:
 1. Ask for skill name (kebab-case, matches spec rules)
 2. Ask for one-sentence description (what + when)
 3. Ask for profile: single-rule or full-shape
-4. Emit canonical folder tree with placeholder content
+4. Emit canonical folder tree at `skills/<name>/` with placeholder content
 5. Run immediate self-audit — confirm scaffold scores ≥4 on all dimensions
 
 See `prompts/scaffold-new-skill.md`.
@@ -116,11 +137,12 @@ See `prompts/scaffold-new-skill.md`.
 Trigger: "audit this skill", "/semantic-audit"
 
 Behavior:
-1. Walk the plugin's file tree
+1. Walk the skill's file tree at `skills/<name>/`
 2. Detect profile (single-rule vs. full-shape)
-3. Score each of the 8 dimensions per `references/audit-rubric.md`
-4. Emit Semantic Organization Audit with findings
-5. Verdict per the table above
+3. Check for forbidden layouts (`plugins/` wrapper, double nesting)
+4. Score each of the 8 dimensions per `references/audit-rubric.md`
+5. Emit Semantic Organization Audit with findings
+6. Verdict per the table above
 
 See `prompts/audit-existing-skill.md`.
 
@@ -148,7 +170,7 @@ See `prompts/rename-for-semantics.md`.
 
 ## References
 
-- `references/spec-vs-conventions.md` — the two-layer model explained
+- `references/spec-vs-conventions.md` — how spec and marketplace layers coexist in one directory
 - `references/folder-roles.md` — what each canonical folder holds; forbidden names
 - `references/naming-rules.md` — spec-mandated and convention-mandated naming
 - `references/migration-triggers.md` — when a folder becomes its own skill
@@ -166,8 +188,9 @@ See `prompts/rename-for-semantics.md`.
 
 ## Self-application
 
-This skill must pass its own audit. The audit applies the two-layer rubric.
-Self-test target: all skill-layer dimensions at 5; all plugin-layer
-dimensions at 5; verdict = `spec-compliant + marketplace-ready`.
+This skill must pass its own audit. The audit applies the 8-dimension
+rubric. Self-test target: all skill-layer dimensions at 5; all
+marketplace-layer dimensions at 5; verdict =
+`spec-compliant + marketplace-ready`.
 
 If the skill cannot meet its own bar, fix the rubric or fix the skill.

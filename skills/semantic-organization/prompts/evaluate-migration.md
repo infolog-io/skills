@@ -68,18 +68,18 @@ If any trigger fires AND no anti-trigger overrides, the verdict is
 **Plan:**
 
 ```
-Migration: <parent>/skills/<parent>/concerns/motion/
-        → plugins/<new-motion-skill>/
+Migration: skills/<parent>/concerns/motion/
+        → skills/<new-motion-skill>/
 
-1. Create plugins/<new-motion-skill>/ with the standard scaffold
-2. Move contents of concerns/motion/ into plugins/<new-motion-skill>/skills/<new-motion-skill>/
+1. Create skills/<new-motion-skill>/ with the standard scaffold (flat structure)
+2. Move contents of concerns/motion/ into skills/<new-motion-skill>/
    - motion-audit-rubric.md → references/audit-rubric.md
    - 6 prompts → prompts/
    - motion-token-tree.md → templates/
-3. Author plugins/<new-motion-skill>/.claude-plugin/plugin.json
-4. Author plugins/<new-motion-skill>/README.md (≤200 words)
-5. Author plugins/<new-motion-skill>/TESTS.md
-6. Add the new entry to .claude-plugin/marketplace.json
+3. Author skills/<new-motion-skill>/.claude-plugin/plugin.json (inside the new skill folder)
+4. Author skills/<new-motion-skill>/README.md (≤200 words)
+5. Author skills/<new-motion-skill>/TESTS.md
+6. Add the new entry to .claude-plugin/marketplace.json (source: ./skills/<new-motion-skill>)
 7. In the parent skill, replace concerns/motion/ with a one-paragraph
    note that the concern is now owned by a separate installable skill
 8. Run semantic-audit on both — both must score ≥4
@@ -116,8 +116,8 @@ separate audit. No own rubric. No own verdict. Anti-triggers dominate.
 **Plan:**
 
 ```
-1. Move plugins/<parent>/skills/<parent>/<folder>/ → plugins/<folder-name>/
-2. Update path in marketplace.json
+1. Move skills/<parent>/<folder>/ → skills/<folder-name>/
+2. Update path in marketplace.json (source: ./skills/<folder-name>)
 3. Run semantic-audit on the new sibling
 ```
 

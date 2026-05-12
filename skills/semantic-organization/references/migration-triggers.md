@@ -82,17 +82,17 @@ A folder inside a skill contains its own `.claude-plugin/plugin.json` with
 a different `name` field. Someone built a skill-inside-a-skill.
 
 **Verdict:** `already-its-own-skill`. Move it out of the parent to
-`plugins/<its-name>/` and register it in the marketplace.
+`skills/<its-name>/` and register it in the marketplace.
 
 ## Migration plan (when promotion is the verdict)
 
 Emit this plan:
 
 ```
-Migration: <parent-skill>/<folder> → plugins/<new-name>
+Migration: <parent-skill>/<folder> → skills/<new-name>
 
-1. Create plugins/<new-name>/ with the standard scaffold
-2. Move <folder>'s contents into plugins/<new-name>/skills/<new-name>/
+1. Create skills/<new-name>/ with the standard scaffold (flat — no plugin wrapper)
+2. Move <folder>'s contents into skills/<new-name>/
 3. Distribute by role:
    - references go into references/
    - prompts go into prompts/

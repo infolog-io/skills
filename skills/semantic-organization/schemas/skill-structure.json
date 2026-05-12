@@ -2,33 +2,34 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://infolog.io/schemas/skill-structure.json",
   "title": "Skill Structure",
-  "description": "Validates the canonical structure of a skill in the infolog-io marketplace.",
+  "description": "Validates the canonical structure of a skill in the infolog-io marketplace. Flat layout matching the Anthropic Agent Skills convention at https://github.com/anthropics/skills — skills live at skills/<name>/ with no plugin wrapper.",
   "type": "object",
-  "required": ["plugin_name", "plugin_root", "skill_root", "manifest", "readme", "tests_md", "skill_md", "folders"],
+  "required": ["skill_name", "skill_root", "manifest", "readme", "tests_md", "skill_md", "folders"],
   "additionalProperties": false,
   "properties": {
-    "plugin_name": {
+    "skill_name": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]{1,28}[a-z0-9]$",
       "description": "kebab-case, 3-30 chars, starts with a letter, ends with a letter or digit"
     },
-    "plugin_root": {
-      "type": "string",
-      "pattern": "^plugins/[a-z][a-z0-9-]+$",
-      "description": "Path relative to repo root, e.g., plugins/<skill-name>"
-    },
     "skill_root": {
       "type": "string",
-      "pattern": "^plugins/[a-z][a-z0-9-]+/skills/[a-z][a-z0-9-]+$"
+      "pattern": "^skills/[a-z][a-z0-9-]+$",
+      "description": "Path relative to marketplace repo root, e.g., skills/<skill-name>. No 'plugins/' wrapper."
     },
     "manifest": {
       "type": "object",
-      "required": ["name", "version", "description"],
+      "required": ["name", "version", "description", "path"],
       "additionalProperties": true,
       "properties": {
         "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]+$" },
         "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
         "description": { "type": "string", "minLength": 20 },
+        "path": {
+          "type": "string",
+          "pattern": "^skills/[a-z][a-z0-9-]+/\\.claude-plugin/plugin\\.json$",
+          "description": "Plugin manifest MUST live inside the skill folder at skills/<name>/.claude-plugin/plugin.json"
+        },
         "author": {
           "type": "object",
           "properties": {
@@ -40,52 +41,77 @@
     },
     "readme": {
       "type": "object",
-      "required": ["exists", "word_count"],
+      "required": ["exists", "word_count", "path"],
       "additionalProperties": false,
       "properties": {
         "exists": { "const": true },
-        "word_count": { "type": "integer", "maximum": 200 }
+        "word_count": { "type": "integer", "maximum": 200 },
+        "path": {
+          "type": "string",
+          "pattern": "^skills/[a-z][a-z0-9-]+/README\\.md$"
+        }
       }
     },
     "tests_md": {
       "type": "object",
-      "required": ["exists", "has_end_conditions", "has_test_cases"],
+      "required": ["exists", "has_end_conditions", "has_test_cases", "path"],
       "additionalProperties": false,
       "properties": {
         "exists": { "const": true },
         "has_end_conditions": { "const": true },
-        "has_test_cases": { "const": true }
+        "has_test_cases": { "const": true },
+        "path": {
+          "type": "string",
+          "pattern": "^skills/[a-z][a-z0-9-]+/TESTS\\.md$"
+        }
       }
     },
     "skill_md": {
       "type": "object",
-      "required": ["exists", "frontmatter_name_matches", "has_triggers"],
+      "required": ["exists", "frontmatter_name_matches", "has_triggers", "path"],
       "additionalProperties": false,
       "properties": {
         "exists": { "const": true },
         "frontmatter_name_matches": { "const": true },
-        "has_triggers": { "const": true }
+        "has_triggers": { "const": true },
+        "path": {
+          "type": "string",
+          "pattern": "^skills/[a-z][a-z0-9-]+/SKILL\\.md$",
+          "description": "SKILL.md MUST be one level deep, at skills/<name>/SKILL.md. No nested skills/ wrapper."
+        }
       }
     },
     "folders": {
       "type": "object",
-      "required": ["references", "prompts", "templates", "schemas", "fixtures"],
       "additionalProperties": false,
       "properties": {
+        "scripts": { "$ref": "#/$defs/folder_check" },
         "references": { "$ref": "#/$defs/folder_check" },
+        "assets": { "$ref": "#/$defs/folder_check" },
         "prompts": { "$ref": "#/$defs/folder_check" },
         "templates": { "$ref": "#/$defs/folder_check" },
         "schemas": { "$ref": "#/$defs/folder_check" },
         "fixtures": { "$ref": "#/$defs/folder_check" },
-        "tools": { "$ref": "#/$defs/folder_check" },
-        "assets": { "$ref": "#/$defs/folder_check" },
         "migrations": { "$ref": "#/$defs/folder_check" }
-      }
+      },
+      "description": "All folders optional. Spec folders: scripts/, references/, assets/. Marketplace conventions: prompts/, templates/, schemas/, fixtures/."
+    },
+    "forbidden_layouts_present": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "plugins-wrapper-directory",
+          "double-nested-skills",
+          "plugin-manifest-at-repo-root",
+          "skill-md-at-repo-root"
+        ]
+      },
+      "description": "List of forbidden layout violations. MUST be empty for a healthy skill."
     },
     "forbidden_folders_present": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "List of forbidden folder names found in the skill (must be empty for a healthy skill)"
+      "description": "List of forbidden folder names found in the skill (src/, lib/, utils/, helpers/, common/, misc/, docs/, tests/, examples/, legacy/). MUST be empty for a healthy skill."
     }
   },
   "$defs": {
