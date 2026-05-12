@@ -135,7 +135,7 @@ Verdict is automatically `broken`. The build-out plan starts with:
      - 3-5 color tokens (primary, neutral, semantic at minimum)
      - 6-10 spacing tokens (geometric or modular scale)
      - 3-5 type tokens (sizes; family; weight)
-   - Bootstrap with learn2kern for the type scale.
+   - Bootstrap the type scale with a modular type scale generator if available.
    - Document the token decisions in a tokens-decisions.md.
 ```
 

@@ -77,8 +77,7 @@ estimatrix does not emit a size until these four rules are satisfied.
 When a task is underspecified, estimatrix runs an active intake — it asks
 the user questions, ONE focused question at a time (or a tight numbered
 list of 2-4), and loops until enough information exists to emit a
-defensible estimate. This is the same pattern jtbd-prd uses for
-interviews.
+defensible estimate.
 
 ### Blank-Detection Checklist
 

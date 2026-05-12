@@ -5,10 +5,10 @@ description: >
   named ratio, emits BODY and HEADINGS token families separately, with
   line-height bands and letter-spacing defaults per band. Outputs CSS
   custom properties and Tailwind theme.fontSize. Color slots reference
-  atomic-brand tokens for composition. Runs conversational intake (jtbd
-  style) when inputs are missing. Activates on "type scale", "typography",
-  "font sizes", "modular scale", "kerning", "line height", "typographic
-  hierarchy", or "/learn2kern".
+  external `--color-*` custom properties via var() with sensible
+  fallbacks. Runs conversational intake when inputs are missing.
+  Activates on "type scale", "typography", "font sizes", "modular scale",
+  "kerning", "line height", "typographic hierarchy", or "/learn2kern".
 ---
 
 # learn2kern
@@ -18,7 +18,9 @@ description: >
 Generate a complete typography token set from two inputs: a base size and
 a named modular ratio. Emit BODY and HEADINGS as separate token families
 so each can have its own font, weight, line-height, letter-spacing, and
-color. Compose with `atomic-brand` for color tokens.
+color. Color tokens are external — the emit references `var(--color-*)`
+with hex fallbacks, so the skill composes with any project that defines
+those custom properties.
 
 ## The eight named ratios
 
@@ -109,9 +111,10 @@ If the user does not specify a HEADINGS family, default to `inherit`
 (matches BODY). If the user does not specify weight, default to 400 for
 BODY and 700 for HEADINGS.
 
-## Color slots — compose with atomic-brand
+## Color slots — external color tokens
 
-Color tokens reference `atomic-brand`'s color set, with fallback values:
+Color tokens reference external `--color-*` custom properties with
+fallback values:
 
 ```css
 --font-body-color: var(--color-text, #222);
@@ -119,15 +122,14 @@ Color tokens reference `atomic-brand`'s color set, with fallback values:
 --bg-page: var(--color-bg, #fff);
 ```
 
-`learn2kern` owns typography. `atomic-brand` owns color. The `var()`
-reference threads through both. If `atomic-brand` tokens are not
-present, the fallback hex is sensible.
+This skill owns typography only. Color comes from whatever defines the
+`--color-text` and `--color-bg` custom properties in the consuming
+project. If nothing defines them, the fallback hex applies.
 
 ## Conversational intake
 
 When inputs are missing, run an active intake — one focused question per
-turn — until enough info exists to emit. Same pattern as estimatrix and
-jtbd-prd.
+turn — until enough info exists to emit.
 
 ### Blank-Detection Checklist
 
@@ -137,7 +139,7 @@ jtbd-prd.
 4. **Body family** — recommend Inter as a safe default
 5. **Heading family** — `inherit` unless user specifies
 6. **Weights** — body 400, heading 700 (recommend; ask if uncommon)
-7. **Color tokens** — defer to atomic-brand or accept hex fallbacks
+7. **Color tokens** — defer to external `--color-*` tokens or accept hex fallbacks
 8. **Emission targets** — CSS (always); Tailwind (ask if relevant)
 
 ### Intake ordering
@@ -321,13 +323,13 @@ Skill (final): [emits the scale + CSS + Tailwind as in the happy-path example]
 `type scale` · `typography` · `font sizes` · `modular scale` · `kerning` ·
 `line height` · `typographic hierarchy` · `/learn2kern`
 
-## Composition with other skills
+## Interfaces
 
-| Skill | Use |
+| Layer | Convention |
 |---|---|
-| `atomic-brand` | Owns color tokens; learn2kern references them via `var()` |
-| `estimatrix` | Sizes typography token implementation tasks |
-| `jtbd-prd` | Validates whether a typography redesign serves a real job |
+| Color | References external `--color-text` and `--color-bg` custom properties via `var()` with hex fallbacks |
+| Type scale output | Markdown table + CSS custom properties + Tailwind `theme.fontSize` object + JSON conforming to `assets/scale-tokens-schema.json` |
+| Sample preview | Plain-text table with step / size / sample sentence; consumers render visually |
 
 ## What this skill emits — and what it doesn't
 
@@ -345,6 +347,6 @@ skill is the source of truth for the scale.
 
 - Do not emit a scale without first satisfying the Blank-Detection Checklist
 - Do not collapse BODY and HEADINGS into one token family
-- Do not hardcode color values when atomic-brand tokens are available
+- Do not hardcode color values when external `--color-*` tokens are available
 - Do not round to integer pixels — subpixel typography is fine
 - Do not invent new named ratios; the eight are canonical

@@ -6,7 +6,7 @@ emit a Semantic Organization Audit with a verdict.
 
 ## Input contract
 
-A path to a plugin directory (e.g., `plugins/jtbd-prd/`). The plugin
+A path to a plugin directory (e.g., `plugins/<skill-name>/`). The plugin
 contains a `skills/<skill-name>/` subdirectory holding the spec-compliant
 skill.
 
@@ -115,8 +115,8 @@ Confidence:                        High | Medium | Low
 
 ### Full-shape skill, marketplace-ready
 
-Input: a skill matching jtbd-prd's shape (SKILL.md + references/ + prompts/
-+ templates/ + schemas/ + fixtures/ + plugin.json + README + TESTS).
+Input: a skill matching the canonical full-shape (SKILL.md + references/
++ prompts/ + templates/ + schemas/ + fixtures/ + plugin.json + README + TESTS).
 
 Output:
 
@@ -142,8 +142,8 @@ Confidence:                        High
 
 ### Single-rule skill, marketplace-drift
 
-Input: a skill matching estimatrix's shape (SKILL.md + plugin.json +
-README only).
+Input: a skill matching the single-rule shape (SKILL.md + plugin.json +
+README only — no sub-folders).
 
 Output:
 

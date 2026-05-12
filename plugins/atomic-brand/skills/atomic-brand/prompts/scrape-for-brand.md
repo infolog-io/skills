@@ -154,7 +154,7 @@ Generate a `proposed-tokens.css` from the most dominant patterns:
   ],
   "recommendations": [
     "Confidence is low — confirm extracted colors against design files",
-    "Type scale from scraping is not modular; recommend learn2kern to regenerate",
+    "Type scale from scraping is not modular; recommend regenerating with a modular type scale generator",
     "Validate spacing scale by checking design files; scraped values may include legacy CSS"
   ]
 }

@@ -155,14 +155,14 @@ docx/
 ### Full plugin in this marketplace
 
 ```
-plugins/jtbd-prd/
+plugins/<skill-name>/
 ├── .claude-plugin/
 │   └── plugin.json
-├── README.md          ← plugin layer
-├── TESTS.md           ← plugin layer
-└── skills/jtbd-prd/   ← spec-compliant skill begins here
+├── README.md              ← plugin layer
+├── TESTS.md               ← plugin layer
+└── skills/<skill-name>/   ← spec-compliant skill begins here
     ├── SKILL.md
     ├── references/
-    ├── assets/        ← templates, schemas, fixtures all live here in revised standard
-    └── scripts/       (optional, only if needed)
+    ├── assets/            ← templates, schemas, fixtures all live here in revised standard
+    └── scripts/           (optional, only if needed)
 ```

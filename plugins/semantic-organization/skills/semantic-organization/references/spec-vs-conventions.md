@@ -55,10 +55,9 @@ new skills should prefer the spec folders unless a clear need arises.
 | `schemas/` | JSON Schema validation contracts | `assets/` |
 | `fixtures/` | Input + expected-output test pairs | `assets/` or omitted |
 
-Existing skills (`jtbd-prd`, `semantic-organization`) that use these
-folders score 5 on folder discipline as long as they are documented in the
-skill's SKILL.md under a "Folder rationale" section or are referenced from
-SKILL.md.
+Skills that use these convention folders score 5 on folder discipline
+as long as they are documented in the skill's SKILL.md under a "Folder
+rationale" section or are referenced from SKILL.md.
 
 New skills should default to spec folders. Use the convention folders only
 when the content does not fit `references/`, `assets/`, or `scripts/`.
@@ -116,9 +115,8 @@ The correction: spec mandates `SKILL.md`. The three optional spec folders
 are `scripts/`, `references/`, `assets/`. Anything else is a convention,
 and conventions cannot be required at the skill layer.
 
-Single-rule meta-skills (claude-pip, estimatrix) are spec-compliant with
-just `SKILL.md`. The marketplace adds plugin.json + README + TESTS. That
-is the minimum bar.
+Single-rule meta-skills are spec-compliant with just `SKILL.md`. The
+marketplace adds plugin.json + README + TESTS. That is the minimum bar.
 
 ## When to escalate from convention to spec proposal
 

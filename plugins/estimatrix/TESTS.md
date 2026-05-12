@@ -113,7 +113,7 @@ Confidence: <high | medium | low>
 ### K13 — Active question-asking, not passive refusal
 
 - Input: any ambiguous or underspecified task (e.g., "estimate the dashboard work")
-- Expected: skill runs an active intake interview, like jtbd-prd does:
+- Expected: skill runs an active intake interview:
   1. Identifies which blanks must be filled (scope, success criterion, dependencies, constraints)
   2. Asks ONE focused question at a time (or a tight numbered list of 2-4)
   3. Waits for the user's answer

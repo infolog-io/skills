@@ -54,7 +54,7 @@ The recommended order across categories:
 | 7 | Brand drift | Per-element polish |
 | 8 | Variant clarity | Final cleanup pass |
 
-### 4. Size each task per estimatrix
+### 4. Size each task with T-shirt sizes
 
 | Task scope | Size |
 |---|---|

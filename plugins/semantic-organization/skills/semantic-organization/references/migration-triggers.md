@@ -57,20 +57,21 @@ Should this folder become its own sibling skill?
 
 ### Example 1 — promote
 
-`atomic-brand/concerns/motion/` reaches 6 prompts (audit motion-curve usage,
-audit duration ranges, audit easing fairness, audit reduced-motion support,
-suggest motion-token tree, refactor motion to tokens) and gains its own
-rubric for motion-specific scores.
+A parent skill's `concerns/motion/` sub-folder reaches 6 prompts (audit
+motion-curve usage, audit duration ranges, audit easing fairness, audit
+reduced-motion support, suggest motion-token tree, refactor motion to
+tokens) and gains its own rubric for motion-specific scores.
 
-**Verdict:** `promote-to-sibling-skill`. The folder becomes `atomic-motion`
-in the marketplace, depends on `atomic-brand` for the token contract.
+**Verdict:** `promote-to-sibling-skill`. The folder becomes its own
+installable skill in the marketplace, with the parent owning the token
+contract via shared interface conventions.
 
 ### Example 2 — stay
 
-`jtbd-prd/prompts/` has five prompts (extract-from-interview,
+A skill's `prompts/` folder has five prompts (e.g., extract-from-interview,
 extract-from-tickets, reverse-from-artifact, cluster-and-score, verdict).
-But each prompt is a mode of the same skill, not a separate audit. All
-share the same verdict semantics and feed the same Job Article output.
+Each prompt is a mode of the same skill, not a separate audit. All share
+the same verdict semantics and feed the same canonical output artifact.
 
 **Verdict:** `stay-as-folder`. Five prompts but unified purpose — this is a
 healthy `prompts/` folder, not a sibling skill in disguise.

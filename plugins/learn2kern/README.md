@@ -11,12 +11,14 @@ size and one of eight named ratios.
 - Letter-spacing per band: tighter at display, normal at body
 - BODY + HEADINGS as separate token families
 - Emissions: CSS custom properties + Tailwind theme.fontSize
-- Color slots reference atomic-brand tokens via `var()` with fallbacks
+- Color slots reference external color tokens via `var()` with fallbacks
 
 ## Composition
 
-`atomic-brand` owns color. `learn2kern` owns typography. They thread
-together via `var(--color-text, #222)` references.
+This skill owns typography only. Color tokens are external — the
+emitted output references `var(--color-text, #222)` and similar, so it
+composes with any project that defines those custom properties (and
+falls back to sensible hex defaults when none are present).
 
 ## Modes
 

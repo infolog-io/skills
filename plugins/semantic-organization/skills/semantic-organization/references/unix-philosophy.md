@@ -19,11 +19,11 @@ Tests:
 
 If any answer is no, split the skill.
 
-Examples in this marketplace:
-- `jtbd-prd` does one thing: validate customer need via JTBD evidence → Job Article
-- `tufte-love` does one thing: audit a data visualization against Tufte principles
-- `estimatrix` does one thing: enforce the T-shirt sizing rule
-- `atomic-brand` (proposed) does *many* things — that is why it is a skill family, not a skill
+Examples of one-thing-well skill purposes:
+- "Validate a customer need via JTBD evidence and emit a Job Article"
+- "Audit a data visualization against a defined rubric and emit a scored audit"
+- "Enforce a sizing rule when estimation is requested"
+- "A skill spanning a dozen concerns is a family, not a skill — split it"
 
 ### 2. Compose with others through clean interfaces
 
@@ -38,10 +38,10 @@ Tests:
 - Is the output schema declared (frontmatter, JSON schema, or convention)?
 - Does the skill avoid emitting binary or proprietary formats unless absolutely required?
 
-Examples:
-- `jtbd-prd` emits a markdown Job Article + a JSON schema-validated structure → consumable downstream
-- `tufte-love` emits a markdown audit → consumable as a code-review comment, a doc section, or input to another agent
-- `learn2kern` (planned) emits a type scale as JSON tokens → consumable by any tool that imports W3C design tokens
+Examples of clean composition outputs:
+- A markdown artifact plus a JSON-schema-validated structured form → consumable downstream by any agent
+- A markdown audit → consumable as a code-review comment, a doc section, or input to another agent
+- A type-scale token bundle as JSON → consumable by any tool that imports W3C design tokens
 
 ### 3. Prefer plain text
 
@@ -82,11 +82,11 @@ Where possible, skills take input and emit transformed output. They do not
 maintain state, do not require setup, do not hold conversational context.
 
 Pure-filter examples:
-- `tufte-love` takes a chart description, returns an audit. Stateless.
-- `estimatrix` takes a "how long" question, returns a T-shirt size. Stateless.
+- A chart auditor takes a chart description, returns an audit. Stateless.
+- A sizing rule takes a "how long" question, returns a T-shirt size. Stateless.
 
 Not-quite-filter examples (legitimate):
-- `jtbd-prd` accumulates evidence across an interview session. Has state, but the state is the artifact (Job Article), not hidden.
+- A need-validation skill accumulates evidence across an interview session. Has state, but the state is the artifact, not hidden.
 
 ### Avoid captive interfaces
 
@@ -101,8 +101,8 @@ A skill should not lock the user into a single way of using it.
 If another skill does the job, defer to it. Cross-reference, do not reimplement.
 
 Examples:
-- An `atomic-charts` skill is unnecessary because `tufte-love` already does that. Cross-reference instead.
-- A new "voice" skill should defer to the lexicon-check skill family rather than restating its rules.
+- A proposed "atomic-charts" skill is unnecessary if a chart-audit skill already covers the rubric. Defer to the existing skill via interface conventions rather than re-implementing.
+- A proposed "voice" skill should defer to an existing lexicon-check skill family rather than restating its rules.
 
 ## Anti-patterns the philosophy rejects
 
@@ -124,11 +124,12 @@ Resolution:
 - Spin out a sibling when migration triggers fire (see `references/migration-triggers.md`)
 - Use a parent skill as a documented index of the family
 
-Example: `atomic-brand` starts as one skill with concern-folders inside.
-When any concern folder meets migration triggers (≥5 prompts, own rubric,
-own verdicts), it spins out as a sibling (`atomic-motion`, `atomic-print`).
-The parent skill keeps a one-paragraph reference to the spinout. Family
-cohesion + small-tools tenet, satisfied together.
+Example: a multi-concern parent skill starts as one skill with
+concern-folders inside. When any concern folder meets migration
+triggers (≥5 prompts, own rubric, own verdicts), it spins out as a
+sibling skill. The parent skill keeps a one-paragraph note that the
+concern is now owned by a separate installable skill. Family cohesion
+plus small-tools tenet, satisfied together.
 
 ## The shortest summary
 

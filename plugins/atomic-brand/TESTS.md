@@ -15,7 +15,7 @@ marketplace conventions `prompts/` and `fixtures/`.
 6. The three verdicts (system-healthy, drifting, broken) emit different artifacts
 7. JSON schema in `assets/` validates the canonical audit example
 8. README ≤200 words
-9. Self-audit via `semantic-organization`: scores ≥4 on every dimension
+9. Self-audit against the canonical skill-structure standard: scores ≥4 on every dimension
 
 ## Test cases
 
@@ -101,12 +101,13 @@ marketplace conventions `prompts/` and `fixtures/`.
 
 ## Migration triggers to watch
 
-When the following fire, spin out a sibling skill:
+When a concern grows beyond its place inside this skill, spin it out as
+a separate installable skill. Triggers:
 
-| Folder grows to | Sibling to create |
+| Concern reaches | Action |
 |---|---|
-| `references/medium-native.md` + dedicated prompts ≥5 | `atomic-native` |
-| Motion concerns reach rubric + 5 prompts | `atomic-motion` |
-| Print concerns reach rubric + 5 prompts | `atomic-print` |
-| Iconography concerns reach rubric + 5 prompts | `atomic-icons` |
-| States (empty/loading/error) reaches rubric + 5 prompts | `atomic-states` |
+| Native-medium guidance with ≥5 dedicated prompts | Promote to a separate skill for native-platform audits |
+| Motion guidance with own rubric + 5 prompts | Promote to a separate motion skill |
+| Print guidance with own rubric + 5 prompts | Promote to a separate print skill |
+| Iconography guidance with own rubric + 5 prompts | Promote to a separate iconography skill |
+| States (empty/loading/error) with own rubric + 5 prompts | Promote to a separate states skill |

@@ -79,8 +79,8 @@ assets (a PDF, a website, etc.).
 
 Spacing is hard to extract from a single image. Skip unless the image
 shows a recurring layout with measurable margins. If extracted, flag
-confidence as low and recommend overriding with a learn2kern modular
-scale.
+confidence as low and recommend overriding with a modular type scale
+generator.
 
 ### 4. Radius observation
 
@@ -118,7 +118,7 @@ Generate a `proposed-tokens.css`:
   --font-sans: 'Inter', sans-serif;          /* confidence: medium */
   --font-display: 'Inter', sans-serif;       /* assume same — confirm */
 
-  /* Type scale — NOT extracted; recommend learn2kern to generate */
+  /* Type scale — NOT extracted; recommend running a modular type scale generator */
   /* --font-size-* tokens deferred */
 
   /* Spacing — NOT extracted; using a default modular scale */
@@ -184,7 +184,7 @@ white background.
   "recommendations": [
     "Single-asset extraction provides only the brand color. Provide a style guide PDF or screenshot for type, spacing, radius, and neutrals.",
     "Confirm --color-primary-light is intentional (it may be a gradient artifact rather than a discrete token).",
-    "Run learn2kern to generate the type scale once the typeface is confirmed."
+    "Run a modular type scale generator once the typeface is confirmed."
   ]
 }
 ```

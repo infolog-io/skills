@@ -52,7 +52,7 @@ If any trigger fires AND no anti-trigger overrides, the verdict is
 
 ### Example 1 — promote
 
-**Input:** `atomic-brand/concerns/motion/`
+**Input:** `<parent-skill>/skills/<parent-skill>/concerns/motion/`
 
 **Walk:**
 - 6 prompts (audit-motion-curves, audit-duration-ranges, audit-easing,
@@ -68,28 +68,27 @@ If any trigger fires AND no anti-trigger overrides, the verdict is
 **Plan:**
 
 ```
-Migration: atomic-brand/skills/atomic-brand/concerns/motion/
-        → plugins/atomic-motion/
+Migration: <parent>/skills/<parent>/concerns/motion/
+        → plugins/<new-motion-skill>/
 
-1. Create plugins/atomic-motion/ with the standard scaffold
-2. Move contents of concerns/motion/ into plugins/atomic-motion/skills/atomic-motion/
+1. Create plugins/<new-motion-skill>/ with the standard scaffold
+2. Move contents of concerns/motion/ into plugins/<new-motion-skill>/skills/<new-motion-skill>/
    - motion-audit-rubric.md → references/audit-rubric.md
    - 6 prompts → prompts/
    - motion-token-tree.md → templates/
-3. Author plugins/atomic-motion/.claude-plugin/plugin.json with name = atomic-motion
-4. Author plugins/atomic-motion/README.md (≤200 words)
-5. Author plugins/atomic-motion/TESTS.md
-6. Add atomic-motion entry to .claude-plugin/marketplace.json
-7. In atomic-brand, replace concerns/motion/ with a one-paragraph reference:
-   "Motion guidance lives in atomic-motion. Install separately:
-    claude plugin install atomic-motion@infolog-io"
-8. Run semantic-audit on both atomic-brand and atomic-motion — both must score ≥4
+3. Author plugins/<new-motion-skill>/.claude-plugin/plugin.json
+4. Author plugins/<new-motion-skill>/README.md (≤200 words)
+5. Author plugins/<new-motion-skill>/TESTS.md
+6. Add the new entry to .claude-plugin/marketplace.json
+7. In the parent skill, replace concerns/motion/ with a one-paragraph
+   note that the concern is now owned by a separate installable skill
+8. Run semantic-audit on both — both must score ≥4
 9. Commit and push
 ```
 
 ### Example 2 — stay
 
-**Input:** `jtbd-prd/skills/jtbd-prd/prompts/`
+**Input:** `<some-skill>/skills/<some-skill>/prompts/`
 
 **Walk:**
 - 5 prompts (extract-from-interview, extract-from-tickets,

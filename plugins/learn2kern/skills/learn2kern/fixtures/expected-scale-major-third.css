@@ -42,7 +42,7 @@
   --font-heading-letter-spacing: var(--letter-spacing-heading);
   --font-heading-color: var(--color-text, #222);
 
-  /* Page background (composes with atomic-brand) */
+  /* Page background (references external --color-bg with fallback) */
   --bg-page: var(--color-bg, #fff);
 }
 

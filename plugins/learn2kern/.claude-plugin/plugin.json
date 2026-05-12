@@ -1,6 +1,6 @@
 {
   "name": "learn2kern",
   "version": "0.1.0",
-  "description": "Typography skill. Generates modular type scales (eight named ratios from Minor Second to Golden Ratio) with BODY and HEADINGS as separate token families, line-height bands, letter-spacing per band. Emits CSS custom properties and Tailwind theme.fontSize. Color slots reference atomic-brand tokens. Runs conversational intake when inputs are missing.",
+  "description": "Typography skill. Generates modular type scales (eight named ratios from Minor Second to Golden Ratio) with BODY and HEADINGS as separate token families, line-height bands, letter-spacing per band. Emits CSS custom properties and Tailwind theme.fontSize. Color slots reference external color tokens via var() with fallbacks. Runs conversational intake when inputs are missing.",
   "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
 }

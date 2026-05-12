@@ -83,7 +83,7 @@ Tags emitted: `brand_drift`.
 Questions:
 
 - Are spacing values from a defined scale (4, 8, 12, 16, 24, 32 — or any consistent scale)?
-- Are type sizes from a modular scale (see learn2kern)?
+- Are type sizes from a modular scale?
 - Are colors from the brand palette plus neutrals, not arbitrary intermediates?
 
 Score:

@@ -22,7 +22,7 @@ infolog-io plugins.
 | `pdf-processing` | `PDF-Processing` | uppercase forbidden |
 | `code-review` | `-pdf` | leading hyphen |
 | `data-analysis` | `pdf--processing` | consecutive hyphens |
-| `jtbd-prd` | `jtbd_prd` | underscores forbidden |
+| `my-skill` | `my_skill` | underscores forbidden |
 
 The same name appears in four places — all must match:
 1. Parent directory name (`plugins/<name>/skills/<name>/`)

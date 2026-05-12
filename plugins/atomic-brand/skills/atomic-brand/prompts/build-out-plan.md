@@ -89,7 +89,7 @@ Create `src/styles/tokens.css` (or equivalent for the build tool):
   --space-7: 48px;
   --space-8: 64px;
 
-  /* Type — bootstrap with learn2kern */
+  /* Type — bootstrap with a modular type scale generator */
   --font-sans: system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
   --font-size-sm: 0.875rem;
@@ -221,15 +221,15 @@ For this case:
 
 Note this in the build-out plan when detected.
 
-## Composition with other skills
+## Adjacent passes
 
-| Skill | Use |
+| Pass | When to run |
 |---|---|
-| `learn2kern` | Generate the type scale tokens in Phase 1 |
-| `jtbd-prd` | If the build-out is for a redesign, validate the customer job first |
-| `estimatrix` | Each phase is already sized; project total is L |
-| `parse-image-for-brand` | If brand assets exist, run before Phase 1 to seed values |
-| `scrape-for-brand` | If a live site exists, run before Phase 1 to seed values |
+| Modular type scale generation | Before Phase 1, to seed type tokens |
+| Customer-need validation | If the build-out is for a redesign, validate the underlying job first |
+| Sizing of phases | Each phase carries a T-shirt size; reconcile against your own rubric if needed |
+| `parse-image-for-brand` (this skill's failover step 2) | If brand assets exist, run before Phase 1 to seed values |
+| `scrape-for-brand` (this skill's failover step 3) | If a live site exists, run before Phase 1 to seed values |
 
 ## Verification before returning output
 

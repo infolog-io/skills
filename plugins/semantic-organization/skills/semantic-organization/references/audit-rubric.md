@@ -112,7 +112,8 @@ Not every skill needs the full plugin layer. Two profiles:
 ### Full-shape skill
 
 A skill with multiple operating modes, prompts, references, and outputs.
-Examples in infolog-io: jtbd-prd, tufte-love, semantic-organization.
+Skills with multiple operating modes, multiple references, and optional
+scripts and assets fall in this profile.
 
 Required at minimum:
 - Spec layer: SKILL.md + references/ (recommended) + assets/ (recommended) when content warrants
@@ -123,7 +124,8 @@ Required at minimum:
 A meta-skill that states one durable rule. The skill IS the rule. No
 modes, no prompts, no templates.
 
-Examples in infolog-io: claude-pip, estimatrix.
+A skill that states a single durable rule via SKILL.md alone — no
+sub-folders required.
 
 Required at minimum:
 - Spec layer: SKILL.md only

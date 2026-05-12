@@ -83,15 +83,15 @@
 
 (emitted only when verdict is `drifting`. See companion `refactor-plan.md`.)
 
-## Composition with other skills
+## Adjacent passes
 
-| Skill | Use |
+| Pass | When to run |
 |---|---|
-| `tufte-love` | Run on any chart/dashboard surfaces |
-| `learn2kern` | Generate or audit the type scale referenced in tokens |
-| `jtbd-prd` | If a redesign is being scoped, validate the underlying customer job |
-| `estimatrix` | Size the refactor or build-out tasks |
-| `semantic-organization` | Apply to design-system code organization itself |
+| Chart-audit pass | Run on any chart/dashboard surfaces |
+| Typography-audit pass | Generate or audit the type scale referenced in tokens |
+| Need-validation pass | If a redesign is being scoped, validate the underlying customer job |
+| Sizing pass | Size the refactor or build-out tasks against your sizing rubric |
+| Code-organization pass | Apply to design-system code organization itself |
 
 ## Confidence rationale
 

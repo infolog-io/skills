@@ -16,7 +16,7 @@ runs in the SKILL body.
 6. SKILL.md emits CSS custom properties AND Tailwind theme.fontSize
 7. Conversational intake (jtbd-style) runs when inputs are missing
 8. Single-turn happy path skips intake when inputs are stated
-9. Color slots emit as `var(--color-text, fallback)` references to atomic-brand
+9. Color slots emit as `var(--color-text, fallback)` references to external color tokens
 10. README ≤200 words
 11. Stub status is removed from SKILL.md and plugin.json description
 
@@ -97,12 +97,12 @@ fontSize: {
 - Verify: tokens emit `--letter-spacing-display`, `--letter-spacing-heading`, `--letter-spacing-body`
 - User-supplied values override these defaults
 
-### T8 — Color slots reference atomic-brand tokens
+### T8 — Color slots reference external tokens
 
 - Body color emits: `--font-body-color: var(--color-text, #222)`
 - Heading color emits: `--font-heading-color: var(--color-text, #222)`
 - Background emits: `--bg-page: var(--color-bg, #fff)`
-- Fallback hex values are sensible defaults; primary path is the atomic-brand reference
+- Fallback hex values are sensible defaults; primary path is the external `--color-*` custom property
 - Verify: emitted CSS uses `var()` form, not bare hex
 
 ### T9 — Conversational intake when inputs missing

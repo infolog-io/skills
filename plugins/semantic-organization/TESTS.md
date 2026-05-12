@@ -9,7 +9,7 @@
 5. **Self-test**: semantic-organization scores 5/5 on its own rubric
 6. Scaffold prompt produces a valid skeleton that passes the audit rubric
 7. Audit prompt classifies the three fixture skills (good / drifted / broken) correctly
-8. Migration evaluator correctly identifies which folders in atomic-brand should become sibling skills
+8. Migration evaluator correctly identifies which sub-folders inside a multi-concern skill should become sibling skills
 9. README under 200 words
 
 ## Test cases
@@ -27,7 +27,7 @@
 ### T3 — Audit classification
 | Fixture | Expected scores | Verdict |
 |---|---|---|
-| `fixtures/input-good-skill/` (jtbd-prd-shaped) | 5/5 across most dims | `semantically-healthy` |
+| `fixtures/input-good-skill/` (canonical full-shape) | 5/5 across most dims | `semantically-healthy` |
 | `fixtures/input-drifted-skill/` (mixed naming, missing TESTS.md) | 3 across half the dims | `drifting` |
 | `fixtures/input-broken-skill/` (no SKILL.md, code in src/) | 1-2 across most dims | `broken` |
 

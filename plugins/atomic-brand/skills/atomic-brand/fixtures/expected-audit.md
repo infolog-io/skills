@@ -86,12 +86,12 @@ Fix the 4 token violations in atoms/input.tsx. Mechanical, high
 confidence, immediately raises token compliance from 3 to 4 or 5
 depending on the rest of the project.
 
-## Composition with other skills
+## Adjacent passes
 
-- `tufte-love`: not applicable; no chart surfaces in this fixture.
-- `learn2kern`: type tokens look reasonable; no immediate audit needed.
-- `jtbd-prd`: not applicable; this is a refactor, not a redesign.
-- `estimatrix`: refactor plan total size estimated S-M.
+- Chart-audit pass: not applicable; no chart surfaces in this fixture.
+- Typography-audit pass: type tokens look reasonable; no immediate audit needed.
+- Need-validation pass: not applicable; this is a refactor, not a redesign.
+- Refactor plan total size: S-M.
 
 ## Verdict reasoning
 

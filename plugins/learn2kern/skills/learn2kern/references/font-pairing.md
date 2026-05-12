@@ -141,4 +141,4 @@ host application's job.
 
 The skill will reference this file and answer from the safe-defaults
 tables. It does not prescribe brand-specific fonts — those are an
-atomic-brand concern.
+brand-system concern.

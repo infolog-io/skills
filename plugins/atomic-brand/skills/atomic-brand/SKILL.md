@@ -56,7 +56,7 @@ Trigger: automatic when verdict is `broken`
 Behavior:
 1. Identify which tokens and patterns are missing
 2. Emit `build-out-plan.md` listing required tokens, atoms, molecules, organisms
-3. Sequence the build per estimatrix sizes
+3. Sequence the build by T-shirt size (XS → XL) where applicable
 
 ## The failover chain (brand detection)
 
@@ -157,15 +157,14 @@ See `references/failure-modes.md`.
 | `find duplicate components`, `consolidate components` | Refactor |
 | `what tokens am I missing`, `build out my design system` | Build-out |
 
-## Composition with other infolog-io skills
+## Interfaces
 
-| Sibling | Relationship |
+| Layer | Convention |
 |---|---|
-| `tufte-love` | Owns data-viz audit. atomic-brand defers chart audits to it. |
-| `learn2kern` | Owns type scale generation. atomic-brand consumes type tokens via the failover chain; learn2kern can emit those tokens. |
-| `semantic-organization` | Audits the skill structure of atomic-brand itself. |
-| `estimatrix` | Sizes the refactor plan's tasks. |
-| `jtbd-prd` | Validates whether the planned redesign serves a real customer job. |
+| Color tokens | Reads from `--color-*` CSS custom properties via project token files |
+| Type tokens | Reads from `--font-*` CSS custom properties; defers chart-specific or type-scale-specific audits to dedicated skills if present |
+| Output formats | Markdown audit + JSON conforming to `assets/audit-report-schema.json` + optional `refactor-plan.md` or `build-out-plan.md` |
+| Sizing | All emitted tasks use T-shirt sizes; consumers can re-size against their own rubric |
 
 ## Scope (v0.1.0)
 
@@ -175,6 +174,5 @@ See TESTS.md for the trigger table.
 
 ## Self-application
 
-This skill must pass `semantic-organization` audit at ≥4 on every
-dimension. The audit applies the spec-compliant + marketplace-ready
-rubric.
+This skill must pass the canonical skill-structure audit at ≥4 on every
+dimension (spec-compliant + marketplace-ready).

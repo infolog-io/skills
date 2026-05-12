@@ -57,7 +57,8 @@ One durable rule or principle. SKILL.md body carries everything.
 Required: SKILL.md, plugin.json, README.md, TESTS.md.
 No required sub-folders.
 
-Examples in this marketplace: `claude-pip`, `estimatrix`.
+A skill is single-rule when SKILL.md is under 200 lines and there are no
+sub-folders.
 
 ### Full-shape skill
 
@@ -67,7 +68,8 @@ entry point; detail lives in `references/` and `assets/`.
 Required: SKILL.md + plugin layer + at least one of `references/`,
 `scripts/`, `assets/` per actual need.
 
-Examples: `tufte-love`, `jtbd-prd`, `semantic-organization`.
+A skill is full-shape when it has multiple operating modes, references
+broken out from SKILL.md, and (usually) prompts or assets.
 
 ## The eight audit dimensions
 

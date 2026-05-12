@@ -131,11 +131,11 @@ refactor-plan.md     ← prioritized list of replacements
 
 Before issuing verdict, check whether other audits should run:
 
-- If any file in the project looks like a data visualization (chart library imports, dashboard-named files) → recommend running `tufte-love` separately
-- If the type scale appears irregular → recommend `learn2kern` audit
-- If the project structure itself violates patterns → recommend `semantic-organization` audit (for the code organization, not the UI)
+- If any file in the project looks like a data visualization (chart library imports, dashboard-named files) → recommend a chart-audit pass separately
+- If the type scale appears irregular → recommend a typography-audit pass
+- If the project structure itself violates patterns → recommend a code-organization audit (for the code structure, not the UI)
 
-These recommendations appear in the audit's "composition with other skills" section.
+These recommendations appear in the audit's "related audits" section.
 
 ## Verification before returning output
 
