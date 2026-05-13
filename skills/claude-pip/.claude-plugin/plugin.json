@@ -1,6 +1,9 @@
 {
   "name": "claude-pip",
-  "version": "0.1.0",
-  "description": "Performance Improvement Plan for Claude. Type CLAUDE PIP to lock in a behavioral discipline (TDD, plan mode, sub-agents, adversarial review) as a deterministic rule in the project's CLAUDE.md.",
-  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
+  "version": "0.2.0",
+  "description": "Performance Improvement Plan for Claude. Three triggers: CLAUDE PIP adds a master rule; LOCAL PIP scopes a rule to the current directory; OFF THE PIP removes a rule cleanly. Every rule wrapped in HTML-comment markers so it can be removed mechanically.",
+  "author": {
+    "name": "Information Logistics",
+    "url": "https://github.com/infolog-io"
+  }
 }

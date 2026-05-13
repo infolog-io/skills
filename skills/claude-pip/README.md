@@ -1,35 +1,33 @@
 # claude-pip
 
-A Performance Improvement Plan for Claude. When you catch Claude skipping
-a discipline (TDD, plan mode, sub-agents, adversarial review), type
-`CLAUDE PIP` and the rule locks into the project's `CLAUDE.md` as a
-deterministic guideline.
+A Performance Improvement Plan for Claude. Three triggers lock, scope,
+and remove deterministic rules in your project's CLAUDE.md.
+
+## Triggers
+
+| Trigger | What |
+|---|---|
+| `CLAUDE PIP` | Add a master rule to `<project>/.claude/CLAUDE-PIP.md` |
+| `LOCAL PIP` | Add a rule scoped to the current directory's `CLAUDE.md` |
+| `OFF THE PIP` | Remove a rule by ID or keyword |
+
+All triggers are case-sensitive, all-caps.
 
 ## Why
 
-Memory and preferences are not enforced by the harness. Rules in
-`CLAUDE.md` are. This skill turns a one-off correction into a permanent
-rule that fires every time.
-
-## When to use
-
-- Right after Claude skips a discipline you expected
-- When a behavior should hold for the rest of the project
-- When the rule is durable across sessions and worth committing
-
-## When not to use
-
-- One-off scope decisions (use plan mode)
-- Temporary preferences (use Claude memory)
+Memory and preferences are not enforced. Rules in `CLAUDE.md` are. This
+skill turns a one-off correction into a permanent rule that fires every
+time — and lets you remove it cleanly when it no longer applies.
 
 ## How it works
 
-Type `CLAUDE PIP` (all caps). Optional detail follows: `CLAUDE PIP TDD`
-infers the rule; `CLAUDE PIP always run X after Y` uses your exact
-wording.
+Every rule the skill adds is wrapped in HTML-comment markers
+(`<!-- pip:start id=<id> -->` ... `<!-- pip:end id=<id> -->`) so it can
+be removed mechanically later. The ID is auto-generated.
 
-The skill writes to `<project>/.claude/CLAUDE-PIP.md` and imports it from
-the project's root `CLAUDE.md` as the first line.
+- `CLAUDE PIP TDD` infers and writes the TDD rule
+- `LOCAL PIP always lint before commit` scopes a rule to the current dir
+- `OFF THE PIP <id>` removes that rule cleanly
 
 ## Install
 
@@ -37,7 +35,3 @@ the project's root `CLAUDE.md` as the first line.
 claude plugin marketplace add infolog-io/skills
 claude plugin install claude-pip@infolog-io
 ```
-
-## Triggers
-
-`CLAUDE PIP` (all caps, anywhere in a message)
