@@ -1,7 +1,7 @@
 {
   "name": "claude-pip",
-  "version": "0.2.0",
-  "description": "Performance Improvement Plan for Claude. Three triggers: CLAUDE PIP adds a master rule; LOCAL PIP scopes a rule to the current directory; OFF THE PIP removes a rule cleanly. Every rule wrapped in HTML-comment markers so it can be removed mechanically.",
+  "version": "0.3.0",
+  "description": "Performance Improvement Plan for Claude. Five triggers covering a rule's full lifecycle. CLAUDE PIP / LOCAL PIP capture rules (master or directory-scoped). OFF THE PIP removes by id or keyword. PRUNE THE PIP audits the rules; default verdict is keep (carry-forward is the point). PROMOTE THE PIP graduates stable rules to canonical homes (CLAUDE.md, DESIGN.md, user-global) — the user picks which. Every rule wrapped in HTML-comment markers so it can be removed mechanically.",
   "author": {
     "name": "Information Logistics",
     "url": "https://github.com/infolog-io"
