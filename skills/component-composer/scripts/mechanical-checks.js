@@ -12,6 +12,28 @@
 
 export const CHECKS = {};
 
+function overlaps(a, b) {
+  return !(a.x + a.w <= b.x || b.x + b.w <= a.x ||
+           a.y + a.h <= b.y || b.y + b.h <= a.y);
+}
+
+CHECKS.text_collision = function ({ boxes, viewport }) {
+  for (let i = 0; i < boxes.length; i++) {
+    for (let j = i + 1; j < boxes.length; j++) {
+      if (overlaps(boxes[i], boxes[j])) {
+        return {
+          id: 'text_collision',
+          result: 'fail',
+          viewport,
+          evidence: `'${boxes[i].text}' overlaps '${boxes[j].text}'`,
+          suggested_fix: `move or shorten one of the labels`
+        };
+      }
+    }
+  }
+  return { id: 'text_collision', result: 'pass', viewport };
+};
+
 export function runInBrowser(criterionId, viewport) {
   throw new Error('not implemented yet');
 }
