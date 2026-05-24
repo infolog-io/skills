@@ -21,10 +21,10 @@
       }
     },
     {
-      "name": "tufte-love",
-      "description": "Tufte-style audits, redesigns, and reviews for data visualizations, dashboards, and quantitative UI.",
-      "source": "./skills/tufte-love",
-      "version": "0.3.0",
+      "name": "atomic-data-viz",
+      "description": "Tufte-style theme for component-composer.",
+      "source": "./skills/atomic-data-viz",
+      "version": "1.0.0",
       "category": "design",
       "author": {
         "name": "Information Logistics"
