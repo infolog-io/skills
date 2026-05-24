@@ -99,6 +99,16 @@
       "author": {
         "name": "Information Logistics"
       }
+    },
+    {
+      "name": "component-composer",
+      "description": "Generator-critic loop for single-file HTML data graphics.",
+      "source": "./skills/component-composer",
+      "version": "1.0.0",
+      "category": "design",
+      "author": {
+        "name": "Information Logistics"
+      }
     }
   ]
 }
