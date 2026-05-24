@@ -87,6 +87,23 @@ CHECKS.text_truncation = function ({ elements, viewport }) {
   };
 };
 
+CHECKS.responsive_break = function ({ documentScrollWidth, viewportWidth, viewport }) {
+  if (viewport !== 'mobile') {
+    return { id: 'responsive_break', result: 'pass', viewport };
+  }
+  if (documentScrollWidth <= viewportWidth) {
+    return { id: 'responsive_break', result: 'pass', viewport };
+  }
+  const overflowPx = documentScrollWidth - viewportWidth;
+  return {
+    id: 'responsive_break',
+    result: 'fail',
+    viewport,
+    evidence: `document scroll width ${documentScrollWidth}px exceeds viewport ${viewportWidth}px by ${overflowPx}px`,
+    suggested_fix: 'add CSS for narrow viewports; ensure tables wrap or hide non-essential columns'
+  };
+};
+
 CHECKS.overflow = function ({ containers, viewport }) {
   const fails = containers.filter(c => c.scrollWidth > c.clientWidth);
   if (fails.length === 0) {

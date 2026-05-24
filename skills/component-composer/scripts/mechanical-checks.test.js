@@ -130,3 +130,25 @@ test('overflow: fail when a container overflows horizontally', () => {
   assert.equal(result.result, 'fail');
   assert.match(result.evidence, /body/);
 });
+
+test('responsive_break: pass at desktop regardless', () => {
+  const result = CHECKS.responsive_break({
+    documentScrollWidth: 1400, viewportWidth: 1280, viewport: 'desktop'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('responsive_break: pass at mobile when no horizontal scroll', () => {
+  const result = CHECKS.responsive_break({
+    documentScrollWidth: 375, viewportWidth: 375, viewport: 'mobile'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('responsive_break: fail at mobile when horizontal scroll', () => {
+  const result = CHECKS.responsive_break({
+    documentScrollWidth: 500, viewportWidth: 375, viewport: 'mobile'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /500.*375|125/);
+});
