@@ -1,0 +1,11 @@
+{
+  "name": "atomic-data-viz",
+  "version": "1.0.0",
+  "context": "data-graphics",
+  "capabilities": [
+    "chart", "table", "sparkline", "small-multiples",
+    "dot-plot", "strip-plot", "slopegraph", "range-frame-axis"
+  ],
+  "output_formats": ["html", "png", "pdf"],
+  "style_anchor": "single-file-html"
+}
