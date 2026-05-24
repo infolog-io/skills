@@ -108,7 +108,10 @@ CHECKS.token_compliance = function ({ declarations, viewport }) {
   for (const d of declarations) {
     if (d.selector === ':root') continue;
     if (!TOKEN_PROPERTIES.has(d.property)) continue;
-    if (d.value.includes('var(--')) continue;
+    if (d.value.includes('var(--')) {
+      const stripped = d.value.replace(/var\(--[^)]+(?:,\s*[^)]*)?\)/g, '').trim();
+      if (stripped === '' || !looksLikeLiteralValue(stripped)) continue;
+    }
     if (d.value === 'none' || d.value === 'inherit' || d.value === 'initial' ||
         d.value === 'transparent' || d.value === 'currentColor' || d.value === '0') continue;
     if (looksLikeLiteralValue(d.value)) {
@@ -161,7 +164,7 @@ CHECKS.chartjunk_decorative_css = function ({ marks, viewport }) {
     if (m.background && /gradient/i.test(m.background)) {
       violations.push(`${m.selector}: gradient background=${m.background}`);
     }
-    if (m.transform && /rotate[XY]|matrix3d|perspective/.test(m.transform)) {
+    if (m.transform && /rotate[XYZ]|rotate3d|matrix3d|perspective|translateZ|scaleZ/.test(m.transform)) {
       violations.push(`${m.selector}: 3D transform=${m.transform}`);
     }
   }

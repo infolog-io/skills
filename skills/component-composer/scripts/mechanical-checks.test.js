@@ -75,7 +75,7 @@ test('contrast_failure: fail when text contrast < 4.5:1', () => {
 });
 
 test('contrast_failure: pass when mark contrast ≥ 3:1', () => {
-  // mid-gray mark on white: ~4.5:1
+  // mid-gray mark on white: ~3.5:1
   const result = CHECKS.contrast_failure({
     pairs: [{ kind: 'mark', fg: '#888888', bg: '#ffffff', sample: 'data-mark' }],
     viewport: 'desktop'
@@ -150,7 +150,7 @@ test('responsive_break: fail at mobile when horizontal scroll', () => {
     documentScrollWidth: 500, viewportWidth: 375, viewport: 'mobile'
   });
   assert.equal(result.result, 'fail');
-  assert.match(result.evidence, /500.*375|125/);
+  assert.match(result.evidence, /500.*375.*125/);
 });
 
 test('chartjunk_decorative_css: pass when no decorative CSS on data marks', () => {
@@ -271,4 +271,39 @@ test('token_compliance: ignore declarations inside :root', () => {
     viewport: 'desktop'
   });
   assert.equal(result.result, 'pass');
+});
+
+test('token_compliance: fail when var() is mixed with a literal value', () => {
+  const result = CHECKS.token_compliance({
+    declarations: [
+      { selector: '.bar', property: 'padding', value: 'var(--space-2) 24px' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /24px/);
+});
+
+test('chartjunk_decorative_css: fail on rotate3d transform', () => {
+  const result = CHECKS.chartjunk_decorative_css({
+    marks: [
+      { selector: '.bar', boxShadow: 'none', textShadow: 'none',
+        background: 'none', transform: 'rotate3d(1, 0, 0, 30deg)' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /rotate3d/);
+});
+
+test('chartjunk_decorative_css: fail on translateZ transform', () => {
+  const result = CHECKS.chartjunk_decorative_css({
+    marks: [
+      { selector: '.bar', boxShadow: 'none', textShadow: 'none',
+        background: 'none', transform: 'translateZ(10px)' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /translateZ/);
 });
