@@ -109,6 +109,16 @@
       "author": {
         "name": "Information Logistics"
       }
+    },
+    {
+      "name": "bloomberg-dense",
+      "description": "Terminal-aesthetic theme for component-composer.",
+      "source": "./skills/bloomberg-dense",
+      "version": "1.0.0",
+      "category": "design",
+      "author": {
+        "name": "Information Logistics"
+      }
     }
   ]
 }
