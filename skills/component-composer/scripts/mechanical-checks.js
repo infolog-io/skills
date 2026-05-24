@@ -34,6 +34,20 @@ CHECKS.text_collision = function ({ boxes, viewport }) {
   return { id: 'text_collision', result: 'pass', viewport };
 };
 
+CHECKS.text_truncation = function ({ elements, viewport }) {
+  const truncated = elements.filter(e => e.scrollWidth > e.clientWidth);
+  if (truncated.length === 0) {
+    return { id: 'text_truncation', result: 'pass', viewport };
+  }
+  return {
+    id: 'text_truncation',
+    result: 'fail',
+    viewport,
+    evidence: `truncated: ${truncated.map(e => `'${e.text}'`).join(', ')}`,
+    suggested_fix: 'shorten the label, increase container width, or use abbreviation'
+  };
+};
+
 export function runInBrowser(criterionId, viewport) {
   throw new Error('not implemented yet');
 }

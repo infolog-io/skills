@@ -37,3 +37,20 @@ test('text_collision: pass on empty input', () => {
   const result = CHECKS.text_collision({ boxes: [], viewport: 'desktop' });
   assert.equal(result.result, 'pass');
 });
+
+test('text_truncation: pass when scrollWidth fits clientWidth', () => {
+  const result = CHECKS.text_truncation({
+    elements: [{ scrollWidth: 100, clientWidth: 120, text: 'short' }],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('text_truncation: fail when scrollWidth exceeds clientWidth', () => {
+  const result = CHECKS.text_truncation({
+    elements: [{ scrollWidth: 200, clientWidth: 100, text: 'a-very-long-label' }],
+    viewport: 'mobile'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /a-very-long-label/);
+});
