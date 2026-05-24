@@ -90,3 +90,21 @@ test('contrast_failure: fail when mark contrast < 3:1', () => {
   });
   assert.equal(result.result, 'fail');
 });
+
+test('font_size_too_small: pass when display size ≥ 10px', () => {
+  const result = CHECKS.font_size_too_small({
+    elements: [{ tag: 'text', computedFontPx: 14, displayFontPx: 14, sample: 'tick' }],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('font_size_too_small: fail when display size < 10px', () => {
+  const result = CHECKS.font_size_too_small({
+    // SVG text at font-size:11 inside viewBox=360 rendered at width=180 → 5.5px effective
+    elements: [{ tag: 'text', computedFontPx: 11, displayFontPx: 5.5, sample: 'lang label' }],
+    viewport: 'mobile'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /5\.5/);
+});

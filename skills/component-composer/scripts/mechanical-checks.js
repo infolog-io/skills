@@ -87,6 +87,22 @@ CHECKS.text_truncation = function ({ elements, viewport }) {
   };
 };
 
+CHECKS.font_size_too_small = function ({ elements, viewport }) {
+  const fails = elements.filter(e => e.displayFontPx < 10);
+  if (fails.length === 0) {
+    return { id: 'font_size_too_small', result: 'pass', viewport };
+  }
+  return {
+    id: 'font_size_too_small',
+    result: 'fail',
+    viewport,
+    evidence: fails.map(e =>
+      `'${e.sample}' renders at ${e.displayFontPx.toFixed(1)}px (computed ${e.computedFontPx}px)`
+    ).join('; '),
+    suggested_fix: 'increase font-size, or widen container/SVG to reduce viewBox downscale'
+  };
+};
+
 export function runInBrowser(criterionId, viewport) {
   throw new Error('not implemented yet');
 }
