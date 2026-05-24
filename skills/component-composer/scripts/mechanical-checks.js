@@ -87,6 +87,46 @@ CHECKS.text_truncation = function ({ elements, viewport }) {
   };
 };
 
+const TOKEN_PROPERTIES = new Set([
+  'color', 'background', 'background-color', 'border', 'border-color',
+  'fill', 'stroke', 'font-size', 'font-family', 'padding', 'margin',
+  'gap', 'border-radius'
+]);
+
+function looksLikeLiteralValue(value) {
+  // hex
+  if (/#[0-9a-f]{3,8}\b/i.test(value)) return true;
+  // px (other than 0)
+  if (/\b\d+px\b/.test(value) && !/0px\b/.test(value)) return true;
+  // rgb/rgba/hsl literals
+  if (/\b(rgb|hsl)a?\(/.test(value)) return true;
+  return false;
+}
+
+CHECKS.token_compliance = function ({ declarations, viewport }) {
+  const violations = [];
+  for (const d of declarations) {
+    if (d.selector === ':root') continue;
+    if (!TOKEN_PROPERTIES.has(d.property)) continue;
+    if (d.value.includes('var(--')) continue;
+    if (d.value === 'none' || d.value === 'inherit' || d.value === 'initial' ||
+        d.value === 'transparent' || d.value === 'currentColor' || d.value === '0') continue;
+    if (looksLikeLiteralValue(d.value)) {
+      violations.push(`${d.selector} { ${d.property}: ${d.value} }`);
+    }
+  }
+  if (violations.length === 0) {
+    return { id: 'token_compliance', result: 'pass', viewport };
+  }
+  return {
+    id: 'token_compliance',
+    result: 'fail',
+    viewport,
+    evidence: violations.slice(0, 5).join('; ') + (violations.length > 5 ? '; ...' : ''),
+    suggested_fix: 'replace literal values with var(--...) references; declare the value on :root'
+  };
+};
+
 CHECKS.hidden_mark = function ({ marks, viewport }) {
   const violations = [];
   for (const m of marks) {

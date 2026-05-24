@@ -230,3 +230,45 @@ test('hidden_mark: fail when opacity < 0.3', () => {
   assert.equal(result.result, 'fail');
   assert.match(result.evidence, /opacity/);
 });
+
+test('token_compliance: pass when every value is a var() reference', () => {
+  const result = CHECKS.token_compliance({
+    declarations: [
+      { selector: '.bar', property: 'background', value: 'var(--accent-warm)' },
+      { selector: '.bar', property: 'padding', value: 'var(--space-2) var(--space-3)' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('token_compliance: fail when a literal hex appears outside :root', () => {
+  const result = CHECKS.token_compliance({
+    declarations: [
+      { selector: '.bar', property: 'background', value: '#0066ff' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /#0066ff/);
+});
+
+test('token_compliance: fail when a literal px appears outside :root', () => {
+  const result = CHECKS.token_compliance({
+    declarations: [
+      { selector: '.title', property: 'font-size', value: '24px' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'fail');
+});
+
+test('token_compliance: ignore declarations inside :root', () => {
+  const result = CHECKS.token_compliance({
+    declarations: [
+      { selector: ':root', property: '--accent-warm', value: '#c8553d' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'pass');
+});
