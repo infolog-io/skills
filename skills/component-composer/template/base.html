@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<style>
+  :root {
+    /* paper / ink — theme fills these */
+    --paper: #fafaf7;
+    --paper-soft: #f3f1ea;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+
+    /* accents */
+    --accent-warm: #c8553d;
+    --accent-cool: #2c5e6f;
+    --accent-quiet: #888;
+
+    /* gray ramp */
+    --gray-100: #f0eee6;
+    --gray-300: #d1cfc5;
+    --gray-500: #87867f;
+    --gray-700: #3d3d3a;
+    --gray-900: #141413;
+
+    /* type */
+    --serif: ui-serif, Georgia, serif;
+    --sans: system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --font-size-h1: 1.8rem;
+    --font-size-h2: 1.1rem;
+    --font-size-body: 0.95rem;
+    --font-size-caption: 0.78rem;
+
+    /* spacing */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-12: 48px;
+
+    /* structural */
+    --radius-panel: 12px;
+    --border: 1px solid var(--gray-300);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: var(--space-12) var(--space-6);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--font-size-body);
+    line-height: 1.5;
+  }
+  .page { max-width: 720px; margin: 0 auto; }
+  h1 { font-family: var(--serif); font-weight: 600; font-size: var(--font-size-h1); margin: 0; }
+  h2 { font-family: var(--serif); font-weight: 500; font-size: var(--font-size-h2);
+       margin: var(--space-12) 0 var(--space-3); color: var(--ink-soft); }
+  .annotation { color: var(--ink-soft); font-size: var(--font-size-caption); }
+</style>
+</head>
+<body>
+  <main class="page">
+    {{CONTENT}}
+  </main>
+</body>
+</html>
