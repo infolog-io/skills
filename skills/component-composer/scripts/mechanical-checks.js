@@ -226,6 +226,140 @@ CHECKS.font_size_too_small = function ({ elements, viewport }) {
   };
 };
 
+// runInBrowser is executed inside the rendered page via preview_eval.
+// It extracts DOM data for the requested criterion and dispatches to the
+// pure check function. Returns the validator output shape (JSON-safe).
+
 export function runInBrowser(criterionId, viewport) {
-  throw new Error('not implemented yet');
+  switch (criterionId) {
+    case 'text_collision': {
+      const nodes = Array.from(document.querySelectorAll(
+        'svg text, svg tspan, .tick-label, .annotation, .row-label, h1, h2, .stat-label'
+      ));
+      const boxes = nodes.map(n => {
+        const b = n.getBoundingClientRect();
+        return { x: b.x, y: b.y, w: b.width, h: b.height, text: (n.textContent || '').trim() };
+      }).filter(b => b.w > 0 && b.h > 0);
+      return CHECKS.text_collision({ boxes, viewport });
+    }
+    case 'text_truncation': {
+      const nodes = Array.from(document.querySelectorAll('td, th, .label, .annotation'));
+      const elements = nodes.map(n => ({
+        scrollWidth: n.scrollWidth, clientWidth: n.clientWidth,
+        text: (n.textContent || '').trim()
+      }));
+      return CHECKS.text_truncation({ elements, viewport });
+    }
+    case 'contrast_failure': {
+      const samples = Array.from(document.querySelectorAll(
+        'p, h1, h2, td, .annotation, .data-mark, circle, rect.bar'
+      )).slice(0, 30);
+      const pairs = samples.map(n => {
+        const s = getComputedStyle(n);
+        const isText = n.tagName.match(/^(P|H1|H2|TD|SPAN|DIV)$/i);
+        return {
+          kind: isText ? 'text' : 'mark',
+          fg: rgbToHex(s.color),
+          bg: rgbToHex(getEffectiveBackground(n)),
+          sample: n.tagName + (n.className ? '.' + n.className.split(' ')[0] : '')
+        };
+      }).filter(p => p.fg && p.bg);
+      return CHECKS.contrast_failure({ pairs, viewport });
+    }
+    case 'font_size_too_small': {
+      const nodes = Array.from(document.querySelectorAll('svg text, svg tspan'));
+      const elements = nodes.map(n => {
+        const s = getComputedStyle(n);
+        const computedFontPx = parseFloat(s.fontSize);
+        const b = n.getBoundingClientRect();
+        // Approximate display font px from bbox height
+        const displayFontPx = b.height;
+        return { tag: n.tagName, computedFontPx, displayFontPx,
+                 sample: (n.textContent || '').trim().slice(0, 20) };
+      });
+      return CHECKS.font_size_too_small({ elements, viewport });
+    }
+    case 'overflow': {
+      const containers = Array.from(document.querySelectorAll(
+        'body, .page, .figure, .data-table, table'
+      )).map(n => ({
+        selector: n.tagName.toLowerCase() + (n.className ? '.' + n.className.split(' ')[0] : ''),
+        scrollWidth: n.scrollWidth, clientWidth: n.clientWidth
+      }));
+      return CHECKS.overflow({ containers, viewport });
+    }
+    case 'responsive_break': {
+      return CHECKS.responsive_break({
+        documentScrollWidth: document.documentElement.scrollWidth,
+        viewportWidth: window.innerWidth, viewport
+      });
+    }
+    case 'chartjunk_decorative_css': {
+      const nodes = Array.from(document.querySelectorAll(
+        '.data-mark, rect.bar, circle.dot, .tick, line.data-line'
+      ));
+      const marks = nodes.map(n => {
+        const s = getComputedStyle(n);
+        return {
+          selector: n.tagName.toLowerCase() + (n.className ? '.' + n.className.split(' ')[0] : ''),
+          boxShadow: s.boxShadow, textShadow: s.textShadow,
+          background: s.background, transform: s.transform
+        };
+      });
+      return CHECKS.chartjunk_decorative_css({ marks, viewport });
+    }
+    case 'hidden_mark': {
+      const nodes = Array.from(document.querySelectorAll(
+        '.data-mark, rect.bar, circle.dot, line.data-line'
+      ));
+      const marks = nodes.map(n => {
+        const b = n.getBoundingClientRect();
+        const s = getComputedStyle(n);
+        return {
+          selector: n.tagName.toLowerCase() + (n.className ? '.' + n.className.split(' ')[0] : ''),
+          width: b.width, height: b.height, opacity: parseFloat(s.opacity),
+          sample: n.getAttribute('data-label') || n.tagName
+        };
+      });
+      return CHECKS.hidden_mark({ marks, viewport });
+    }
+    case 'token_compliance': {
+      const declarations = [];
+      for (const sheet of document.styleSheets) {
+        try {
+          for (const rule of sheet.cssRules) {
+            if (rule.style) {
+              for (let i = 0; i < rule.style.length; i++) {
+                const property = rule.style[i];
+                const value = rule.style.getPropertyValue(property);
+                declarations.push({ selector: rule.selectorText, property, value });
+              }
+            }
+          }
+        } catch (_) { /* CORS sheet — skip */ }
+      }
+      return CHECKS.token_compliance({ declarations, viewport });
+    }
+    default:
+      return { id: criterionId, result: 'pass', viewport,
+               evidence: 'no mechanical check; dispatched to LLM-judge', _no_mechanical: true };
+  }
+}
+
+// Helpers
+function rgbToHex(rgb) {
+  const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!m) return null;
+  const toHex = n => parseInt(n, 10).toString(16).padStart(2, '0');
+  return '#' + toHex(m[1]) + toHex(m[2]) + toHex(m[3]);
+}
+
+function getEffectiveBackground(el) {
+  let cur = el;
+  while (cur && cur !== document.documentElement) {
+    const bg = getComputedStyle(cur).backgroundColor;
+    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') return bg;
+    cur = cur.parentElement;
+  }
+  return getComputedStyle(document.documentElement).backgroundColor || 'rgb(255,255,255)';
 }
