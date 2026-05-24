@@ -54,3 +54,39 @@ test('text_truncation: fail when scrollWidth exceeds clientWidth', () => {
   assert.equal(result.result, 'fail');
   assert.match(result.evidence, /a-very-long-label/);
 });
+
+test('contrast_failure: pass when text contrast ≥ 4.5:1', () => {
+  // black on white: ~21:1
+  const result = CHECKS.contrast_failure({
+    pairs: [{ kind: 'text', fg: '#000000', bg: '#ffffff', sample: 'h1 title' }],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('contrast_failure: fail when text contrast < 4.5:1', () => {
+  // light gray on white: ~2.5:1
+  const result = CHECKS.contrast_failure({
+    pairs: [{ kind: 'text', fg: '#bbbbbb', bg: '#ffffff', sample: 'body' }],
+    viewport: 'mobile'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /body/);
+});
+
+test('contrast_failure: pass when mark contrast ≥ 3:1', () => {
+  // mid-gray mark on white: ~4.5:1
+  const result = CHECKS.contrast_failure({
+    pairs: [{ kind: 'mark', fg: '#888888', bg: '#ffffff', sample: 'data-mark' }],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('contrast_failure: fail when mark contrast < 3:1', () => {
+  const result = CHECKS.contrast_failure({
+    pairs: [{ kind: 'mark', fg: '#dddddd', bg: '#ffffff', sample: 'data-mark' }],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'fail');
+});

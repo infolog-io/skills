@@ -34,6 +34,45 @@ CHECKS.text_collision = function ({ boxes, viewport }) {
   return { id: 'text_collision', result: 'pass', viewport };
 };
 
+function relLuminance(hex) {
+  // Strip # and parse RGB
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16) / 255;
+  const g = parseInt(h.substring(2, 4), 16) / 255;
+  const b = parseInt(h.substring(4, 6), 16) / 255;
+  const lin = (c) => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+function contrastRatio(fg, bg) {
+  const L1 = relLuminance(fg);
+  const L2 = relLuminance(bg);
+  const lighter = Math.max(L1, L2);
+  const darker  = Math.min(L1, L2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+CHECKS.contrast_failure = function ({ pairs, viewport }) {
+  const fails = pairs.filter(p => {
+    const ratio = contrastRatio(p.fg, p.bg);
+    const threshold = p.kind === 'text' ? 4.5 : 3.0;
+    return ratio < threshold;
+  });
+  if (fails.length === 0) {
+    return { id: 'contrast_failure', result: 'pass', viewport };
+  }
+  return {
+    id: 'contrast_failure',
+    result: 'fail',
+    viewport,
+    evidence: fails.map(p => {
+      const r = contrastRatio(p.fg, p.bg).toFixed(2);
+      return `${p.sample} (${p.kind}): ${p.fg} on ${p.bg} = ${r}:1`;
+    }).join('; '),
+    suggested_fix: 'darken the foreground or lighten the background until threshold passes'
+  };
+};
+
 CHECKS.text_truncation = function ({ elements, viewport }) {
   const truncated = elements.filter(e => e.scrollWidth > e.clientWidth);
   if (truncated.length === 0) {
