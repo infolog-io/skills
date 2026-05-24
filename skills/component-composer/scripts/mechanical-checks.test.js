@@ -152,3 +152,49 @@ test('responsive_break: fail at mobile when horizontal scroll', () => {
   assert.equal(result.result, 'fail');
   assert.match(result.evidence, /500.*375|125/);
 });
+
+test('chartjunk_decorative_css: pass when no decorative CSS on data marks', () => {
+  const result = CHECKS.chartjunk_decorative_css({
+    marks: [
+      { selector: '.data-mark', boxShadow: 'none', textShadow: 'none',
+        background: 'none', transform: 'none' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('chartjunk_decorative_css: fail on box-shadow', () => {
+  const result = CHECKS.chartjunk_decorative_css({
+    marks: [
+      { selector: '.data-mark', boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+        textShadow: 'none', background: 'none', transform: 'none' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /box-shadow/);
+});
+
+test('chartjunk_decorative_css: fail on gradient background', () => {
+  const result = CHECKS.chartjunk_decorative_css({
+    marks: [
+      { selector: 'rect.bar', boxShadow: 'none', textShadow: 'none',
+        background: 'linear-gradient(to top, #fff, #000)', transform: 'none' }
+    ],
+    viewport: 'tablet'
+  });
+  assert.equal(result.result, 'fail');
+});
+
+test('chartjunk_decorative_css: fail on 3D transform', () => {
+  const result = CHECKS.chartjunk_decorative_css({
+    marks: [
+      { selector: '.bar', boxShadow: 'none', textShadow: 'none',
+        background: 'none', transform: 'rotateY(15deg)' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /transform/);
+});

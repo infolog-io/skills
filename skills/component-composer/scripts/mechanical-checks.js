@@ -87,6 +87,34 @@ CHECKS.text_truncation = function ({ elements, viewport }) {
   };
 };
 
+CHECKS.chartjunk_decorative_css = function ({ marks, viewport }) {
+  const violations = [];
+  for (const m of marks) {
+    if (m.boxShadow && m.boxShadow !== 'none') {
+      violations.push(`${m.selector}: box-shadow=${m.boxShadow}`);
+    }
+    if (m.textShadow && m.textShadow !== 'none') {
+      violations.push(`${m.selector}: text-shadow=${m.textShadow}`);
+    }
+    if (m.background && /gradient/i.test(m.background)) {
+      violations.push(`${m.selector}: gradient background=${m.background}`);
+    }
+    if (m.transform && /rotate[XY]|matrix3d|perspective/.test(m.transform)) {
+      violations.push(`${m.selector}: 3D transform=${m.transform}`);
+    }
+  }
+  if (violations.length === 0) {
+    return { id: 'chartjunk_decorative_css', result: 'pass', viewport };
+  }
+  return {
+    id: 'chartjunk_decorative_css',
+    result: 'fail',
+    viewport,
+    evidence: violations.join('; '),
+    suggested_fix: 'remove decorative CSS; rely on position, shape, and saturation alone'
+  };
+};
+
 CHECKS.responsive_break = function ({ documentScrollWidth, viewportWidth, viewport }) {
   if (viewport !== 'mobile') {
     return { id: 'responsive_break', result: 'pass', viewport };
