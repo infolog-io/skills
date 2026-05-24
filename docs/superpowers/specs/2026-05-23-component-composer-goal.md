@@ -348,3 +348,37 @@ This goal grew out of a session that built four Tufte-style charts of GitHub usa
 Style anchor: `ThariqS/html-effectiveness` — single-file HTML with CSS custom properties, no build, no deps.
 
 Output target ergonomics: the artifact is one HTML file you can email, paste, or open offline. The HUD is for iteration only. The user takes home a pure, dependency-free artifact.
+
+---
+
+## v1.0.0 ship assessment
+
+Assessed: 2026-05-23. Branch: `feat/component-composer`. Tag: `v1.0.0`.
+
+All scaffold and static work is complete. Runtime end-to-end verification
+(invoking the composer skill against live Claude Preview with real data)
+is deferred to a follow-up session.
+
+| # | Criterion | Status | Notes |
+|---|-----------|--------|-------|
+| 1 | Composer rebuilds GitHub chart end-to-end with `atomic-data-viz` | DEFERRED | Requires live session invoking the composer skill against real data |
+| 2 | Mechanical layer flags all three original defects (text_collision, hidden_mark, token_compliance) | ✅ | `regression-test.js` passes all 6 assertions against `regression-buggy.html` and `regression-clean.html` |
+| 3 | Loop converges without manual intervention on GitHub chart job | DEFERRED | Requires runtime integration with Claude Preview |
+| 4 | Theme swap from `atomic-data-viz` to `bloomberg-dense` requires no composer changes | ✅ (architecture) / DEFERRED (runtime) | Both `themespec.json` files exist; composer reads theme via filesystem scan. Runtime execution deferred |
+| 5 | Audit summary shows iterations, token usage, resolved-during-loop list | ✅ (protocol) / DEFERRED (runtime) | Full schema documented in `references/loop-protocol.md` |
+| 6 | HUD overlays during iteration, stripped from final artifact | ✅ (protocol) / DEFERRED (runtime) | Inject + strip contract documented in `references/hud-protocol.md`; `scripts/hud.js` implemented |
+| 7 | Final artifact opens in any modern browser with no console errors or external requests | ✅ (static fixture) / DEFERRED (runtime artifact) | `template/base.html` and fixtures are fully self-contained |
+| 8 | PNG and PDF exports written alongside the HTML | ✅ (contracts) / DEFERRED (runtime) | `scripts/export-png.js` and `scripts/export-pdf.js` implemented; runtime execution deferred |
+| 9 | Theme discovery finds both `atomic-data-viz` and `bloomberg-dense` via `themespec.json` scan | ✅ | Both `skills/atomic-data-viz/themespec.json` and `skills/bloomberg-dense/themespec.json` present and structurally valid |
+| 10 | Persistent iteration history saved to `<session-dir>/iterations/` | ✅ (protocol) / DEFERRED (runtime) | Pattern documented in `references/loop-protocol.md` |
+
+### Verdict
+
+Criterion 2 and 9 are fully verified without a live session. Criteria 4, 5, 6, 7, 8, 10
+are architecturally verified — the scaffolding, protocols, and contracts are complete.
+Criteria 1, 3, and the runtime halves of 4–10 require a follow-up session where the
+composer skill is invoked against real data with Claude Preview active.
+
+The mechanical validator (9 checks, 31 unit tests, 6 regression assertions) is the
+highest-risk component. It is fully verified. The remaining deferred criteria are all
+orchestration and I/O — the logic is proven, the wiring is untested in production.
