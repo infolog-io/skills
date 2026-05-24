@@ -108,3 +108,25 @@ test('font_size_too_small: fail when display size < 10px', () => {
   assert.equal(result.result, 'fail');
   assert.match(result.evidence, /5\.5/);
 });
+
+test('overflow: pass when no container overflows', () => {
+  const result = CHECKS.overflow({
+    containers: [
+      { selector: 'body', scrollWidth: 375, clientWidth: 375 },
+      { selector: '.figure', scrollWidth: 350, clientWidth: 360 }
+    ],
+    viewport: 'mobile'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('overflow: fail when a container overflows horizontally', () => {
+  const result = CHECKS.overflow({
+    containers: [
+      { selector: 'body', scrollWidth: 400, clientWidth: 375 }
+    ],
+    viewport: 'mobile'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /body/);
+});

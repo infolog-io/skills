@@ -87,6 +87,22 @@ CHECKS.text_truncation = function ({ elements, viewport }) {
   };
 };
 
+CHECKS.overflow = function ({ containers, viewport }) {
+  const fails = containers.filter(c => c.scrollWidth > c.clientWidth);
+  if (fails.length === 0) {
+    return { id: 'overflow', result: 'pass', viewport };
+  }
+  return {
+    id: 'overflow',
+    result: 'fail',
+    viewport,
+    evidence: fails.map(c =>
+      `'${c.selector}': scrollWidth=${c.scrollWidth} > clientWidth=${c.clientWidth}`
+    ).join('; '),
+    suggested_fix: 'shrink content, increase container max-width, or wrap long lines'
+  };
+};
+
 CHECKS.font_size_too_small = function ({ elements, viewport }) {
   const fails = elements.filter(e => e.displayFontPx < 10);
   if (fails.length === 0) {
