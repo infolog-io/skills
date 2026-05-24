@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regression Clean Fixture</title>
+<style>
+  :root {
+    --paper: #fafaf7;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+    --accent-warm: #c8553d;
+    --accent-cool: #2c5e6f;
+    --accent-muted: #7a9fa8;
+    --sans: system-ui, -apple-system, sans-serif;
+    --font-size-body: 0.95rem;
+    --font-size-caption: 0.78rem;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-12: 48px;
+    --serif: ui-serif, Georgia, serif;
+    --font-size-h1: 1.8rem;
+    --font-size-h2: 1.1rem;
+    --foo-color: #ff0000;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: var(--space-12) var(--space-6);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--font-size-body);
+    line-height: 1.5;
+  }
+  .page { max-width: 720px; margin: 0 auto; }
+
+  /* Fix for Bug 3 — token referenced via var(), no literal outside :root */
+  .foo { color: var(--foo-color); }
+</style>
+</head>
+<body>
+<main class="page">
+  <h1>Clean Fixture — No Defects</h1>
+
+  <!--
+    All three bug types fixed:
+    - text_collision: labels placed far apart
+    - hidden_mark: rect has width >= 2
+    - token_compliance: .foo uses var(--foo-color), literal declared in :root
+  -->
+
+  <svg width="400" height="200" viewBox="0 0 400 200">
+    <!-- Fix 1: labels spaced well apart — no overlap -->
+    <text x="50" y="100" font-size="14">Jan 2024</text>
+    <text x="200" y="100" font-size="14">Feb 2024</text>
+
+    <!-- Fix 2: rect has width=40 — clearly visible -->
+    <rect class="bar" x="100" y="50" width="40" height="80" fill="var(--accent-warm)" data-label="Q1"/>
+    <rect class="bar" x="160" y="50" width="40" height="80" fill="var(--accent-cool)" data-label="Q2"/>
+  </svg>
+
+  <p class="foo">This paragraph uses a CSS variable — token_compliance should pass.</p>
+</main>
+</body>
+</html>
