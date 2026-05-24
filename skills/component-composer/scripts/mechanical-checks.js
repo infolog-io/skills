@@ -87,6 +87,28 @@ CHECKS.text_truncation = function ({ elements, viewport }) {
   };
 };
 
+CHECKS.hidden_mark = function ({ marks, viewport }) {
+  const violations = [];
+  for (const m of marks) {
+    if (m.width < 2 || m.height < 2) {
+      violations.push(`'${m.sample}': width=${m.width}, height=${m.height}`);
+    }
+    if (m.opacity < 0.3) {
+      violations.push(`'${m.sample}': opacity=${m.opacity}`);
+    }
+  }
+  if (violations.length === 0) {
+    return { id: 'hidden_mark', result: 'pass', viewport };
+  }
+  return {
+    id: 'hidden_mark',
+    result: 'fail',
+    viewport,
+    evidence: violations.join('; '),
+    suggested_fix: 'increase mark dimensions, raise opacity ≥ 0.3, or use a denser encoding'
+  };
+};
+
 CHECKS.chartjunk_decorative_css = function ({ marks, viewport }) {
   const violations = [];
   for (const m of marks) {

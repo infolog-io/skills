@@ -198,3 +198,35 @@ test('chartjunk_decorative_css: fail on 3D transform', () => {
   assert.equal(result.result, 'fail');
   assert.match(result.evidence, /transform/);
 });
+
+test('hidden_mark: pass when marks have width≥2 and opacity≥0.3', () => {
+  const result = CHECKS.hidden_mark({
+    marks: [
+      { selector: '.dot', width: 4, height: 4, opacity: 1, sample: 'data point' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'pass');
+});
+
+test('hidden_mark: fail when mark width < 2px', () => {
+  const result = CHECKS.hidden_mark({
+    marks: [
+      { selector: '.bar', width: 1, height: 10, opacity: 1, sample: 'short bar' }
+    ],
+    viewport: 'mobile'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /width/);
+});
+
+test('hidden_mark: fail when opacity < 0.3', () => {
+  const result = CHECKS.hidden_mark({
+    marks: [
+      { selector: '.line', width: 5, height: 5, opacity: 0.2, sample: 'faint annotation' }
+    ],
+    viewport: 'desktop'
+  });
+  assert.equal(result.result, 'fail');
+  assert.match(result.evidence, /opacity/);
+});
