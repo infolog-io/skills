@@ -1,6 +1,9 @@
 {
-  "name": "tufte-love",
-  "version": "0.3.0",
-  "description": "Tufte-style audits, redesigns, and reviews for data visualizations, dashboards, and quantitative UI.",
-  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
+  "name": "atomic-data-viz",
+  "version": "1.0.0",
+  "description": "Theme for component-composer: Tufte-style data graphics with quiet palette, range-frame axes, and high data-ink discipline.",
+  "author": {
+    "name": "Information Logistics",
+    "email": "bdl@infolog.io"
+  }
 }
