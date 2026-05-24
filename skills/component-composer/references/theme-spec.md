@@ -51,7 +51,7 @@ declare on `:root`. The `token_compliance` mechanical check enforces it.
 
 Concrete values. Example:
 
-```markdown
+````markdown
 ## Color values
 
 ```css
@@ -61,7 +61,7 @@ Concrete values. Example:
   --accent-warm: #c8553d;
 }
 ```
-```
+````
 
 ## criteria.md
 
