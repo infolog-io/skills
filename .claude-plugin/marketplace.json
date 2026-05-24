@@ -89,6 +89,16 @@
       "author": {
         "name": "Information Logistics"
       }
+    },
+    {
+      "name": "goal",
+      "description": "Execute a paired goal-doc + implementation-plan via subagent-driven loops. Tracks progress against the goal's binary success criteria. Activates on /goal, 'execute the goal', 'run the plan'.",
+      "source": "./skills/goal",
+      "version": "0.1.0",
+      "category": "engineering",
+      "author": {
+        "name": "Information Logistics"
+      }
     }
   ]
 }
