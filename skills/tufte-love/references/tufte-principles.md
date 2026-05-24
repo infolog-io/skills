@@ -190,3 +190,74 @@ Common lies:
 - Visual emphasis that does not match the data.
 
 Truth is not only about accurate numbers. It is also about honest context.
+
+---
+
+<!-- Merged from gist: https://gist.github.com/aparente/e48c353755958621b3c0004593105a90 -->
+
+## Formal definitions and quick reference
+
+The sections above are the practitioner playbook. The definitions below are the named frameworks from *The Visual Display of Quantitative Information* that anchor those rules.
+
+### Lie Factor
+
+```
+Lie Factor = Size of effect shown in graphic / Size of effect in data
+```
+
+- Lie Factor = 1.0: truthful.
+- Lie Factor > 1.05 or < 0.95: distortion.
+
+### Six principles of graphical integrity
+
+1. Representation of numbers should be directly proportional to quantities represented.
+2. Clear, detailed, thorough labeling defeats distortion.
+3. Show data variation, not design variation.
+4. In time-series displays, standardize money (deflate) and use consistent baselines.
+5. Dimensions of graphics should not exceed dimensions of data.
+6. Graphics must not quote data out of context.
+
+### Data-ink ratio
+
+```
+Data-Ink Ratio = Data-ink / Total ink used in graphic
+```
+
+Maximize within reason:
+
+1. Erase non-data-ink (decoration, heavy grids, boxes).
+2. Erase redundant data-ink (3D when 2D suffices).
+3. Revise and edit.
+
+**The eraser test:** if you can erase something without losing data information, erase it.
+
+### Three categories of chartjunk
+
+- **Moiré vibration** — busy patterns and cross-hatching that create visual noise.
+- **The Grid** — heavy gridlines compete with data; mute or eliminate them.
+- **The Duck** — self-promoting graphics that draw attention to their own design rather than the data.
+
+### Multifunctioning graphical elements
+
+Every graphical element should serve multiple purposes when possible.
+
+- Data points that also serve as labels (scatter plots with text).
+- Axes that double as a data series.
+- Range-frames where the axis shows the data range, not an arbitrary extent.
+- Marginal rugs that turn an axis into a marginal distribution.
+
+### The Tufte test
+
+For any visualization, ask:
+
+1. **Data-Ink:** can I erase any element without losing data?
+2. **Integrity:** does the visual effect match the data effect? (Lie Factor ≈ 1)
+3. **Chartjunk:** does any element exist for decoration only?
+4. **Excellence:** does it reveal the data at multiple levels?
+5. **Comparison:** can the viewer easily compare data elements?
+6. **Density:** could this show more data in the same space?
+7. **Context:** is all necessary context provided (labels, sources, scales)?
+
+For the extended test covering causality, multivariate integration, and layering, see `analytical-design.md`.
+
+<!-- End merged content -->

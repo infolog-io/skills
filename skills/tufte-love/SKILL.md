@@ -295,6 +295,8 @@ Use the reference files when deeper guidance is needed:
 
 - `references/tufte-principles.md`
   - Core theory and principles.
+- `references/analytical-design.md`
+  - Extensions from *Envisioning Information*, *Visual Explanations*, *Beautiful Evidence*: the 6 principles of analytical design, sparklines, layering & separation, micro/macro, range-frames, causality, confections. Load when designing dashboards, dense displays, sparklines, or explanatory graphics.
 - `references/audit-rubric.md`
   - Scored audit checklist.
 - `references/chart-patterns.md`
