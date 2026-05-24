@@ -1,0 +1,9 @@
+{
+  "name": "component-composer",
+  "version": "1.0.0",
+  "description": "Generator-critic loop: drafts a single-file HTML artifact, validates with mechanical + LLM-judge checks, iterates until every active-theme criterion passes.",
+  "author": {
+    "name": "Information Logistics",
+    "email": "bdl@infolog.io"
+  }
+}
