@@ -122,7 +122,43 @@ Goal completion report
 If any criterion fails, present the gap and ask whether to continue
 iterating or accept the partial result.
 
-### 6. Stuck detection
+### 6. Write the handoff doc
+
+After all plan tasks complete and success criteria are verified (success or partial), write a self-contained handoff at:
+
+```
+docs/handoff-<topic-slug>.md
+```
+
+Where `<topic-slug>` matches the goal/plan filename's `<name>` portion.
+
+The handoff is a briefing document for the next session — not a transcript. It must let a fresh Claude session read it cold + project CLAUDE.md and immediately know: what shipped, what's pending, what rules not to break, what the next task is, and how to verify any work it does.
+
+**Mandatory handoff sections (in order):**
+
+1. **Header** — date, branch, tests command + count, tag (if any), confidence level (high | medium | low + why), `Read first:` list of 2-4 docs, PRD status note.
+2. **TL;DR** — 3–5 sentences ending with the single concrete next-task verb phrase.
+3. **What shipped** — status tables grouped by phase, every row has a commit SHA. Followed by "Bugs fixed during session" bullets.
+4. **What's pending — the queue** — ordered list; first item matches the TL;DR's next task. Each item: title + paragraph with inputs, outputs, acceptance criterion.
+5. **Architectural rules (do not regress)** — numbered, ≥ 3 rules, each ≤ 20 words, hard-won decisions only.
+6. **Files of interest** — three buckets: Read before touching anything / Code that changed / New fixtures or artifacts.
+7. **Parked work** — items deferred on purpose, each with parking reason + unblock signal. Or `N/A — no active parks.`
+8. **Resume paths** — ≥ 2 distinct self-contained starting moves, each with a concrete first action.
+9. **Verification checklist** — re-runnable commands the next session can execute to confirm state.
+10. **Cross-references** — links to goal, plan, design notes, runtime data fixtures.
+
+**Writing rules:**
+
+- No weasel words: "probably", "roughly", "should work", "I think".
+- Every sentence ≤ 20 words.
+- Every "shipped" row has a commit SHA, or `(pending)` if uncommitted.
+- Confidence interval in header is mandatory.
+
+**Style:** if `anthropic-skills:aircall-context-bridge` is installed, invoke it for the handoff phase. Otherwise follow the template above directly.
+
+After the handoff is written, also produce a **copy-paste resume block** in the chat — a compressed version of the handoff (header + TL;DR + resume paths + verification commands) that the user can paste directly into a fresh session as the opening message.
+
+### 7. Stuck detection
 
 If a task's subagent fails 3 times with the same kind of failure (e.g.,
 test assertion, file-not-found, syntax error in generated code), halt
