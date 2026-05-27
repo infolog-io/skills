@@ -394,11 +394,13 @@ Estimated total: ~3 hours of focused work.
 
 ## Followups (not in scope, log only)
 
-- HTML+SVG hybrid layout pattern for slopegraphs (atomic activity-windows clipping)
+- HTML+SVG hybrid layout pattern for slopegraphs (atomic activity-windows clipping) — **DONE in-session** as `.windows` grid in `infolog-io` final; promote to `output-style.md` base when a second consumer needs it
 - SVG text-overflow mechanical check (validator gap from E2E)
 - `font_token_compliance` validator extension (Phase 6 decision)
 - infolog-io could add a separate display-only `.lede` class if hero pages need it — wait for use case
 - infolog-terminal optional light palette (amber-on-cream Bloomberg-terminal-paper) — wait for ask
+- **Split the generator-critic loop into its own skill** — current composer bundles a generic loop pattern with HTML-specific scaffolding. Trigger condition: when sketching a second `<thing>-composer` for a non-HTML artifact (markdown, code, schemas, prose). Extract `loop-protocol.md`, `drafter-contract.md` (abstract), `validator-contract.md` (abstract dispatch), `hud-protocol.md`, iteration history, stuck detection. Keep HTML-specific output-style + mechanical-checks + base.html in `component-composer`.
+- **Casual / throwaway HTML extension skill** — `component-composer/SKILL.md` now scopes itself to production-grade data graphics and explicitly defers to Thariq Shihipar's [Unreasonable Effectiveness of HTML](https://www.anthropic.com/engineering/claude-code-html) for casual cases. Followup is a *separate* sibling skill (proposed name: `html-sketch`) that implements his patterns: throwaway editors, sliders/knobs for interactive tuning, copy-as-prompt footer, "make me a one-off HTML to triage these tickets" use cases. Out of scope to build now — would re-architect fresh code immediately after committing. Build when a real throwaway-editor use case lands.
 
 ---
 

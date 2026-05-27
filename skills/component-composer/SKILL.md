@@ -1,11 +1,14 @@
 ---
 name: component-composer
 description: >
-  Generator-critic loop for single-file HTML artifacts. Drafts via theme,
-  renders in Claude Preview, validates with hybrid mechanical + LLM-as-judge
-  checks at three viewports, iterates until every active-theme criterion
-  passes. Activates on "compose with <theme>", "render this chart",
-  "/compose", or any data-graphics composition request that names a theme.
+  Production-grade single-file HTML data graphics through a generator-critic
+  loop. Drafts via theme, renders in Claude Preview, validates with hybrid
+  mechanical + LLM-as-judge checks at three viewports, iterates until every
+  active-theme criterion passes. Use for recurring dashboards, multi-theme
+  reports, or design-system-enforced artifacts. Do NOT use for casual,
+  throwaway, or interactive HTML — just ask Claude directly for those.
+  Activates on "compose with <theme>", "render this chart with the design
+  system", "/compose", or any composition request that names a theme.
 ---
 
 # component-composer
@@ -17,6 +20,45 @@ drafter writes HTML; the validator critiques the rendered output; the
 composer feeds failures back to the drafter and iterates until clean.
 
 Themes own the quality criteria. The composer is theme-agnostic.
+
+## When to use
+
+This skill is for **production-grade data graphics** where consistency
+matters across artifacts, themes, viewports, and time:
+
+- Recurring dashboards or reports that must look uniform
+- Artifacts that will be shared, archived, or revisited
+- Multi-theme work where the same data renders under different aesthetics
+- Cases where validator-enforced token discipline (color, type, spacing)
+  is worth the loop overhead
+
+## When NOT to use
+
+This skill is the wrong tool for casual or one-off HTML. Thariq Shihipar's
+post — [The Unreasonable Effectiveness of HTML](https://www.anthropic.com/engineering/claude-code-html)
+— is the canonical guidance for the broader case. He explicitly warned:
+
+> "I'm a little bit afraid that people will read this article and turn it
+> into a /html skill or something. While there might be some value in
+> that, I want to emphasize that you don't need to do much to get Claude
+> to do this. You can just ask it to 'make a HTML file' or 'make a HTML
+> artifact'."
+
+For the following cases, **do not invoke `/compose`**; just ask Claude
+directly:
+
+- Throwaway editors purpose-built for one piece of data (Linear ticket
+  triage, prompt tuner, feature-flag editor)
+- Specs, code-review explainers, PR walkthroughs, design mockups,
+  research reports
+- One-off explorations: "show me 6 different onboarding layouts side by
+  side"
+- Anything where the artifact's value is in *being made and used once*,
+  not in conforming to a recurring quality bar
+- Interactive prototypes with sliders, knobs, copy-as-prompt buttons
+
+The composer's industrial QA loop is overkill for these and gets in the
+way of Thariq's "just make a HTML file" simplicity.
 
 ## Operating mode
 
