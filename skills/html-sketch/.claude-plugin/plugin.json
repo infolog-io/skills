@@ -1,0 +1,10 @@
+{
+  "name": "html-sketch",
+  "description": "Casual single-file HTML artifacts in Thariq Shihipar's 'Unreasonable Effectiveness of HTML' style. Throwaway editors, side-by-side variants, interactive tuning, single-page reports. No validator loop, no themes — just patterns the drafter can reach for. Includes copy-as-prompt footer.",
+  "version": "0.0.1",
+  "category": "design",
+  "author": {
+    "name": "Information Logistics",
+    "email": "bdl@infolog.io"
+  }
+}

@@ -60,39 +60,73 @@ directly:
 The composer's industrial QA loop is overkill for these and gets in the
 way of Thariq's "just make a HTML file" simplicity.
 
+## Dependency
+
+This skill is a **consumer of the `generator-critic` skill**. The
+abstract loop pattern (cycle, HUD, stuck detection, audit-summary format,
+drafter+validator contracts) lives there. Install both:
+
+```
+/plugin install generator-critic@infolog-io
+/plugin install component-composer@infolog-io
+```
+
+`component-composer` provides the HTML-specific implementation:
+`output-style.md`, `theme-spec.md`, `mechanical-checks.js`, the HTML
+drafter rules, and the HTML validator dispatch.
+
 ## Operating mode
 
 When invoked with a job + theme name:
 
 1. **Resolve theme** — read `skills/<theme>/themespec.json` and load the
    theme's `tokens.md`, `criteria.md`, `patterns.md`, `palette.md`.
-2. **Draft** — invoke the drafter per `references/drafter-protocol.md`.
+2. **Draft** — invoke the drafter per `references/drafter-protocol.md`
+   (HTML-specific; extends `generator-critic/references/drafter-contract.md`).
 3. **Render** — write artifact to session dir; render via Claude Preview.
-4. **Inject HUD** — overlay `scripts/hud.js` per `references/hud-protocol.md`.
+4. **Inject HUD** — overlay `generator-critic/scripts/hud.js` per
+   `generator-critic/references/hud-protocol.md`.
 5. **Validate** — run mechanical checks via `preview_eval`, then LLM-as-judge
-   for the rest, per `references/validator-protocol.md`. Repeat at three
-   viewports (mobile 375 / tablet 768 / desktop 1280).
-6. **Aggregate failures** — per `references/loop-protocol.md`.
+   for the rest, per `references/validator-protocol.md` (HTML-specific;
+   extends `generator-critic/references/validator-contract.md`).
+   Repeat at three viewports (mobile 375 / tablet 768 / desktop 1280).
+6. **Aggregate failures** — per `generator-critic/references/loop-protocol.md`.
 7. **Loop** — if any failure, feed back to drafter and goto step 2.
-   If stuck, surface to user via HUD + chat.
+   If stuck, surface to user via HUD + chat (stuck-detection rules in
+   loop-protocol).
 8. **Emit** — final HTML + PNG (via `scripts/export-png.js`) + PDF (via
-   `scripts/export-pdf.js`) + audit summary + iteration history.
+   `scripts/export-pdf.js`) + audit summary (per
+   `generator-critic/references/audit-summary-format.md`) + iteration
+   history.
 
 ## References
 
-- `references/drafter-protocol.md` — drafter LLM behavior
-- `references/validator-protocol.md` — hybrid validator behavior
-- `references/loop-protocol.md` — loop steps, stuck detection, audit format
-- `references/theme-spec.md` — theme interface contract
-- `references/output-style.md` — single-file HTML style anchor
-- `references/hud-protocol.md` — HUD injection + state polling
+This skill (HTML-specific):
+
+- `references/drafter-protocol.md` — HTML drafter rules + required artifact structure
+- `references/validator-protocol.md` — HTML validator dispatch + criteria registry
+- `references/theme-spec.md` — theme interface contract (HTML-flavored)
+- `references/output-style.md` — Atomic Foundation: tokens, base CSS, theme switch
+
+Inherited from `generator-critic`:
+
+- `generator-critic/references/loop-protocol.md` — loop steps, stuck detection
+- `generator-critic/references/drafter-contract.md` — abstract drafter interface
+- `generator-critic/references/validator-contract.md` — abstract dispatch + output shape
+- `generator-critic/references/hud-protocol.md` — HUD injection + state polling
+- `generator-critic/references/audit-summary-format.md` — final-emit shape
 
 ## Scripts
 
-- `scripts/mechanical-checks.js` — 9 pure validator check functions
-- `scripts/hud.js` — in-loop HUD overlay (vanilla JS)
-- `scripts/export-png.js` — PNG export
-- `scripts/export-pdf.js` — PDF export
+This skill (HTML-specific):
+
+- `scripts/mechanical-checks.js` — 9 pure DOM check functions + browser adapter
+- `scripts/export-png.js` — PNG export contract
+- `scripts/export-pdf.js` — PDF export contract
+
+Inherited from `generator-critic`:
+
+- `generator-critic/scripts/hud.js` — in-loop HUD overlay (vanilla JS)
 
 ## Template
 

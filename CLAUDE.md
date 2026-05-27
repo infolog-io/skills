@@ -16,4 +16,4 @@ This repo is a public Claude Code plugin marketplace for skills authored by Info
 
 ## What this repo provides
 
-11 plugins as of v0.5.0 — claude-pip, infolog-io (formerly tufte-love), jtbd-prd, estimatrix, learn2kern, semantic-organization, atomic-brand, github-issues-kanban, goal, component-composer, infolog-terminal. Spans process discipline, JTBD validation, sizing, structural audit, agent orchestration, type scales, brand audits, data viz audits, generator-critic loops, and theme bundles.
+13 plugins as of v0.5.0 — claude-pip, infolog-io (formerly tufte-love), jtbd-prd, estimatrix, learn2kern, semantic-organization, atomic-brand, github-issues-kanban, goal, generator-critic, component-composer, infolog-terminal, html-sketch. Spans process discipline, JTBD validation, sizing, structural audit, agent orchestration, type scales, brand audits, data viz audits, generator-critic loops, theme bundles, and casual HTML patterns.

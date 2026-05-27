@@ -101,10 +101,20 @@
       }
     },
     {
+      "name": "generator-critic",
+      "description": "Abstract generator-critic loop pattern. Consumed by composer-style skills (HTML, code, schemas, prose) that need iterative refinement against declared criteria. Defines the loop, abstract drafter + validator contracts, HUD overlay, and audit-summary format.",
+      "source": "./skills/generator-critic",
+      "version": "0.0.1",
+      "category": "agent-orchestration",
+      "author": {
+        "name": "Information Logistics"
+      }
+    },
+    {
       "name": "component-composer",
-      "description": "Generator-critic loop for single-file HTML data graphics.",
+      "description": "Production-grade single-file HTML data graphics via generator-critic loop (depends on the generator-critic skill). Use when consistency across artifacts, themes, viewports, and time matters. Do NOT use for casual or throwaway HTML — see html-sketch or just ask Claude.",
       "source": "./skills/component-composer",
-      "version": "1.0.0",
+      "version": "0.0.2",
       "category": "design",
       "author": {
         "name": "Information Logistics"
@@ -115,6 +125,16 @@
       "description": "Terminal-aesthetic theme for component-composer.",
       "source": "./skills/infolog-terminal",
       "version": "1.0.0",
+      "category": "design",
+      "author": {
+        "name": "Information Logistics"
+      }
+    },
+    {
+      "name": "html-sketch",
+      "description": "Casual single-file HTML artifacts in Thariq Shihipar's 'Unreasonable Effectiveness of HTML' style. Throwaway editors, side-by-side variant comparisons, interactive tuning with sliders/knobs, single-page reports. No validator loop, no themes, no industrial QA. Includes copy-as-prompt footer pattern for round-tripping back into Claude.",
+      "source": "./skills/html-sketch",
+      "version": "0.0.1",
       "category": "design",
       "author": {
         "name": "Information Logistics"

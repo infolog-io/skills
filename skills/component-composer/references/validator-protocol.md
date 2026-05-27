@@ -1,4 +1,11 @@
-# Validator Protocol
+# Validator Protocol (HTML)
+
+Extends the abstract [validator contract](../../generator-critic/references/validator-contract.md)
+from the `generator-critic` skill. This file specifies the HTML-flavored
+implementation: which mechanical checks are built-in, how the LLM-judge
+prompt is shaped for HTML artifacts, and the per-viewport context label
+scheme. The abstract dispatch rule (mechanical first, LLM-judge fallback)
+applies unconditionally.
 
 The validator runs after each draft to check whether the rendered artifact
 satisfies the active theme's criteria.

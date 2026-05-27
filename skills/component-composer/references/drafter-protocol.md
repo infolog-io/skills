@@ -1,4 +1,10 @@
-# Drafter Protocol
+# Drafter Protocol (HTML)
+
+Extends the abstract [drafter contract](../../generator-critic/references/drafter-contract.md)
+from the `generator-critic` skill. This file specifies the HTML-flavored
+implementation. The abstract contract's behavior rules (address every
+failure, no new failures, preserve intent, surgical edits) apply
+unconditionally and are not repeated here.
 
 The drafter is an LLM agent that emits a single self-contained HTML file
 matching the active theme's tokens, patterns, and criteria.
