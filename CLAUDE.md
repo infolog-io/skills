@@ -16,4 +16,6 @@ This repo is a public Claude Code plugin marketplace for skills authored by Info
 
 ## What this repo provides
 
-13 plugins as of v0.5.0 — claude-pip, infolog-io (formerly tufte-love), jtbd-prd, estimatrix, learn2kern, semantic-organization, atomic-brand, github-issues-kanban, goal, generator-critic, component-composer, infolog-terminal, html-sketch. Spans process discipline, JTBD validation, sizing, structural audit, agent orchestration, type scales, brand audits, data viz audits, generator-critic loops, theme bundles, and casual HTML patterns.
+8 plugins as of v0.5.0 — claude-pip, jtbd-prd, estimatrix, learn2kern, semantic-organization, atomic-brand, github-issues-kanban, goal. Spans process discipline, JTBD validation, sizing, structural audit, agent orchestration, type scales, brand audits.
+
+**HTML composition family moved to its own marketplace.** generator-critic, component-composer, spraypixel (was infolog-io), spraypixel-terminal (was infolog-terminal), and html-sketch now ship under **SPRAYPIXEL.AI** at https://github.com/spraypixel/skills. Repo lives locally at `/Users/informationlogistics/Developer/spraypixel-skills/`. The split happened 2026-05-26 to give the composition family its own identity and release cycle. Docs in `docs/superpowers/` retain the historical record of the work done in this repo before the split.
