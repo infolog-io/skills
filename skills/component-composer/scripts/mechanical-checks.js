@@ -133,7 +133,14 @@ CHECKS.token_compliance = function ({ declarations, viewport }) {
 CHECKS.hidden_mark = function ({ marks, viewport }) {
   const violations = [];
   for (const m of marks) {
-    if (m.width < 2 || m.height < 2) {
+    // 1D marks (SVG <line>): one bbox dim is 0 by design; require the other ≥ 4
+    const is1D = (m.width === 0) !== (m.height === 0);
+    if (is1D) {
+      const length = Math.max(m.width, m.height);
+      if (length < 4) {
+        violations.push(`'${m.sample}': line length=${length}`);
+      }
+    } else if (m.width < 2 || m.height < 2) {
       violations.push(`'${m.sample}': width=${m.width}, height=${m.height}`);
     }
     if (m.opacity < 0.3) {
@@ -233,6 +240,16 @@ CHECKS.font_size_too_small = function ({ elements, viewport }) {
 // It extracts DOM data for the requested criterion and dispatches to the
 // pure check function. Returns the validator output shape (JSON-safe).
 
+function selectorHint(n) {
+  const tag = n.tagName.toLowerCase();
+  // SVG elements expose className as SVGAnimatedString, not string
+  const raw = typeof n.className === 'string'
+    ? n.className
+    : (n.className && n.className.baseVal) || '';
+  const cls = raw.split(' ').filter(Boolean)[0];
+  return cls ? tag + '.' + cls : tag;
+}
+
 export function runInBrowser(criterionId, viewport) {
   switch (criterionId) {
     case 'text_collision': {
@@ -264,7 +281,7 @@ export function runInBrowser(criterionId, viewport) {
           kind: isText ? 'text' : 'mark',
           fg: rgbToHex(s.color),
           bg: rgbToHex(getEffectiveBackground(n)),
-          sample: n.tagName + (n.className ? '.' + n.className.split(' ')[0] : '')
+          sample: selectorHint(n)
         };
       }).filter(p => p.fg && p.bg);
       return CHECKS.contrast_failure({ pairs, viewport });
@@ -286,7 +303,7 @@ export function runInBrowser(criterionId, viewport) {
       const containers = Array.from(document.querySelectorAll(
         'body, .page, .figure, .data-table, table'
       )).map(n => ({
-        selector: n.tagName.toLowerCase() + (n.className ? '.' + n.className.split(' ')[0] : ''),
+        selector: selectorHint(n),
         scrollWidth: n.scrollWidth, clientWidth: n.clientWidth
       }));
       return CHECKS.overflow({ containers, viewport });
@@ -304,7 +321,7 @@ export function runInBrowser(criterionId, viewport) {
       const marks = nodes.map(n => {
         const s = getComputedStyle(n);
         return {
-          selector: n.tagName.toLowerCase() + (n.className ? '.' + n.className.split(' ')[0] : ''),
+          selector: selectorHint(n),
           boxShadow: s.boxShadow, textShadow: s.textShadow,
           background: s.background, transform: s.transform
         };
@@ -319,7 +336,7 @@ export function runInBrowser(criterionId, viewport) {
         const b = n.getBoundingClientRect();
         const s = getComputedStyle(n);
         return {
-          selector: n.tagName.toLowerCase() + (n.className ? '.' + n.className.split(' ')[0] : ''),
+          selector: selectorHint(n),
           width: b.width, height: b.height, opacity: parseFloat(s.opacity),
           sample: n.getAttribute('data-label') || n.tagName
         };

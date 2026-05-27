@@ -18,7 +18,7 @@ skills/<theme-name>/
 
 ```json
 {
-  "name": "atomic-data-viz",
+  "name": "infolog-io",
   "version": "1.0.0",
   "context": "data-graphics",
   "capabilities": ["chart", "table", "sparkline", "small-multiples"],

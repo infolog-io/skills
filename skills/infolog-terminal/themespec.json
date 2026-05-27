@@ -1,7 +1,9 @@
 {
-  "name": "bloomberg-dense",
-  "version": "1.0.0",
+  "name": "infolog-terminal",
+  "version": "0.0.1",
   "context": "data-graphics",
+  "modes": ["dark"],
+  "default_mode": "dark",
   "capabilities": [
     "chart", "table", "sparkline", "small-multiples", "dense-table"
   ],

@@ -1,17 +1,17 @@
 ---
-name: atomic-data-viz
+name: infolog-io
 description: >
   Theme bundle for component-composer. Provides tokens, criteria, patterns,
   and palette for Tufte-style data graphics: range-frame axes, small
   multiples, high data-ink, single highlight, no chartjunk. Activated when
-  component-composer is invoked with `atomic-data-viz` as the theme name.
+  component-composer is invoked with `infolog-io` as the theme name.
 ---
 
-# atomic-data-viz
+# infolog-io
 
 This skill is a **theme** for `component-composer`. It does not run on
 its own. The composer reads this skill's references when the user invokes
-composition with `atomic-data-viz` as the active theme.
+composition with `infolog-io` as the active theme.
 
 ## What this theme provides
 
@@ -35,8 +35,8 @@ over single overloaded charts.
 
 ## To invoke
 
-> "compose a chart with atomic-data-viz showing my GitHub usage data"
+> "compose a chart with infolog-io showing my GitHub usage data"
 
-The composer resolves `atomic-data-viz` via `themespec.json`, reads the
+The composer resolves `infolog-io` via `themespec.json`, reads the
 references, drafts an HTML artifact, validates against `criteria.md`, and
 iterates until clean.

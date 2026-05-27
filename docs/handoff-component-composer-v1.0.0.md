@@ -12,7 +12,7 @@
 
 ## TL;DR for the next session
 
-Shipped v1.0.0 of a three-skill system: `component-composer` (generator-critic loop), `atomic-data-viz` (refactored from `tufte-love` as the first conformant theme), and `bloomberg-dense` (sibling theme proving multi-theme architecture). Plus `/goal` orchestrator, `atomic-brand` components catalog, 9 mechanical validator checks with regression fixtures. **Adversarial review against the Anthropic Claude Blog post "Unreasonable Effectiveness of HTML" exposed over-engineering and over-narrowing.** The next natural task is: **decide whether to open the PR now or run v1.1 dial-in first to address the adversarial findings (rename `atomic-data-viz` → broader scope, add casual mode, add throwaway-editor capability, add copy-as-prompt pattern).**
+Shipped v1.0.0 of a three-skill system: `component-composer` (generator-critic loop), `infolog-io` (refactored from `tufte-love` as the first conformant theme), and `infolog-terminal` (sibling theme proving multi-theme architecture). Plus `/goal` orchestrator, `atomic-brand` components catalog, 9 mechanical validator checks with regression fixtures. **Adversarial review against the Anthropic Claude Blog post "Unreasonable Effectiveness of HTML" exposed over-engineering and over-narrowing.** The next natural task is: **decide whether to open the PR now or run v1.1 dial-in first to address the adversarial findings (rename `infolog-io` → broader scope, add casual mode, add throwaway-editor capability, add copy-as-prompt pattern).**
 
 ---
 
@@ -48,15 +48,15 @@ Final test count: 31 tests, all passing.
 | 24 | `scripts/export-png.js` (contract file) | ✅ | `c0242c6` |
 | 25 | `scripts/export-pdf.js` (contract file) | ✅ | `1e6f02b` |
 
-### Phase 4 — atomic-data-viz refactor (9 commits)
+### Phase 4 — infolog-io refactor (9 commits)
 
 | Step | What | Status | Commit |
 |---|---|---|---|
-| 26 | `git mv tufte-love → atomic-data-viz`; `tufte-principles.md` → `principles.md` | ✅ | `54bbee6` |
+| 26 | `git mv tufte-love → infolog-io`; `tufte-principles.md` → `principles.md` | ✅ | `54bbee6` |
 | 27 | SKILL.md rewritten as theme declaration; plugin.json bumped to v1.0.0 | ✅ | `964a0e6` |
 | 28-32 | New theme files: themespec.json, tokens.md, palette.md, criteria.md, patterns.md | ✅ | sequential commits |
 | 33 | Removed audit-rubric.md + color-palette.md (merged into new files) | ✅ | `dbfb24e` |
-| 34 | Marketplace entry renamed `tufte-love` → `atomic-data-viz` | ✅ | `a2d0297` |
+| 34 | Marketplace entry renamed `tufte-love` → `infolog-io` | ✅ | `a2d0297` |
 
 ### Phase 5 — atomic-brand components.md (1 commit)
 
@@ -64,11 +64,11 @@ Final test count: 31 tests, all passing.
 |---|---|---|---|
 | 35 | 9-component structural catalog (axis, legend, annotation, sparkline, data-mark, table-row, small-multiple-cell, slopegraph-line, strip-plot-tick) | ✅ | `0ad61f0` |
 
-### Phase 6 — bloomberg-dense sibling theme (8 commits)
+### Phase 6 — infolog-terminal sibling theme (8 commits)
 
 | Step | What | Status | Commit |
 |---|---|---|---|
-| 36-42 | Scaffolded `skills/bloomberg-dense/`: plugin.json, SKILL.md, themespec.json, tokens.md, palette.md (green-on-black), criteria.md, patterns.md | ✅ | `a5ad646` → `d8fa3c2` |
+| 36-42 | Scaffolded `skills/infolog-terminal/`: plugin.json, SKILL.md, themespec.json, tokens.md, palette.md (green-on-black), criteria.md, patterns.md | ✅ | `a5ad646` → `d8fa3c2` |
 | 43 | Marketplace registration | ✅ | `8b91621` |
 
 ### Phase 7 — verification + tag (3 commits)
@@ -107,7 +107,7 @@ The first item below matches the TL;DR's "next task."
 
 1. **Decide PR-now vs v1.1-dial-in-first.** The adversarial review against Thariq's "Unreasonable Effectiveness of HTML" article surfaced five structural critiques: (a) Thariq explicitly warned against /html skills; (b) we over-narrowed to data viz; (c) we missed throwaway-editor + copy-as-prompt patterns; (d) we made it less joyful with industrial QA; (e) we over-validated with token_compliance as a hard gate. Decision needed: open the PR for v1.0.0 as a checkpoint, or run v1.1 dial-in (rename theme broader, add casual mode, add editor-as-artifact, add copy-as-prompt footer, soften token_compliance) before merging.
 
-2. **Runtime end-to-end test.** Success criteria 1, 3, 4 (runtime), 5 (runtime), 6 (runtime), 7, 8, 10 are all DEFERRED — they require invoking the composer skill against live data with Claude Preview running. Best done in a fresh session that's not at context budget. Inputs: `/tmp/tufte-gh/repos.json` + `/tmp/tufte-gh/events.json` already available. Acceptance: composer rebuilds the GitHub usage chart end-to-end with `atomic-data-viz`; HUD overlays during, absent from final; PNG + PDF emit; same loop with `bloomberg-dense` produces a visually different chart.
+2. **Runtime end-to-end test.** Success criteria 1, 3, 4 (runtime), 5 (runtime), 6 (runtime), 7, 8, 10 are all DEFERRED — they require invoking the composer skill against live data with Claude Preview running. Best done in a fresh session that's not at context budget. Inputs: `/tmp/tufte-gh/repos.json` + `/tmp/tufte-gh/events.json` already available. Acceptance: composer rebuilds the GitHub usage chart end-to-end with `infolog-io`; HUD overlays during, absent from final; PNG + PDF emit; same loop with `infolog-terminal` produces a visually different chart.
 
 3. **Open the PR.** `gh pr create` against `main`, body summarizing the 7 phases + linking to goal + handoff. Confidence: high.
 
@@ -141,8 +141,8 @@ The first item below matches the TL;DR's "next task."
 ### Code that changed this session
 
 - `skills/component-composer/` — new skill, SKILL + 6 references + scripts + template.
-- `skills/atomic-data-viz/` — renamed from `skills/tufte-love/`, reorganized as a conformant theme.
-- `skills/bloomberg-dense/` — new sibling theme.
+- `skills/infolog-io/` — renamed from `skills/tufte-love/`, reorganized as a conformant theme.
+- `skills/infolog-terminal/` — new sibling theme.
 - `skills/atomic-brand/references/components.md` — new 9-component catalog.
 - `skills/goal/` — new orchestrator skill for goal+plan execution.
 - `.claude-plugin/marketplace.json` — three new plugin entries, one rename.
@@ -169,11 +169,11 @@ The first item below matches the TL;DR's "next task."
 
 ## Resume paths (pick one)
 
-1. **Open the PR now.** `gh pr create --base main --head feat/component-composer --title "feat: component-composer v1.0.0 + atomic-data-viz + bloomberg-dense" --body "$(cat docs/handoff-component-composer-v1.0.0.md | head -60)"` — get v1.0.0 visible, do v1.1 dial-in as a follow-up branch.
+1. **Open the PR now.** `gh pr create --base main --head feat/component-composer --title "feat: component-composer v1.0.0 + infolog-io + infolog-terminal" --body "$(cat docs/handoff-component-composer-v1.0.0.md | head -60)"` — get v1.0.0 visible, do v1.1 dial-in as a follow-up branch.
 
-2. **Run the v1.1 dial-in first.** Adversarial review findings are concrete: rename `atomic-data-viz` to a broader name, add casual mode to skip the loop, add editor-as-artifact capability, add copy-as-prompt footer, soften `token_compliance` to warn-not-fail in casual mode. Estimated: 8-15 commits on a new `feat/component-composer-v1.1` branch. Then PR both together.
+2. **Run the v1.1 dial-in first.** Adversarial review findings are concrete: rename `infolog-io` to a broader name, add casual mode to skip the loop, add editor-as-artifact capability, add copy-as-prompt footer, soften `token_compliance` to warn-not-fail in casual mode. Estimated: 8-15 commits on a new `feat/component-composer-v1.1` branch. Then PR both together.
 
-3. **Run the runtime E2E test first.** Fresh session. Invoke `component-composer` with `atomic-data-viz` theme on the GitHub usage data in `/tmp/tufte-gh/`. Watch the loop iterate. Verify success criteria 1, 3, 4-runtime, 5-runtime, 6-runtime, 7, 8, 10 actually pass. Only then PR.
+3. **Run the runtime E2E test first.** Fresh session. Invoke `component-composer` with `infolog-io` theme on the GitHub usage data in `/tmp/tufte-gh/`. Watch the loop iterate. Verify success criteria 1, 3, 4-runtime, 5-runtime, 6-runtime, 7, 8, 10 actually pass. Only then PR.
 
 ---
 
@@ -212,11 +212,11 @@ For the next session if path 2 is chosen. Severity tags from the review:
 | Severity | Finding | Recommended move | Effort |
 |---|---|---|---|
 | 🚨 | Thariq explicitly warned against /html skills | Acknowledge in goal doc; reframe composer as one of many possible HTML workflows | XS |
-| 🚨 | We over-narrowed to "data viz" | Rename `atomic-data-viz` → `atomic-html` or `quiet-html`; expand themespec capabilities | S |
+| 🚨 | We over-narrowed to "data viz" | Rename `infolog-io` → `atomic-html` or `quiet-html`; expand themespec capabilities | S |
 | 🚨 | Missed throwaway-editor + copy-as-prompt | Add `editor-as-artifact` capability + "copy-as-prompt" footer to base.html | M |
 | 🟡 | Less joyful (industrial QA) | Add `--casual` mode that skips the validator loop; loop becomes opt-in via `--audit` | S |
 | 🟡 | Over-validated for casual artifacts | Soften `token_compliance` to warn-not-fail in casual mode | XS |
 | 🟢 | Plan + spec are markdown | Convert to HTML artifacts (eat own dog food) | M |
-| 🟢 | `atomic-data-viz` name too narrow | Same as second row | (merged) |
+| 🟢 | `infolog-io` name too narrow | Same as second row | (merged) |
 
 The single highest-leverage change is the `--casual` mode + default-mode inversion. Currently the composer always validates. Inverting that — casual is default, full loop is opt-in — recovers Thariq's "just make a HTML file" workflow.

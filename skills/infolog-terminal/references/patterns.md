@@ -1,4 +1,4 @@
-# bloomberg-dense · Patterns
+# infolog-terminal · Patterns
 
 ## Default form is a dense table
 

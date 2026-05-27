@@ -21,9 +21,9 @@
       }
     },
     {
-      "name": "atomic-data-viz",
+      "name": "infolog-io",
       "description": "Tufte-style theme for component-composer.",
-      "source": "./skills/atomic-data-viz",
+      "source": "./skills/infolog-io",
       "version": "1.0.0",
       "category": "design",
       "author": {
@@ -111,9 +111,9 @@
       }
     },
     {
-      "name": "bloomberg-dense",
+      "name": "infolog-terminal",
       "description": "Terminal-aesthetic theme for component-composer.",
-      "source": "./skills/bloomberg-dense",
+      "source": "./skills/infolog-terminal",
       "version": "1.0.0",
       "category": "design",
       "author": {

@@ -1,4 +1,4 @@
-# Component Composer + atomic-data-viz — Goal
+# Component Composer + infolog-io — Goal
 
 - Date: 2026-05-23
 - Status: Goal locked, ready for implementation plan
@@ -20,7 +20,7 @@ Single self-contained `.html` file in the style of `ThariqS/html-effectiveness`:
 
 ```
 component-composer        orchestrates draft → render → validate → loop
-atomic-data-viz           a theme — supplies tokens, criteria, patterns, palette
+infolog-io           a theme — supplies tokens, criteria, patterns, palette
                           (refactored from tufte-love)
 atomic-brand              base brand-token taxonomy (existing) +
                           new components.md describing the structural primitives
@@ -138,7 +138,7 @@ Composer tracks per-iteration LLM calls (drafter + validator LLM-judge) and per-
 
 ```
 Composer audit
-- Theme: atomic-data-viz v1.0.0
+- Theme: infolog-io v1.0.0
 - Iterations: 4
 - Final result: pass
 - Drafter calls: 4 (~12K tokens in, ~8K tokens out)
@@ -178,7 +178,7 @@ skills/<theme-name>/
 
 ```json
 {
-  "name": "atomic-data-viz",
+  "name": "infolog-io",
   "version": "1.0.0",
   "context": "data-graphics",
   "capabilities": ["chart", "table", "sparkline", "small-multiples", "dot-plot",
@@ -196,10 +196,10 @@ Composer scans `skills/*/themespec.json` at session start. The user names a them
 
 Same shapes as previously specified. `criteria.md` rules have id (heading) + check (prose). No severity, no priority — drafter fixes all failures.
 
-## `atomic-data-viz` refactor (from `tufte-love`)
+## `infolog-io` refactor (from `tufte-love`)
 
 ```
-skills/atomic-data-viz/
+skills/infolog-io/
   SKILL.md                    declares "theme for component-composer"
   themespec.json              v1.0.0 manifest
   .claude-plugin/plugin.json  renamed
@@ -287,7 +287,7 @@ Each entry: HTML+SVG skeleton + CSS variable contract. Themes set the variables;
 | Item | Status |
 |---|---|
 | `component-composer` skill (full hybrid validator) | In |
-| `atomic-data-viz` theme (refactored from tufte-love) | In |
+| `infolog-io` theme (refactored from tufte-love) | In |
 | `atomic-brand/references/components.md` (9 components) | In |
 | Theme discovery via filesystem scan | In |
 | Persistent iteration history (`iterations/iter-NN.html`) | In |
@@ -296,7 +296,7 @@ Each entry: HTML+SVG skeleton + CSS variable contract. Themes set the variables;
 | HTML output | In |
 | PNG output (`preview_screenshot`) | In |
 | PDF output (`window.print()` via `preview_eval`) | In |
-| One sibling theme scaffolded: `bloomberg-dense` (terminal aesthetic) | In |
+| One sibling theme scaffolded: `infolog-terminal` (terminal aesthetic) | In |
 | End-to-end test rebuilding the GitHub chart with mechanical layer catching the original bugs | In |
 | Concrete Swift / Compose native renderers | OUT — out of scope, no abstraction stub either |
 | React / Vite / Tailwind / shadcn runtime | OUT — single static HTML file is the artifact |
@@ -305,15 +305,15 @@ Each entry: HTML+SVG skeleton + CSS variable contract. Themes set the variables;
 
 The goal is met when ALL of these are true:
 
-1. ✅ Running the composer with `atomic-data-viz` against the GitHub usage data produces a single HTML file matching the html-effectiveness style.
+1. ✅ Running the composer with `infolog-io` against the GitHub usage data produces a single HTML file matching the html-effectiveness style.
 2. ✅ The mechanical layer flags every defect from the previous session (the `2025/Dec` label overlap, the chart-2 oversized labels, the chart-3 hidden short bars). Verified against `/tmp/tufte-gh/charts.html` v1 as a regression fixture.
 3. ✅ The loop runs to convergence without manual intervention on the GitHub chart job.
-4. ✅ Switching the theme name from `atomic-data-viz` to `bloomberg-dense` and re-running produces a visually different chart with no code changes to the composer.
+4. ✅ Switching the theme name from `infolog-io` to `infolog-terminal` and re-running produces a visually different chart with no code changes to the composer.
 5. ✅ Audit summary shows iteration count, drafter/judge token usage, and resolved-during-loop list.
 6. ✅ HUD overlays the preview during iteration and is absent from the final artifact.
 7. ✅ Final artifact opens in any modern browser with no console errors and no external requests.
 8. ✅ PNG and PDF exports written alongside the HTML.
-9. ✅ Theme discovery finds both `atomic-data-viz` and `bloomberg-dense` via `themespec.json` scan.
+9. ✅ Theme discovery finds both `infolog-io` and `infolog-terminal` via `themespec.json` scan.
 10. ✅ Persistent iteration history saved to `<session-dir>/iterations/`.
 
 ## Implementation order
@@ -323,13 +323,13 @@ The goal is met when ALL of these are true:
 3. Build `scripts/mechanical-checks.js` with 9 built-in checks; unit-test against synthetic HTML fixtures
 4. Build `scripts/hud.js` and `template/base.html`
 5. Build `scripts/export-png.js` and `scripts/export-pdf.js`
-6. Refactor `skills/tufte-love/` → `skills/atomic-data-viz/`; write `tokens.md`, `palette.md`, `criteria.md`, `patterns.md`; preserve `principles.md` and `analytical-design.md`
+6. Refactor `skills/tufte-love/` → `skills/infolog-io/`; write `tokens.md`, `palette.md`, `criteria.md`, `patterns.md`; preserve `principles.md` and `analytical-design.md`
 7. Write `skills/atomic-brand/references/components.md` with 9 structural components
-8. Scaffold `skills/bloomberg-dense/` — themespec.json + tokens.md + palette.md + criteria.md + patterns.md (terminal aesthetic: green-on-black, monospace, dense)
+8. Scaffold `skills/infolog-terminal/` — themespec.json + tokens.md + palette.md + criteria.md + patterns.md (terminal aesthetic: green-on-black, monospace, dense)
 9. Build theme-discovery scan
 10. Build persistent iteration history + cost tracking
-11. End-to-end test: rebuild the GitHub chart via composer with atomic-data-viz; verify all 10 success criteria
-12. Re-run with bloomberg-dense theme; verify criterion 4
+11. End-to-end test: rebuild the GitHub chart via composer with infolog-io; verify all 10 success criteria
+12. Re-run with infolog-terminal theme; verify criterion 4
 13. Tag v1.0.0
 
 ## Open questions (resolve during implementation, do not block goal)
@@ -361,15 +361,15 @@ is deferred to a follow-up session.
 
 | # | Criterion | Status | Notes |
 |---|-----------|--------|-------|
-| 1 | Composer rebuilds GitHub chart end-to-end with `atomic-data-viz` | DEFERRED | Requires live session invoking the composer skill against real data |
+| 1 | Composer rebuilds GitHub chart end-to-end with `infolog-io` | DEFERRED | Requires live session invoking the composer skill against real data |
 | 2 | Mechanical layer flags all three original defects (text_collision, hidden_mark, token_compliance) | ✅ | `regression-test.js` passes all 6 assertions against `regression-buggy.html` and `regression-clean.html` |
 | 3 | Loop converges without manual intervention on GitHub chart job | DEFERRED | Requires runtime integration with Claude Preview |
-| 4 | Theme swap from `atomic-data-viz` to `bloomberg-dense` requires no composer changes | ✅ (architecture) / DEFERRED (runtime) | Both `themespec.json` files exist; composer reads theme via filesystem scan. Runtime execution deferred |
+| 4 | Theme swap from `infolog-io` to `infolog-terminal` requires no composer changes | ✅ (architecture) / DEFERRED (runtime) | Both `themespec.json` files exist; composer reads theme via filesystem scan. Runtime execution deferred |
 | 5 | Audit summary shows iterations, token usage, resolved-during-loop list | ✅ (protocol) / DEFERRED (runtime) | Full schema documented in `references/loop-protocol.md` |
 | 6 | HUD overlays during iteration, stripped from final artifact | ✅ (protocol) / DEFERRED (runtime) | Inject + strip contract documented in `references/hud-protocol.md`; `scripts/hud.js` implemented |
 | 7 | Final artifact opens in any modern browser with no console errors or external requests | ✅ (static fixture) / DEFERRED (runtime artifact) | `template/base.html` and fixtures are fully self-contained |
 | 8 | PNG and PDF exports written alongside the HTML | ✅ (contracts) / DEFERRED (runtime) | `scripts/export-png.js` and `scripts/export-pdf.js` implemented; runtime execution deferred |
-| 9 | Theme discovery finds both `atomic-data-viz` and `bloomberg-dense` via `themespec.json` scan | ✅ | Both `skills/atomic-data-viz/themespec.json` and `skills/bloomberg-dense/themespec.json` present and structurally valid |
+| 9 | Theme discovery finds both `infolog-io` and `infolog-terminal` via `themespec.json` scan | ✅ | Both `skills/infolog-io/themespec.json` and `skills/infolog-terminal/themespec.json` present and structurally valid |
 | 10 | Persistent iteration history saved to `<session-dir>/iterations/` | ✅ (protocol) / DEFERRED (runtime) | Pattern documented in `references/loop-protocol.md` |
 
 ### Verdict

@@ -1,7 +1,9 @@
 {
-  "name": "atomic-data-viz",
-  "version": "1.0.0",
+  "name": "infolog-io",
+  "version": "0.0.1",
   "context": "data-graphics",
+  "modes": ["light", "dark", "system"],
+  "default_mode": "system",
   "capabilities": [
     "chart", "table", "sparkline", "small-multiples",
     "dot-plot", "strip-plot", "slopegraph", "range-frame-axis"

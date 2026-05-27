@@ -1,4 +1,4 @@
-# atomic-data-viz · Token schema
+# infolog-io · Token schema
 
 This theme requires the following CSS custom properties on `:root`. The
 composer's `token_compliance` check verifies every styled property in the

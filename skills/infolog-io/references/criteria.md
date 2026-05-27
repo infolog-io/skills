@@ -1,4 +1,4 @@
-# atomic-data-viz · Validator criteria
+# infolog-io · Validator criteria
 
 Each criterion has an id (the markdown H2) and a check description. The
 composer dispatches mechanical checks first; remaining criteria go to
@@ -91,3 +91,11 @@ typography. Subjective judgment.
 When a legend can be replaced by a direct label, the direct label is
 preferred. Charts with two or more colors and a legend in the corner
 that could instead label lines directly violate. Subjective judgment.
+
+## orphan_widow
+
+No heading, lede, annotation, caption, or footer ends with a final line
+shorter than 25% of the block's measure. A single word, date, or short
+phrase stranded on its own line is a violation. The drafter applies
+`text-wrap: balance` to short prose blocks; the LLM-judge confirms no
+visible stranding. Subjective judgment — confirmed by LLM-judge.

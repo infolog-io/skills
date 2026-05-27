@@ -1,4 +1,4 @@
-# bloomberg-dense · Validator criteria
+# infolog-terminal · Validator criteria
 
 Inherits the structural mechanical checks (text_collision, overflow, etc.)
 from the composer's built-in registry. Adds these subjective criteria
@@ -24,3 +24,11 @@ Subjective.
 The artifact uses any color outside the declared palette
 (`--paper`, `--ink`, `--accent-*`, `--gray-*`). Verified by the
 mechanical `token_compliance` check; LLM-judge confirms aesthetic.
+
+## orphan_widow
+
+No heading, lede, annotation, caption, or footer ends with a final line
+shorter than 25% of the block's measure. A single word, date, or short
+phrase stranded on its own line is a violation. The drafter applies
+`text-wrap: balance` to short prose blocks; the LLM-judge confirms no
+visible stranding. Subjective judgment — confirmed by LLM-judge.

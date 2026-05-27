@@ -60,7 +60,7 @@ Emitted on success or abort:
 
 ```text
 Composer audit
-- Theme: atomic-data-viz v1.0.0
+- Theme: infolog-io v1.0.0
 - Iterations: 4
 - Final result: pass
 - Drafter calls: 4 (~12K tokens in, ~8K tokens out)

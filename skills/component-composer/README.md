@@ -10,5 +10,5 @@ PDF exports.
 
 See `SKILL.md` for operating mode. See `references/` for protocol details.
 
-Themes: `atomic-data-viz` (Tufte-style) and `bloomberg-dense` (terminal
+Themes: `infolog-io` (Tufte-style) and `infolog-terminal` (terminal
 aesthetic) ship as sibling skills.

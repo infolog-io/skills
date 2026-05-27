@@ -1,10 +1,10 @@
-# Component Composer + atomic-data-viz Implementation Plan
+# Component Composer + infolog-io Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build a generator-critic loop that drafts single-file HTML data graphics, validates with hybrid mechanical+LLM-judge checks, and iterates until every active-theme criterion passes — implementing the composer skill, the atomic-data-viz theme (refactored from tufte-love), a second theme to prove multi-theme works, and the supporting components catalog.
+**Goal:** Build a generator-critic loop that drafts single-file HTML data graphics, validates with hybrid mechanical+LLM-judge checks, and iterates until every active-theme criterion passes — implementing the composer skill, the infolog-io theme (refactored from tufte-love), a second theme to prove multi-theme works, and the supporting components catalog.
 
-**Architecture:** Three skills participate. `component-composer` is the loop orchestrator (drafter LLM + hybrid validator + HUD + iteration history + exports). `atomic-data-viz` is the first theme, supplying tokens/criteria/patterns/palette. `atomic-brand` gains a structural components catalog. `bloomberg-dense` is a scaffolded sibling theme proving the multi-theme architecture. All artifacts are zero-dependency single-file HTML in the `ThariqS/html-effectiveness` style.
+**Architecture:** Three skills participate. `component-composer` is the loop orchestrator (drafter LLM + hybrid validator + HUD + iteration history + exports). `infolog-io` is the first theme, supplying tokens/criteria/patterns/palette. `atomic-brand` gains a structural components catalog. `infolog-terminal` is a scaffolded sibling theme proving the multi-theme architecture. All artifacts are zero-dependency single-file HTML in the `ThariqS/html-effectiveness` style.
 
 **Tech Stack:** Plain HTML/CSS/SVG output (zero npm dependencies in the artifact). Vanilla JS for the in-loop HUD only. Mechanical validator scripts in ES modules executed via Claude Preview's `preview_eval`. Tests via Node.js built-in test runner (`node --test`). LLM orchestration described in markdown skill protocols; no Python or build pipeline.
 
@@ -35,7 +35,7 @@
 | `template/base.html` | HTML skeleton with token slots |
 | `template/fixtures/` | Synthetic HTML fixtures used by mechanical-check tests |
 
-### `skills/atomic-data-viz/` (rename from `skills/tufte-love/`)
+### `skills/infolog-io/` (rename from `skills/tufte-love/`)
 
 | Path | Responsibility |
 |---|---|
@@ -59,7 +59,7 @@
 |---|---|
 | `references/components.md` | NEW: 9 structural components (axis, legend, annotation, sparkline, data-mark, table-row, small-multiple-cell, slopegraph-line, strip-plot-tick) |
 
-### `skills/bloomberg-dense/` (new sibling theme)
+### `skills/infolog-terminal/` (new sibling theme)
 
 | Path | Responsibility |
 |---|---|
@@ -105,7 +105,7 @@ mkdir -p skills/component-composer/.claude-plugin \
   "description": "Generator-critic loop: drafts a single-file HTML artifact, validates with mechanical + LLM-judge checks, iterates until every active-theme criterion passes.",
   "author": {
     "name": "Information Logistics",
-    "email": "bdl@infolog.io"
+    "email": "bdl@infolog-io"
   }
 }
 ```
@@ -211,7 +211,7 @@ PDF exports.
 
 See `SKILL.md` for operating mode. See `references/` for protocol details.
 
-Themes: `atomic-data-viz` (Tufte-style) and `bloomberg-dense` (terminal
+Themes: `infolog-io` (Tufte-style) and `infolog-terminal` (terminal
 aesthetic) ship as sibling skills.
 ```
 
@@ -334,7 +334,7 @@ skills/<theme-name>/
 
 ```json
 {
-  "name": "atomic-data-viz",
+  "name": "infolog-io",
   "version": "1.0.0",
   "context": "data-graphics",
   "capabilities": ["chart", "table", "sparkline", "small-multiples"],
@@ -684,7 +684,7 @@ Emitted on success or abort:
 
 ```text
 Composer audit
-- Theme: atomic-data-viz v1.0.0
+- Theme: infolog-io v1.0.0
 - Iterations: 4
 - Final result: pass
 - Drafter calls: 4 (~12K tokens in, ~8K tokens out)
@@ -2018,55 +2018,55 @@ git commit -m "feat(component-composer): add PDF export contract"
 
 ---
 
-## Phase 4 — atomic-data-viz refactor
+## Phase 4 — infolog-io refactor
 
-### Task 26: Rename tufte-love → atomic-data-viz
+### Task 26: Rename tufte-love → infolog-io
 
 **Files:**
-- Move: `skills/tufte-love/` → `skills/atomic-data-viz/`
+- Move: `skills/tufte-love/` → `skills/infolog-io/`
 
 - [ ] **Step 1: Git-move the directory**
 
 ```bash
-git mv skills/tufte-love skills/atomic-data-viz
+git mv skills/tufte-love skills/infolog-io
 git status
 ```
 
 - [ ] **Step 2: Rename tufte-principles.md → principles.md**
 
 ```bash
-git mv skills/atomic-data-viz/references/tufte-principles.md \
-       skills/atomic-data-viz/references/principles.md
+git mv skills/infolog-io/references/tufte-principles.md \
+       skills/infolog-io/references/principles.md
 ```
 
 - [ ] **Step 3: Commit the rename**
 
 ```bash
-git commit -m "refactor: rename tufte-love → atomic-data-viz; principles.md"
+git commit -m "refactor: rename tufte-love → infolog-io; principles.md"
 ```
 
 ### Task 27: Update plugin.json + SKILL.md frontmatter
 
 **Files:**
-- Modify: `skills/atomic-data-viz/.claude-plugin/plugin.json`
-- Modify: `skills/atomic-data-viz/SKILL.md` (frontmatter only)
+- Modify: `skills/infolog-io/.claude-plugin/plugin.json`
+- Modify: `skills/infolog-io/SKILL.md` (frontmatter only)
 
 - [ ] **Step 1: Read current plugin.json**
 
 ```bash
-cat skills/atomic-data-viz/.claude-plugin/plugin.json
+cat skills/infolog-io/.claude-plugin/plugin.json
 ```
 
 - [ ] **Step 2: Update plugin.json**
 
 ```json
 {
-  "name": "atomic-data-viz",
+  "name": "infolog-io",
   "version": "1.0.0",
   "description": "Theme for component-composer: Tufte-style data graphics with quiet palette, range-frame axes, and high data-ink discipline.",
   "author": {
     "name": "Information Logistics",
-    "email": "bdl@infolog.io"
+    "email": "bdl@infolog-io"
   }
 }
 ```
@@ -2077,19 +2077,19 @@ Replace the entire SKILL.md with:
 
 ```markdown
 ---
-name: atomic-data-viz
+name: infolog-io
 description: >
   Theme bundle for component-composer. Provides tokens, criteria, patterns,
   and palette for Tufte-style data graphics: range-frame axes, small
   multiples, high data-ink, single highlight, no chartjunk. Activated when
-  component-composer is invoked with `atomic-data-viz` as the theme name.
+  component-composer is invoked with `infolog-io` as the theme name.
 ---
 
-# atomic-data-viz
+# infolog-io
 
 This skill is a **theme** for `component-composer`. It does not run on
 its own. The composer reads this skill's references when the user invokes
-composition with `atomic-data-viz` as the active theme.
+composition with `infolog-io` as the active theme.
 
 ## What this theme provides
 
@@ -2113,9 +2113,9 @@ over single overloaded charts.
 
 ## To invoke
 
-> "compose a chart with atomic-data-viz showing my GitHub usage data"
+> "compose a chart with infolog-io showing my GitHub usage data"
 
-The composer resolves `atomic-data-viz` via `themespec.json`, reads the
+The composer resolves `infolog-io` via `themespec.json`, reads the
 references, drafts an HTML artifact, validates against `criteria.md`, and
 iterates until clean.
 ```
@@ -2123,20 +2123,20 @@ iterates until clean.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add skills/atomic-data-viz/.claude-plugin/plugin.json skills/atomic-data-viz/SKILL.md
-git commit -m "refactor(atomic-data-viz): rewrite SKILL.md as theme declaration; bump v1.0.0"
+git add skills/infolog-io/.claude-plugin/plugin.json skills/infolog-io/SKILL.md
+git commit -m "refactor(infolog-io): rewrite SKILL.md as theme declaration; bump v1.0.0"
 ```
 
 ### Task 28: Write `themespec.json`
 
 **Files:**
-- Create: `skills/atomic-data-viz/themespec.json`
+- Create: `skills/infolog-io/themespec.json`
 
 - [ ] **Step 1: Write themespec.json**
 
 ```json
 {
-  "name": "atomic-data-viz",
+  "name": "infolog-io",
   "version": "1.0.0",
   "context": "data-graphics",
   "capabilities": [
@@ -2151,19 +2151,19 @@ git commit -m "refactor(atomic-data-viz): rewrite SKILL.md as theme declaration;
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/atomic-data-viz/themespec.json
-git commit -m "feat(atomic-data-viz): add themespec manifest"
+git add skills/infolog-io/themespec.json
+git commit -m "feat(infolog-io): add themespec manifest"
 ```
 
 ### Task 29: Write `references/tokens.md`
 
 **Files:**
-- Create: `skills/atomic-data-viz/references/tokens.md`
+- Create: `skills/infolog-io/references/tokens.md`
 
 - [ ] **Step 1: Write tokens.md**
 
 ```markdown
-# atomic-data-viz · Token schema
+# infolog-io · Token schema
 
 This theme requires the following CSS custom properties on `:root`. The
 composer's `token_compliance` check verifies every styled property in the
@@ -2242,19 +2242,19 @@ Multiples of 4px. Use these — never raw px values.
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/atomic-data-viz/references/tokens.md
-git commit -m "feat(atomic-data-viz): add tokens.md schema"
+git add skills/infolog-io/references/tokens.md
+git commit -m "feat(infolog-io): add tokens.md schema"
 ```
 
 ### Task 30: Write `references/palette.md`
 
 **Files:**
-- Create: `skills/atomic-data-viz/references/palette.md`
+- Create: `skills/infolog-io/references/palette.md`
 
 - [ ] **Step 1: Write palette.md**
 
 ```markdown
-# atomic-data-viz · Palette
+# infolog-io · Palette
 
 Concrete values for the Tufte-quiet aesthetic. Drafter copies this into
 the artifact's `:root` declaration.
@@ -2331,19 +2331,19 @@ not data-encoding.
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/atomic-data-viz/references/palette.md
-git commit -m "feat(atomic-data-viz): add concrete palette"
+git add skills/infolog-io/references/palette.md
+git commit -m "feat(infolog-io): add concrete palette"
 ```
 
 ### Task 31: Write `references/criteria.md`
 
 **Files:**
-- Create: `skills/atomic-data-viz/references/criteria.md`
+- Create: `skills/infolog-io/references/criteria.md`
 
 - [ ] **Step 1: Write criteria.md**
 
 ```markdown
-# atomic-data-viz · Validator criteria
+# infolog-io · Validator criteria
 
 Each criterion has an id (the markdown H2) and a check description. The
 composer dispatches mechanical checks first; remaining criteria go to
@@ -2441,19 +2441,19 @@ that could instead label lines directly violate. Subjective judgment.
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/atomic-data-viz/references/criteria.md
-git commit -m "feat(atomic-data-viz): add validator criteria"
+git add skills/infolog-io/references/criteria.md
+git commit -m "feat(infolog-io): add validator criteria"
 ```
 
 ### Task 32: Write `references/patterns.md`
 
 **Files:**
-- Create: `skills/atomic-data-viz/references/patterns.md`
+- Create: `skills/infolog-io/references/patterns.md`
 
 - [ ] **Step 1: Write patterns.md**
 
 ```markdown
-# atomic-data-viz · Patterns
+# infolog-io · Patterns
 
 Preferred chart patterns. The drafter consults these before composing.
 When a pattern fits, use it.
@@ -2529,23 +2529,23 @@ note if needed. Tufte: thoroughly describe the evidence.
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/atomic-data-viz/references/patterns.md
-git commit -m "feat(atomic-data-viz): add patterns library"
+git add skills/infolog-io/references/patterns.md
+git commit -m "feat(infolog-io): add patterns library"
 ```
 
 ### Task 33: Delete superseded references
 
 **Files:**
-- Delete: `skills/atomic-data-viz/references/audit-rubric.md`
-- Delete: `skills/atomic-data-viz/references/color-palette.md`
+- Delete: `skills/infolog-io/references/audit-rubric.md`
+- Delete: `skills/infolog-io/references/color-palette.md`
 
 - [ ] **Step 1: Verify content has migrated**
 
 ```bash
-diff <(grep -h '^##' skills/atomic-data-viz/references/audit-rubric.md) \
-     <(grep -h '^##' skills/atomic-data-viz/references/criteria.md)
-diff <(head -50 skills/atomic-data-viz/references/color-palette.md) \
-     <(head -50 skills/atomic-data-viz/references/palette.md)
+diff <(grep -h '^##' skills/infolog-io/references/audit-rubric.md) \
+     <(grep -h '^##' skills/infolog-io/references/criteria.md)
+diff <(head -50 skills/infolog-io/references/color-palette.md) \
+     <(head -50 skills/infolog-io/references/palette.md)
 ```
 
 Manually confirm: every dimension from audit-rubric.md is represented
@@ -2555,14 +2555,14 @@ palette.md is in palette.md.
 - [ ] **Step 2: Delete the superseded files**
 
 ```bash
-git rm skills/atomic-data-viz/references/audit-rubric.md
-git rm skills/atomic-data-viz/references/color-palette.md
+git rm skills/infolog-io/references/audit-rubric.md
+git rm skills/infolog-io/references/color-palette.md
 ```
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git commit -m "refactor(atomic-data-viz): remove audit-rubric.md and color-palette.md (merged into criteria.md + palette.md)"
+git commit -m "refactor(infolog-io): remove audit-rubric.md and color-palette.md (merged into criteria.md + palette.md)"
 ```
 
 ### Task 34: Update marketplace.json entry
@@ -2570,7 +2570,7 @@ git commit -m "refactor(atomic-data-viz): remove audit-rubric.md and color-palet
 **Files:**
 - Modify: `marketplace.json`
 
-- [ ] **Step 1: Rename `tufte-love` → `atomic-data-viz` in marketplace.json**
+- [ ] **Step 1: Rename `tufte-love` → `infolog-io` in marketplace.json**
 
 Update the relevant entry. Old:
 ```json
@@ -2579,8 +2579,8 @@ Update the relevant entry. Old:
 New:
 ```json
 {
-  "name": "atomic-data-viz",
-  "source": "./skills/atomic-data-viz",
+  "name": "infolog-io",
+  "source": "./skills/infolog-io",
   "version": "1.0.0",
   "description": "Tufte-style theme for component-composer."
 }
@@ -2590,7 +2590,7 @@ New:
 
 ```bash
 git add marketplace.json
-git commit -m "chore(marketplace): rename tufte-love → atomic-data-viz"
+git commit -m "chore(marketplace): rename tufte-love → infolog-io"
 ```
 
 ---
@@ -2800,30 +2800,30 @@ git commit -m "feat(atomic-brand): add structural components catalog"
 
 ---
 
-## Phase 6 — bloomberg-dense sibling theme
+## Phase 6 — infolog-terminal sibling theme
 
-### Task 36: Scaffold bloomberg-dense directory + plugin.json
+### Task 36: Scaffold infolog-terminal directory + plugin.json
 
 **Files:**
-- Create: `skills/bloomberg-dense/.claude-plugin/plugin.json`
+- Create: `skills/infolog-terminal/.claude-plugin/plugin.json`
 
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-mkdir -p skills/bloomberg-dense/.claude-plugin \
-         skills/bloomberg-dense/references
+mkdir -p skills/infolog-terminal/.claude-plugin \
+         skills/infolog-terminal/references
 ```
 
 - [ ] **Step 2: Write plugin.json**
 
 ```json
 {
-  "name": "bloomberg-dense",
+  "name": "infolog-terminal",
   "version": "1.0.0",
   "description": "Theme for component-composer: terminal-aesthetic data graphics. Green-on-black, monospace, high density. Proves multi-theme architecture works.",
   "author": {
     "name": "Information Logistics",
-    "email": "bdl@infolog.io"
+    "email": "bdl@infolog-io"
   }
 }
 ```
@@ -2831,28 +2831,28 @@ mkdir -p skills/bloomberg-dense/.claude-plugin \
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/bloomberg-dense/
-git commit -m "feat(bloomberg-dense): scaffold skill directory"
+git add skills/infolog-terminal/
+git commit -m "feat(infolog-terminal): scaffold skill directory"
 ```
 
 ### Task 37: Write SKILL.md
 
 **Files:**
-- Create: `skills/bloomberg-dense/SKILL.md`
+- Create: `skills/infolog-terminal/SKILL.md`
 
 - [ ] **Step 1: Write SKILL.md**
 
 ```markdown
 ---
-name: bloomberg-dense
+name: infolog-terminal
 description: >
   Theme bundle for component-composer. Terminal/Bloomberg-terminal
   aesthetic: green-on-black, monospace everywhere, maximum data density,
   no chartjunk. Activated when component-composer is invoked with
-  `bloomberg-dense` as the theme name.
+  `infolog-terminal` as the theme name.
 ---
 
-# bloomberg-dense
+# infolog-terminal
 
 This skill is a **theme** for `component-composer`. It does not run on
 its own.
@@ -2861,7 +2861,7 @@ its own.
 
 - `themespec.json` — manifest
 - `references/tokens.md` — CSS variable schema (same structural tokens as
-  atomic-data-viz; different values)
+  infolog-io; different values)
 - `references/palette.md` — green-on-black, monospace
 - `references/criteria.md` — density-first criteria
 - `references/patterns.md` — dense-table-first patterns
@@ -2873,31 +2873,31 @@ Maximum information per pixel. No serifs. No drop-shadows. No gradients.
 Looks like a Bloomberg terminal or top from 1995.
 
 This theme exists to prove the multi-theme architecture: it shares the
-same component catalog as atomic-data-viz, but the rendered output is
+same component catalog as infolog-io, but the rendered output is
 visually completely different.
 
 ## To invoke
 
-> "compose with bloomberg-dense showing the same GitHub data"
+> "compose with infolog-terminal showing the same GitHub data"
 ```
 
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/bloomberg-dense/SKILL.md
-git commit -m "feat(bloomberg-dense): add SKILL.md"
+git add skills/infolog-terminal/SKILL.md
+git commit -m "feat(infolog-terminal): add SKILL.md"
 ```
 
 ### Task 38: Write themespec.json
 
 **Files:**
-- Create: `skills/bloomberg-dense/themespec.json`
+- Create: `skills/infolog-terminal/themespec.json`
 
 - [ ] **Step 1: Write themespec.json**
 
 ```json
 {
-  "name": "bloomberg-dense",
+  "name": "infolog-terminal",
   "version": "1.0.0",
   "context": "data-graphics",
   "capabilities": [
@@ -2911,21 +2911,21 @@ git commit -m "feat(bloomberg-dense): add SKILL.md"
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/bloomberg-dense/themespec.json
-git commit -m "feat(bloomberg-dense): add themespec manifest"
+git add skills/infolog-terminal/themespec.json
+git commit -m "feat(infolog-terminal): add themespec manifest"
 ```
 
 ### Task 39: Write `references/tokens.md`
 
 **Files:**
-- Create: `skills/bloomberg-dense/references/tokens.md`
+- Create: `skills/infolog-terminal/references/tokens.md`
 
 - [ ] **Step 1: Write tokens.md**
 
 ```markdown
-# bloomberg-dense · Token schema
+# infolog-terminal · Token schema
 
-Same structural tokens as atomic-data-viz. Different values.
+Same structural tokens as infolog-io. Different values.
 
 Required `:root` variables:
 
@@ -2936,27 +2936,27 @@ Required `:root` variables:
 | `--accent-warm`, `--accent-cool`, `--accent-quiet` | Highlights (amber, cyan, dim-green) |
 | `--gray-100`..`--gray-900` | Grays (cool, near-black to off-white) |
 | `--serif`, `--sans`, `--mono` | All resolve to the same monospace stack |
-| `--font-size-h1`, `--font-size-h2`, `--font-size-body`, `--font-size-caption` | Type scale (tighter than atomic-data-viz) |
-| `--space-1`..`--space-12` | Spacing scale (tighter than atomic-data-viz — values divided by 1.25) |
+| `--font-size-h1`, `--font-size-h2`, `--font-size-body`, `--font-size-caption` | Type scale (tighter than infolog-io) |
+| `--space-1`..`--space-12` | Spacing scale (tighter than infolog-io — values divided by 1.25) |
 | `--radius-panel`, `--border` | Structural (radius 0; borders 1px solid green) |
 ```
 
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/bloomberg-dense/references/tokens.md
-git commit -m "feat(bloomberg-dense): add tokens schema"
+git add skills/infolog-terminal/references/tokens.md
+git commit -m "feat(infolog-terminal): add tokens schema"
 ```
 
 ### Task 40: Write `references/palette.md`
 
 **Files:**
-- Create: `skills/bloomberg-dense/references/palette.md`
+- Create: `skills/infolog-terminal/references/palette.md`
 
 - [ ] **Step 1: Write palette.md**
 
 ```markdown
-# bloomberg-dense · Palette
+# infolog-terminal · Palette
 
 ```css
 :root {
@@ -3005,19 +3005,19 @@ git commit -m "feat(bloomberg-dense): add tokens schema"
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/bloomberg-dense/references/palette.md
-git commit -m "feat(bloomberg-dense): add palette"
+git add skills/infolog-terminal/references/palette.md
+git commit -m "feat(infolog-terminal): add palette"
 ```
 
 ### Task 41: Write `references/criteria.md`
 
 **Files:**
-- Create: `skills/bloomberg-dense/references/criteria.md`
+- Create: `skills/infolog-terminal/references/criteria.md`
 
 - [ ] **Step 1: Write criteria.md**
 
 ```markdown
-# bloomberg-dense · Validator criteria
+# infolog-terminal · Validator criteria
 
 Inherits the structural mechanical checks (text_collision, overflow, etc.)
 from the composer's built-in registry. Adds these subjective criteria
@@ -3048,19 +3048,19 @@ mechanical `token_compliance` check; LLM-judge confirms aesthetic.
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/bloomberg-dense/references/criteria.md
-git commit -m "feat(bloomberg-dense): add density-first criteria"
+git add skills/infolog-terminal/references/criteria.md
+git commit -m "feat(infolog-terminal): add density-first criteria"
 ```
 
 ### Task 42: Write `references/patterns.md`
 
 **Files:**
-- Create: `skills/bloomberg-dense/references/patterns.md`
+- Create: `skills/infolog-terminal/references/patterns.md`
 
 - [ ] **Step 1: Write patterns.md**
 
 ```markdown
-# bloomberg-dense · Patterns
+# infolog-terminal · Patterns
 
 ## Default form is a dense table
 
@@ -3092,11 +3092,11 @@ icons; no badges; no emoji.
 - [ ] **Step 2: Commit**
 
 ```bash
-git add skills/bloomberg-dense/references/patterns.md
-git commit -m "feat(bloomberg-dense): add patterns"
+git add skills/infolog-terminal/references/patterns.md
+git commit -m "feat(infolog-terminal): add patterns"
 ```
 
-### Task 43: Register bloomberg-dense in marketplace.json
+### Task 43: Register infolog-terminal in marketplace.json
 
 **Files:**
 - Modify: `marketplace.json`
@@ -3105,8 +3105,8 @@ git commit -m "feat(bloomberg-dense): add patterns"
 
 ```json
 {
-  "name": "bloomberg-dense",
-  "source": "./skills/bloomberg-dense",
+  "name": "infolog-terminal",
+  "source": "./skills/infolog-terminal",
   "version": "1.0.0",
   "description": "Terminal-aesthetic theme for component-composer."
 }
@@ -3116,7 +3116,7 @@ git commit -m "feat(bloomberg-dense): add patterns"
 
 ```bash
 git add marketplace.json
-git commit -m "chore(marketplace): register bloomberg-dense"
+git commit -m "chore(marketplace): register infolog-terminal"
 ```
 
 ---
@@ -3142,7 +3142,7 @@ Expected: every test passes. Count ≥ 22 tests (scaffold + 3 per check × 9 che
 The output must include the word "pass" or equivalent for each test;
 no "skip" or "todo" markers.
 
-### Task 45: Manual integration test — rebuild GitHub chart with atomic-data-viz
+### Task 45: Manual integration test — rebuild GitHub chart with infolog-io
 
 **Files:**
 - (verification — produces `/tmp/composer-test/session-01/`)
@@ -3151,7 +3151,7 @@ no "skip" or "todo" markers.
 
 In a Claude Code session, say:
 
-> "Use component-composer with atomic-data-viz to render the GitHub usage
+> "Use component-composer with infolog-io to render the GitHub usage
 > data from /tmp/tufte-gh/repos.json and /tmp/tufte-gh/events.json. Build
 > the same four charts we built before. Run the full loop and surface the
 > audit summary."
@@ -3159,7 +3159,7 @@ In a Claude Code session, say:
 - [ ] **Step 2: Verify the loop runs**
 
 Expected behavior:
-- Composer reads atomic-data-viz/themespec.json + references.
+- Composer reads infolog-io/themespec.json + references.
 - Drafter produces iter-01.html.
 - Composer renders, screenshots at 3 viewports.
 - Validator returns failure list (likely text_collision, font_size_too_small).
@@ -3217,14 +3217,14 @@ git add tests/regression-fixture-result.md
 git commit -m "test(component-composer): confirm mechanical checks catch original session bugs"
 ```
 
-### Task 47: Re-run with bloomberg-dense theme
+### Task 47: Re-run with infolog-terminal theme
 
 **Files:**
 - (verification — produces `/tmp/composer-test/session-02/`)
 
 - [ ] **Step 1: Re-invoke the composer**
 
-> "Now compose the same GitHub data with bloomberg-dense theme."
+> "Now compose the same GitHub data with infolog-terminal theme."
 
 - [ ] **Step 2: Verify the output is visually distinct**
 
@@ -3248,15 +3248,15 @@ required zero composer-code changes.
 Walk through `docs/superpowers/specs/2026-05-23-component-composer-goal.md`
 § "Success criteria (binary)" and verify each:
 
-- [ ] 1. atomic-data-viz composer run produced single HTML in html-effectiveness style.
+- [ ] 1. infolog-io composer run produced single HTML in html-effectiveness style.
 - [ ] 2. Mechanical layer flagged every defect from the previous session (text_collision, hidden_mark).
 - [ ] 3. Loop ran to convergence without manual intervention.
-- [ ] 4. Switching theme name to bloomberg-dense and re-running produced a visually different chart with zero composer code changes.
+- [ ] 4. Switching theme name to infolog-terminal and re-running produced a visually different chart with zero composer code changes.
 - [ ] 5. Audit summary showed iteration count, drafter+judge token usage, resolved-during-loop list.
 - [ ] 6. HUD overlaid the preview during iteration; absent from final.html.
 - [ ] 7. final.html opens with no console errors and no external requests.
 - [ ] 8. final.png and (best-effort) final.pdf were emitted alongside.
-- [ ] 9. Theme discovery scan finds atomic-data-viz and bloomberg-dense via themespec.json.
+- [ ] 9. Theme discovery scan finds infolog-io and infolog-terminal via themespec.json.
 - [ ] 10. Persistent iteration history saved to `<session-dir>/iterations/`.
 
 If any criterion fails, file a TODO in `docs/superpowers/specs/2026-05-23-component-composer-goal.md` § "Open questions" and fix before tagging.
@@ -3277,7 +3277,7 @@ Expected: clean working tree, all phases committed.
 - [ ] **Step 2: Tag**
 
 ```bash
-git tag -a v1.0.0 -m "component-composer + atomic-data-viz + bloomberg-dense v1.0.0
+git tag -a v1.0.0 -m "component-composer + infolog-io + infolog-terminal v1.0.0
 
 Generator-critic loop for single-file HTML data graphics.
 Hybrid mechanical + LLM-judge validator.
@@ -3297,7 +3297,7 @@ git show v1.0.0
 
 ## Self-review (do not commit this section)
 
-1. **Spec coverage:** every section of the goal doc — purpose, architecture, all three skills, theme-spec interface, atomic-data-viz refactor, atomic-brand changes, full in-scope list, success criteria — has a task. ✓
+1. **Spec coverage:** every section of the goal doc — purpose, architecture, all three skills, theme-spec interface, infolog-io refactor, atomic-brand changes, full in-scope list, success criteria — has a task. ✓
 2. **Placeholders:** no "TBD", "TODO", "implement later", "appropriate error handling", "similar to Task N". ✓
 3. **Type consistency:** validator output shape (`{id, result, viewport, evidence?, suggested_fix?}`) is identical across tasks 12-21. Criterion ids are stable. ✓
 4. **CSS variable names:** `--paper`, `--ink`, `--accent-warm`, `--gray-100..900`, `--space-1..12`, `--font-size-h1..caption` consistent across tokens.md, palette.md, base.html, components.md. ✓

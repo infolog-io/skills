@@ -1,4 +1,4 @@
-# atomic-data-viz · Patterns
+# infolog-io · Patterns
 
 Preferred chart patterns. The drafter consults these before composing.
 When a pattern fits, use it.
