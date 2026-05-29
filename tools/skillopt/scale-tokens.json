@@ -1,0 +1,116 @@
+{
+  "$schema": "./scale-tokens-schema.json",
+  "meta": {
+    "name": "Golden Ratio Type Scale",
+    "base": 16,
+    "ratio": 1.618,
+    "ratioName": "Golden Ratio",
+    "stepsUp": 5,
+    "stepsDown": 2,
+    "generatedAt": "2026-05-28"
+  },
+  "families": {
+    "body": {
+      "family": "Inter, system-ui, -apple-system, sans-serif",
+      "weight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": "0em",
+      "color": "var(--color-text, #222)"
+    },
+    "heading": {
+      "family": "Playfair Display, Georgia, serif",
+      "weight": 700,
+      "lineHeight": 1.25,
+      "letterSpacing": "-0.011em",
+      "color": "var(--color-text, #222)"
+    }
+  },
+  "steps": [
+    {
+      "step": -2,
+      "px": 6.11,
+      "rem": 0.382,
+      "pt": 4.58,
+      "band": "body",
+      "lineHeight": 1.5,
+      "letterSpacing": "0em",
+      "use": "fine print"
+    },
+    {
+      "step": -1,
+      "px": 9.88,
+      "rem": 0.618,
+      "pt": 7.41,
+      "band": "body",
+      "lineHeight": 1.5,
+      "letterSpacing": "0em",
+      "use": "small text"
+    },
+    {
+      "step": 0,
+      "px": 16.00,
+      "rem": 1.000,
+      "pt": 12.00,
+      "band": "body",
+      "lineHeight": 1.5,
+      "letterSpacing": "0em",
+      "use": "body (base)",
+      "isBase": true
+    },
+    {
+      "step": 1,
+      "px": 25.89,
+      "rem": 1.618,
+      "pt": 19.42,
+      "band": "heading",
+      "lineHeight": 1.25,
+      "letterSpacing": "-0.011em",
+      "use": "h4"
+    },
+    {
+      "step": 2,
+      "px": 41.89,
+      "rem": 2.618,
+      "pt": 31.42,
+      "band": "heading",
+      "lineHeight": 1.25,
+      "letterSpacing": "-0.011em",
+      "use": "h3"
+    },
+    {
+      "step": 3,
+      "px": 67.77,
+      "rem": 4.236,
+      "pt": 50.83,
+      "band": "heading",
+      "lineHeight": 1.25,
+      "letterSpacing": "-0.011em",
+      "use": "h2"
+    },
+    {
+      "step": 4,
+      "px": 109.65,
+      "rem": 6.853,
+      "pt": 82.24,
+      "band": "heading",
+      "lineHeight": 1.25,
+      "letterSpacing": "-0.011em",
+      "use": "h1"
+    },
+    {
+      "step": 5,
+      "px": 177.43,
+      "rem": 11.089,
+      "pt": 133.07,
+      "band": "display",
+      "lineHeight": 1.1,
+      "letterSpacing": "-0.022em",
+      "use": "display"
+    }
+  ],
+  "colorTokens": {
+    "bodyColor": "var(--color-text, #222)",
+    "headingColor": "var(--color-text, #222)",
+    "bgPage": "var(--color-bg, #fff)"
+  }
+}

@@ -127,25 +127,12 @@ See `references/failure-modes.md`.
    - broken: emit build-out-plan.md
 ```
 
-## References
+## Files
 
-- `references/atomic-design.md` — Brad Frost's atomic design distillation
-- `references/brand-tokens.md` — token taxonomy by category
-- `references/composition-rules.md` — dependency-graph rules; what imports what
-- `references/audit-rubric.md` — 8-dimension scored rubric
-- `references/failover-chain.md` — brand detection ordering
-- `references/failure-modes.md` — tagged violation taxonomy
-
-## Prompts
-
-- `prompts/audit-url.md` — orchestrator; runs the full flow
-- `prompts/audit-component-library.md` — codebase walk and classify
-- `prompts/audit-token-compliance.md` — token vs. hardcoded scoring
-- `prompts/audit-brand-coherence.md` — visual identity audit
-- `prompts/parse-image-for-brand.md` — failover step 2
-- `prompts/scrape-for-brand.md` — failover step 3
-- `prompts/refactor-plan.md` — drifting verdict downstream
-- `prompts/build-out-plan.md` — broken verdict downstream
+| Folder | Contents |
+|---|---|
+| `references/` | `atomic-design.md`, `brand-tokens.md`, `composition-rules.md`, `audit-rubric.md`, `failover-chain.md`, `failure-modes.md` |
+| `prompts/` | `audit-url.md` (orchestrator), `audit-component-library.md`, `audit-token-compliance.md`, `audit-brand-coherence.md`, `parse-image-for-brand.md`, `scrape-for-brand.md`, `refactor-plan.md`, `build-out-plan.md` |
 
 ## Triggers
 

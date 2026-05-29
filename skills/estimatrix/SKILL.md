@@ -115,7 +115,8 @@ Stop asking when:
 | Ask one focused question per turn, or a tight numbered list of 2-4 | Dump a bullet list of 8 questions |
 | Quote the user's exact phrase when probing ambiguity | Paraphrase in ways that drift from intent |
 | Offer 2-4 concrete options when scope is open | Ask open-ended "what do you want?" |
-| Confirm understanding back to the user before sizing | Estimate against assumptions the user never confirmed |
+| Include a rough estimate range in every turn | Send questions without any sizing information |
+| Confirm understanding before finalizing | Lock in a final size without user confirmation |
 
 ### Single-turn happy path
 
@@ -188,42 +189,33 @@ Complexity: low
 Confidence: medium (pending confirmation that the API exposes the metric)
 ```
 
-### Refusal-style intake (anti-pattern)
-
-Wrong:
-
-> User: "estimate the dashboard work"
-> Skill: "I cannot size this without knowing scope, success criterion, constraints, dependencies, and complexity inputs. Please provide:
-> - Scope
-> - Success criterion
-> - Constraints
-> - ...
-> [end of response]"
-
-This is passive. The user has to do all the work. estimatrix should
-drive the conversation, not block on it.
-
-Right:
-
-> User: "estimate the dashboard work"
-> Skill: [asks ONE focused question with concrete options]
-
 ### Stop-asking signal
 
-If the user says "just give me a rough size" or similar after one or two
-questions, emit the estimate with whatever information is in hand:
+### Every turn carries an estimate
+
+Never send a turn with ONLY questions — always include a rough estimate
+alongside any clarifying questions. This applies to every intake turn.
+
+For canonical patterns (debugging, rewrite, migration, integration), size the
+pattern itself even when details are sparse:
 
 ```
-Size: M (best guess given what I know)
-Complexity: medium
-Confidence: low
-Remaining blanks (would tighten this if filled):
-- Which dashboard
-- Whether to include adjacent refactor
+Rough estimate (pending your answers):
+- Size: M–L (debugging tasks with no repro typically land here)
+- Complexity: high (intermittent issues require exploration)
+- Confidence: low
+
+To tighten this, I need to know:
+1. [focused question]
 ```
 
-Confidence is `low` because blanks remain. That's an honest signal, not a
-hedge.
+Canonical pattern defaults:
+- **Race condition / intermittent bug, no repro**: XS–M size, high complexity
+- **Major rewrite (auth, payments, data layer)**: L–XXL size, high complexity
+- **Migration to documented system**: M–L size, medium complexity
+
+Confidence is `low` because blanks remain — that's honest, not a hedge. As
+blanks fill, the range narrows and confidence rises.
 
 ## Output format
 
@@ -262,152 +254,20 @@ For tables:
 
 ## Worked examples
 
-### K1 — Ambiguity (rule 1, active intake)
+Eight canonical scenarios live in `references/worked-examples.md`:
 
-User: "estimate adding a feature flag"
-
-Skill (turn 1): Before sizing, two things to nail down. Which flag system?
-
-  A. GrowthBook (already in the codebase)
-  B. LaunchDarkly
-  C. A custom toggle in env vars
-  D. Other — name it
-
-(Once you pick, I'll ask about the feature being gated.)
-
-[Intake continues until scope + success criterion are filled, then emits estimate.]
-
-### K2 — Multiple interpretations (rule 1)
-
-User: "estimate refactoring the auth code"
-
-Skill response:
-
-```
-Interpretations:
-- A: Rename auth helper functions for clarity
-  → Size: XS, Complexity: low
-- B: Move auth logic from middleware into a service module
-  → Size: M, Complexity: medium
-- C: Replace JWT-based auth with session-based
-  → Size: L, Complexity: high
-- D: Migrate from custom auth to a managed identity provider
-  → Size: XL, Complexity: high
-
-Which scope?
-```
-
-### K3 — Simpler alternative (rule 2)
-
-User: "estimate adding 'enterprise SSO' to login"
-
-Skill response:
-
-```
-Asked scope: Support SAML, OIDC, and Microsoft Entra
-- Size: XL, Complexity: high
-
-Simpler alternative (rule 2):
-- Start with one IdP (most-requested by current customers)
-- Size: M, Complexity: medium
-- Ship MVP; add other IdPs as inbound demand justifies
-
-Which scope?
-```
-
-### K4 — Missing success criterion (rule 4, active intake)
-
-User: "estimate fixing the bug"
-
-Skill (turn 1): Which bug, and what does "fixed" look like?
-
-  Quick triage:
-  1. Is there a failing test, error log, or reproduction case I can anchor to?
-  2. What's the observed (broken) behavior, in one sentence?
-  3. What's the expected (fixed) behavior, in one sentence?
-
-Once those three are filled, I can size.
-
-### K5 — Surgical scope (rule 3)
-
-User: "estimate adding a button to the login form. Also the form has some old margin hacks we should clean up."
-
-Skill response:
-
-```
-| Task | Size | Complexity |
+| # | Scenario | Lesson |
 |---|---|---|
-| Add button to login form | XS | low |
-| Clean up margin hacks (adjacent) | S | low |
-```
+| K1 | Ambiguity (rule 1) | Active intake; one focused question |
+| K2 | Multiple interpretations | List sized interpretations, ask which |
+| K3 | Simpler alternative (rule 2) | Offer smaller scope alongside asked scope |
+| K4 | Missing success criterion (rule 4) | Quick triage of three blanks |
+| K5 | Surgical scope (rule 3) | Adjacent work goes in a separate row |
+| K6 | Small task, high complexity | XS-S size, high cognitive load |
+| K7 | Large task, low complexity | M-L size, mechanical work |
+| K8 | XXL decomposition | Break into L-or-smaller phases before sizing |
 
-Two rows, not one rolled-up size. The user can ship the button without
-the cleanup.
-
-### K6 — Small task, high complexity
-
-User: "estimate fixing the intermittent race condition in checkout"
-
-Skill response:
-
-```
-Assumptions:
-- Race happens between order-write and inventory-decrement
-- Reproduction is intermittent (already observed)
-
-Success criterion:
-- A deterministic test reproduces the race, then passes after the fix
-
-Size: XS-S
-Complexity: high
-Confidence: medium (until reproduction is in hand)
-```
-
-Small change in code, high uncertainty in diagnosis.
-
-### K7 — Large task, low complexity
-
-User: "estimate renaming getUserData to fetchUser across the codebase"
-
-Skill response:
-
-```
-Assumptions:
-- The rename is global; no semantic change
-- Tests cover the renamed function's behavior
-
-Success criterion:
-- All call sites use the new name; tests pass; no string-literal references remain
-
-Size: M (assuming 50-200 call sites)
-Complexity: low
-Confidence: high
-```
-
-Mechanical, well-understood. If call-site count is 500+, bumps to L
-without changing complexity.
-
-### K8 — XXL decomposition
-
-User: "estimate the auth rewrite"
-
-Skill response:
-
-```
-Initial sizing: XL-XXL
-
-XXL is a decomposition signal. Breaking down:
-
-| Phase | Task | Size | Complexity |
-|---|---|---|---|
-| 1 | Define auth contract; document target API | M | medium |
-| 2 | Build new auth service alongside existing | L | high |
-| 3 | Shadow-write to new service; compare | M | medium |
-| 4 | Cut over read traffic | L | medium |
-| 5 | Cut over write traffic; remove old | L | medium |
-
-Total: 5 phases, sized L-or-smaller. Sequencing per phase.
-```
+Load the reference when a scenario maps cleanly to one of these.
 
 ## When to apply
 

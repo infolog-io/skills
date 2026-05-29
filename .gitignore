@@ -4,3 +4,6 @@ __pycache__/
 tmp/
 scratch/
 .claude/
+tools/skillopt/runs/
+tools/skillopt/.venv/
+tools/skillopt/.pytest_cache/

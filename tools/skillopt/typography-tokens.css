@@ -1,0 +1,110 @@
+/**
+ * Typography Tokens — Golden Ratio (φ = 1.618)
+ * Base: 16px | Steps: -2 to +5
+ * Body: Inter | Headings: Playfair Display
+ */
+
+:root {
+  /* Font families */
+  --font-body-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading-family: 'Playfair Display', Georgia, serif;
+
+  /* Font weights */
+  --font-body-weight: 400;
+  --font-heading-weight: 700;
+
+  /* Line-height bands */
+  --line-height-normal: 1.5;   /* Body: steps -2 to 0 */
+  --line-height-tight: 1.25;   /* Heading: steps 1 to 4 */
+  --line-height-display: 1.1;  /* Display: step 5+ */
+
+  /* Letter-spacing per band */
+  --letter-spacing-body: 0em;
+  --letter-spacing-heading: -0.011em;
+  --letter-spacing-display: -0.022em;
+
+  /* Color tokens (external) */
+  --font-body-color: var(--color-text, #222);
+  --font-heading-color: var(--color-text, #222);
+  --bg-page: var(--color-bg, #fff);
+
+  /* Type scale — Golden Ratio */
+  --font-size--2: 0.382rem;   /* 6.11px */
+  --font-size--1: 0.618rem;   /* 9.88px */
+  --font-size-0: 1.000rem;    /* 16.00px — base */
+  --font-size-1: 1.618rem;    /* 25.89px */
+  --font-size-2: 2.618rem;    /* 41.89px */
+  --font-size-3: 4.236rem;    /* 67.77px */
+  --font-size-4: 6.853rem;    /* 109.65px */
+  --font-size-5: 11.089rem;   /* 177.43px */
+}
+
+/* Body typography */
+body {
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-size: var(--font-size-0);
+  line-height: var(--line-height-normal);
+  letter-spacing: var(--letter-spacing-body);
+  color: var(--font-body-color);
+  background-color: var(--bg-page);
+}
+
+/* Heading typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  color: var(--font-heading-color);
+  letter-spacing: var(--letter-spacing-heading);
+  line-height: var(--line-height-tight);
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--font-size-4);
+  line-height: var(--line-height-tight);
+}
+
+h2 {
+  font-size: var(--font-size-3);
+}
+
+h3 {
+  font-size: var(--font-size-2);
+}
+
+h4 {
+  font-size: var(--font-size-1);
+}
+
+h5 {
+  font-size: var(--font-size-0);
+}
+
+h6 {
+  font-size: var(--font-size--1);
+}
+
+/* Display heading */
+.display {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-size: var(--font-size-5);
+  line-height: var(--line-height-display);
+  letter-spacing: var(--letter-spacing-display);
+  color: var(--font-heading-color);
+}
+
+/* Utility classes */
+p {
+  font-size: var(--font-size-0);
+  line-height: var(--line-height-normal);
+}
+
+small, .small {
+  font-size: var(--font-size--1);
+}
+
+.fine {
+  font-size: var(--font-size--2);
+}

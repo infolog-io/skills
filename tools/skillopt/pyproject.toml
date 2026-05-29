@@ -1,0 +1,30 @@
+[project]
+name = "skillopt-harness"
+version = "0.1.0"
+description = "Local SkillOpt-style optimizer for the infolog-skills marketplace"
+requires-python = ">=3.11"
+dependencies = [
+    "claude-agent-sdk>=0.1.0",
+    "click>=8.1.0",
+    "pydantic>=2.0.0",
+    "diff-match-patch>=20230430",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# Tooling, not a published package — install deps only, no package code shipped
+packages = []
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]

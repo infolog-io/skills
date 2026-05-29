@@ -1,0 +1,44 @@
+/* learn2kern CSS emission template — Major Third example, base 16px */
+/* Adapt step values, family, and weights to user-specified inputs. */
+
+:root {
+  /* Type scale (Major Third, base 16px) */
+  --font-size-2xs: 0.640rem;   /* 10.24px */
+  --font-size-xs:  0.800rem;   /* 12.80px */
+  --font-size-sm:  0.875rem;   /* alias if needed */
+  --font-size-base: 1.000rem;  /* 16.00px */
+  --font-size-md:  1.000rem;   /* alias if needed */
+  --font-size-lg:  1.250rem;   /* 20.00px */
+  --font-size-xl:  1.563rem;   /* 25.00px */
+  --font-size-2xl: 1.953rem;   /* 31.25px */
+  --font-size-3xl: 2.441rem;   /* 39.06px */
+  --font-size-4xl: 3.052rem;   /* 48.83px */
+  --font-size-5xl: 3.815rem;   /* 61.04px */
+
+  /* Line-height bands */
+  --line-height-normal: 1.5;
+  --line-height-tight: 1.25;
+  --line-height-display: 1.10;
+
+  /* Letter-spacing per band */
+  --letter-spacing-body: 0em;
+  --letter-spacing-heading: -0.011em;
+  --letter-spacing-display: -0.022em;
+
+  /* BODY family */
+  --font-body-family: 'Inter', system-ui, sans-serif;
+  --font-body-weight: 400;
+  --font-body-line-height: var(--line-height-normal);
+  --font-body-letter-spacing: var(--letter-spacing-body);
+  --font-body-color: var(--color-text, #222);
+
+  /* HEADINGS family */
+  --font-heading-family: inherit;
+  --font-heading-weight: 700;
+  --font-heading-line-height: var(--line-height-tight);
+  --font-heading-letter-spacing: var(--letter-spacing-heading);
+  --font-heading-color: var(--color-text, #222);
+
+  /* Page background (for completeness) */
+  --bg-page: var(--color-bg, #fff);
+}

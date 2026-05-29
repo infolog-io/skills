@@ -119,63 +119,16 @@ See `references/audit-rubric.md`.
 
 ## Operating modes
 
-### Scaffold mode
-
-Trigger: "scaffold a new skill", "/new-skill", "create a skill"
-
-Behavior:
-1. Ask for skill name (kebab-case, matches spec rules)
-2. Ask for one-sentence description (what + when)
-3. Ask for profile: single-rule or full-shape
-4. Emit canonical folder tree at `skills/<name>/` with placeholder content
-5. Run immediate self-audit — confirm scaffold scores ≥4 on all dimensions
-
-See `prompts/scaffold-new-skill.md`.
-
-### Audit mode
-
-Trigger: "audit this skill", "/semantic-audit"
-
-Behavior:
-1. Walk the skill's file tree at `skills/<name>/`
-2. Detect profile (single-rule vs. full-shape)
-3. Check for forbidden layouts (`plugins/` wrapper, double nesting)
-4. Score each of the 8 dimensions per `references/audit-rubric.md`
-5. Emit Semantic Organization Audit with findings
-6. Verdict per the table above
-
-See `prompts/audit-existing-skill.md`.
-
-### Migration mode
-
-Trigger: "should this be a folder or its own skill?"
-
-Behavior:
-1. Check folder against migration triggers
-2. Return: `stay-as-folder` / `promote-to-sibling-skill` / `already-its-own-skill`
-3. If promote, emit migration plan
-
-See `references/migration-triggers.md` and `prompts/evaluate-migration.md`.
-
-### Rename mode
-
-Trigger: "rename this folder", "is this folder name semantic?"
-
-Behavior:
-1. Compare folder name against the role taxonomy
-2. Propose a spec-canonical name or flag for deletion
-3. Refuse to rename spec-canonical folders (`scripts/`, `references/`, `assets/`) to non-spec names
-
-See `prompts/rename-for-semantics.md`.
+| Mode | Trigger | Behavior | Prompt |
+|---|---|---|---|
+| **Scaffold** | "scaffold a new skill", "/new-skill", "create a skill" | Ask name (kebab-case) + one-sentence description + profile. Emit canonical tree at `skills/<name>/` with placeholders. Run immediate self-audit. | `prompts/scaffold-new-skill.md` |
+| **Audit** | "audit this skill", "/semantic-audit" | Walk `skills/<name>/`. Detect profile. Check for forbidden layouts. Score the 8 dimensions per `references/audit-rubric.md`. Emit audit + verdict. | `prompts/audit-existing-skill.md` |
+| **Migration** | "should this be a folder or its own skill?" | Check folder against `references/migration-triggers.md`. Return `stay-as-folder` / `promote-to-sibling-skill` / `already-its-own-skill`. Emit migration plan if promote. | `prompts/evaluate-migration.md` |
+| **Rename** | "rename this folder", "is this folder name semantic?" | Compare against role taxonomy. Propose spec-canonical name or flag for deletion. Refuse to rename spec-canonical folders (`scripts/`, `references/`, `assets/`) to non-spec names. | `prompts/rename-for-semantics.md` |
 
 ## References
 
-- `references/spec-vs-conventions.md` — how spec and marketplace layers coexist in one directory
-- `references/folder-roles.md` — what each canonical folder holds; forbidden names
-- `references/naming-rules.md` — spec-mandated and convention-mandated naming
-- `references/migration-triggers.md` — when a folder becomes its own skill
-- `references/audit-rubric.md` — the 8-dimension scored rubric
-- `references/unix-philosophy.md` — Unix tenets applied to skills
+See `references/`: `spec-vs-conventions.md`, `folder-roles.md`, `naming-rules.md`, `migration-triggers.md`, `audit-rubric.md`, `unix-philosophy.md`.
 
 ## Triggers
 

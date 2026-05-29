@@ -161,81 +161,11 @@ If the user states base, ratio, family choices, and intent, skip intake:
 
 ### CSS custom properties
 
-```css
-:root {
-  /* Type scale (Major Third, base 16px) */
-  --font-size-2xs: 0.640rem;   /* 10.24px */
-  --font-size-xs:  0.800rem;   /* 12.80px */
-  --font-size-sm:  0.875rem;   /* alias if needed */
-  --font-size-base: 1.000rem;  /* 16.00px */
-  --font-size-md:  1.000rem;   /* alias if needed */
-  --font-size-lg:  1.250rem;   /* 20.00px */
-  --font-size-xl:  1.563rem;   /* 25.00px */
-  --font-size-2xl: 1.953rem;   /* 31.25px */
-  --font-size-3xl: 2.441rem;   /* 39.06px */
-  --font-size-4xl: 3.052rem;   /* 48.83px */
-  --font-size-5xl: 3.815rem;   /* 61.04px */
-
-  /* Line-height bands */
-  --line-height-normal: 1.5;
-  --line-height-tight: 1.25;
-  --line-height-display: 1.10;
-
-  /* Letter-spacing per band */
-  --letter-spacing-body: 0em;
-  --letter-spacing-heading: -0.011em;
-  --letter-spacing-display: -0.022em;
-
-  /* BODY family */
-  --font-body-family: 'Inter', system-ui, sans-serif;
-  --font-body-weight: 400;
-  --font-body-line-height: var(--line-height-normal);
-  --font-body-letter-spacing: var(--letter-spacing-body);
-  --font-body-color: var(--color-text, #222);
-
-  /* HEADINGS family */
-  --font-heading-family: inherit;
-  --font-heading-weight: 700;
-  --font-heading-line-height: var(--line-height-tight);
-  --font-heading-letter-spacing: var(--letter-spacing-heading);
-  --font-heading-color: var(--color-text, #222);
-
-  /* Page background (for completeness) */
-  --bg-page: var(--color-bg, #fff);
-}
-```
+Emit the full token set per `templates/css-output.css`. The template contains the BODY + HEADINGS families, line-height bands, letter-spacing per band, and `--color-*` external references with fallbacks. Substitute step values, family, and weights for the user's chosen inputs.
 
 ### Tailwind theme.fontSize
 
-```js
-// tailwind.config.{js,ts}
-module.exports = {
-  theme: {
-    extend: {
-      fontSize: {
-        '2xs':  ['0.640rem', { lineHeight: '1.5' }],
-        'xs':   ['0.800rem', { lineHeight: '1.5' }],
-        'base': ['1.000rem', { lineHeight: '1.5' }],
-        'lg':   ['1.250rem', { lineHeight: '1.25' }],
-        'xl':   ['1.563rem', { lineHeight: '1.25' }],
-        '2xl':  ['1.953rem', { lineHeight: '1.25' }],
-        '3xl':  ['2.441rem', { lineHeight: '1.25' }],
-        '4xl':  ['3.052rem', { lineHeight: '1.10' }],
-        '5xl':  ['3.815rem', { lineHeight: '1.10' }],
-      },
-      letterSpacing: {
-        body:    '0em',
-        heading: '-0.011em',
-        display: '-0.022em',
-      },
-      fontFamily: {
-        body:    ['Inter', 'system-ui', 'sans-serif'],
-        heading: ['inherit'],
-      },
-    },
-  },
-};
-```
+Emit the Tailwind config per `templates/tailwind-config.js`. Substitute step values, family, and letter-spacing for the user's chosen inputs.
 
 ## Sample-content preview (text-based)
 
@@ -254,64 +184,34 @@ p   1.000rem (16.00px)  How vexingly quick daft zebras jump
 small 0.875rem (14.00px) How vexingly quick daft zebras jump
 ```
 
-## Worked example — happy path (T10)
+## Worked examples
+
+### Happy path (T10)
 
 User: "Generate a type scale with base=16, Major Third, 6 up 2 down, Inter for body and headings, emit CSS and Tailwind"
 
-Skill:
+Skill emits the step table:
 
 ```
-Type Scale — Major Third, base 16px
-
-Steps:
-  -2: 10.24px / 0.640rem / 7.68pt
-  -1: 12.80px / 0.800rem / 9.60pt
-   0: 16.00px / 1.000rem / 12.00pt   ← base
-   1: 20.00px / 1.250rem / 15.00pt
-   2: 25.00px / 1.563rem / 18.75pt
-   3: 31.25px / 1.953rem / 23.44pt
-   4: 39.06px / 2.441rem / 29.30pt
-   5: 48.83px / 3.052rem / 36.62pt
-   6: 61.04px / 3.815rem / 45.78pt
-
-Line-heights:
-  body (-2..0):    1.5
-  heading (1..4):  1.25
-  display (5+):    1.10
-
-Letter-spacing:
-  body:    0em
-  heading: -0.011em
-  display: -0.022em
-
-CSS:
-[full CSS block as above]
-
-Tailwind:
-[full Tailwind block as above]
+Steps (Major Third, base 16px):
+  -2: 10.24px / 0.640rem
+  -1: 12.80px / 0.800rem
+   0: 16.00px / 1.000rem   ← base
+   1: 20.00px / 1.250rem
+   2: 25.00px / 1.563rem
+   3: 31.25px / 1.953rem
+   4: 39.06px / 2.441rem
+   5: 48.83px / 3.052rem
+   6: 61.04px / 3.815rem
 ```
 
-## Worked example — conversational intake (T9)
+Then emits CSS per `templates/css-output.css` and Tailwind per `templates/tailwind-config.js`, substituting the computed step values.
+
+### Conversational intake (T9)
 
 User: "generate a type scale"
 
-Skill (turn 1): To generate a scale, I need two inputs:
-
-1. **Base size** — typically 16px for web. Use 16, or another value?
-2. **Ratio** — Minor Third (1.200) is the safest starting point for product UI;
-   Major Third (1.250) for marketing pages; Golden Ratio (1.618) for hero displays.
-   Pick a named ratio, or specify a decimal.
-
-User: "16px base, Major Third"
-
-Skill (turn 2): Good. Two more:
-
-3. **Body font family** — Inter is a safe default. Override or accept?
-4. **Heading font family** — usually inherits from body unless you have a display face.
-
-User: "Inter for both, default everything else"
-
-Skill (final): [emits the scale + CSS + Tailwind as in the happy-path example]
+Skill asks for base + ratio first, then family choices, then optional overrides. Each turn has 1-2 focused questions with concrete defaults. Once base, ratio, and family are filled, skill emits the full scale.
 
 ## References
 

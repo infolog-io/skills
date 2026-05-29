@@ -123,36 +123,13 @@ automation rules. See `assets/template-*.json`.
 | `report result on #N`, `/report` | Report primitive |
 | `yolo`, `enable yolo` | Toggle YOLO mode (with confirmation) |
 
-## References
+## Files
 
-- `references/issue-as-task-contract.md` — label scheme, status lifecycle, body requirements
-- `references/lock-protocol.md` — claim sequence, optimistic concurrency, TTL, release
-- `references/dependency-chain.md` — depends-on labels, transitive resolution, cycle rejection
-- `references/event-bus.md` — comment marker format, event types, payloads
-- `references/conductor-protocol.md` — dispatch algorithm, agent-agnostic with Claude Code section
-- `references/worker-protocol.md` — claim/work/report/release, agent-agnostic
-- `references/yolo-mode.md` — when to use, audit-trail requirements
-- `references/audit-rubric.md` — 6-dimension scored rubric
-
-## Prompts
-
-- `prompts/audit-board.md` — scored board health audit
-- `prompts/triage-inbox.md` — conversational intake for new issues
-- `prompts/generate-board.md` — create a new Projects V2 from archetype
-- `prompts/list-boards.md` — multi-board summary
-- `prompts/dispatch-next.md` — conductor primitive
-- `prompts/claim-issue.md` — worker primitive
-- `prompts/report-result.md` — worker primitive
-
-## Assets
-
-- `assets/label-scheme.json` — canonical label schema (status, claim, dependency, agent-output, sizing, priority, control)
-- `assets/event-schema.json` — event payload schemas per type
-- `assets/audit-report-schema.json` — structured audit output schema
-- `assets/template-personal-todo.json` — Inbox/Next/Doing/Waiting/Done
-- `assets/template-writing-pipeline.json` — Drafts→Research→Outline→Drafting→Review→Published
-- `assets/template-oss-triage.json` — New→Triaged→Reproducing→Fix→Review→Closed
-- `assets/template-sprint-planning.json` — Backlog→Sprint→In-progress→Review→Done
+| Folder | Contents |
+|---|---|
+| `references/` | `issue-as-task-contract.md`, `lock-protocol.md`, `dependency-chain.md`, `event-bus.md`, `conductor-protocol.md`, `worker-protocol.md`, `yolo-mode.md`, `audit-rubric.md` |
+| `prompts/` | `audit-board.md`, `triage-inbox.md`, `generate-board.md`, `list-boards.md`, `dispatch-next.md`, `claim-issue.md`, `report-result.md` |
+| `assets/` | `label-scheme.json`, `event-schema.json`, `audit-report-schema.json`, `template-{personal-todo,writing-pipeline,oss-triage,sprint-planning}.json` |
 
 ## Interfaces
 
