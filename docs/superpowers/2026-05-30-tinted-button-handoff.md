@@ -43,7 +43,7 @@ mockup if they vanish.
 
 ## The GREY neutral button — DONE, settled
 
-User-requested (matched a macOS Dia "Always quit / Cancel ⎟ESC⎟" dialog).
+User-requested (matched a native "Always quit / Cancel ⎟ESC⎟" confirm dialog).
 - "our grey" = `--gray-100` fill (#E5E5EA light / #2C2C2E dark) + `--gray-300`
   hairline border (#D1D1D6 / #3A3A3C) + `--ink` text.
 - Contrast 13.86:1 light / 12.37:1 dark. Trivially AA.
@@ -76,7 +76,7 @@ The OKLCH labels are fixed, but the FILLS are still pale by nature. The user's
 "yucky" may be partly the pale fill. Three levers, pick with the user:
 - **a. OKLCH as-is** — accept the soft tinted look (labels now vivid).
 - **b. Bolder fills** — lower fill L / raise Ccap so the tint has more presence.
-- **c. Bordered-tint** — add a full-chroma hairline edge (Apple `.borderedTinted`)
+- **c. Bordered-tint** — add a full-chroma hairline edge (the bordered-tint pattern)
   so it stops reading anemic.
 - **d. Pivot** — solids stay for primary semantic actions; tint only for
   genuinely secondary ones; grey for neutral. (Sidesteps paleness entirely.)
@@ -91,7 +91,7 @@ Recommend rendering a/b/c side-by-side from disk, then deciding.
 - Verify light + dark via `agent-browser open "file://…"` + `screenshot --full`.
 - Write + commit a spec to `docs/superpowers/specs/YYYY-MM-DD-tonal-buttons-design.md`.
 
-## Token reference (Apple HIG system colors, both themes)
+## Token reference (semantic system colors, both themes)
 
 LIGHT: --paper #fff · --ink #1a1a1a · --gray-100 #E5E5EA · --gray-300 #D1D1D6 ·
 success #34C759 · info #007AFF · warning #FFCC00 · danger #FF3B30.

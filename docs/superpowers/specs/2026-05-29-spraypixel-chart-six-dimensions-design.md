@@ -8,8 +8,8 @@ Eventual home: `spraypixel-skills` repo (graduation deferred)
 ## Goal
 
 Expand §07 from a color-only chart lint into a six-dimension chart system. The
-section today formalizes R01–R10, ten rules that all govern color. Apple's WWDC
-2022 session "Design an effective chart" defines six dimensions. Color is one.
+section today formalizes R01–R10, ten rules that all govern color. An effective chart decides six things, drawn from the data-viz
+canon (Tufte, Bertin, Cleveland, Brewer). Color is one.
 This work adds the other five and reframes color as the sixth.
 
 The user picked: prove on the page first, broad survey across all six
@@ -23,7 +23,7 @@ the one chapter already finished to high rigor.
 
 The intellectual claim: color discipline is necessary, not sufficient. A chart
 that nails color but picks the wrong mark, or lies with a truncated axis, still
-fails. Tufte governs the ink. Apple governs the decisions made before the ink.
+fails. Tufte governs the ink. The six dimensions govern the decisions made before the ink.
 The section credits both lineages.
 
 ## Naming scheme
@@ -103,10 +103,10 @@ Rules:
   abbreviations. "June 6" not "6/6." "60 minutes" not "60m."
 - A02 visible-focus: focus rings are large, thick, and high-contrast against
   chart elements.
-- A03 input-parity: every touch or mouse gesture maps to keyboard, Voice
-  Control, Switch Control, and VoiceOver.
-- A04 audio-graph (note only): expose data points to Apple's Audio Graph
-  architecture for pitch-shifted sonification. Documented as a rule; the
+- A03 input-parity: every touch or mouse gesture maps to keyboard, screen
+  readers, voice input, and switch access.
+- A04 sonification (note only): expose data points for a pitch-shifted
+  audio readout. Documented as a rule; the
   HTML specimen cannot render audio, so this is text plus an aria note.
 
 Exemplar: ONE genuinely new specimen. A small chart with a visible focus ring on
@@ -117,9 +117,9 @@ single new build.
 ### R — Color
 
 R01–R10 unchanged. Exemplified by every existing chart. The cluster gains one
-framing sentence tying it to Apple Part 6 (color enhances, never the sole
-channel; mute to direct focus; test against color blindness and Dark Mode and
-Increase Contrast).
+framing sentence on the color dimension (color enhances, never the sole
+channel; mute to direct focus; test against color blindness, dark mode, and
+high-contrast modes).
 
 ## Material build list
 
@@ -140,7 +140,7 @@ real gap.
 ## Out of scope
 
 - No wrong-then-right paired specimens. The user chose exemplar plus prose.
-- No audio graph implementation. Documented as a rule, noted in aria.
+- No sonification implementation. Documented as a rule, noted in aria.
 - No graduation to spraypixel-skills this pass. Prove on the page first.
 - No new chart types beyond the Accessibility specimen.
 - No changes to the existing palette or token work from earlier this session.
