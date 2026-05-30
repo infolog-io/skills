@@ -1,0 +1,9 @@
+{
+  "name": "infolog-terminal",
+  "version": "1.0.0",
+  "description": "Theme for component-composer: terminal-aesthetic data graphics. Green-on-black, monospace, high density. Proves multi-theme architecture works.",
+  "author": {
+    "name": "infolog.io",
+    "email": "bdl@infolog.io"
+  }
+}

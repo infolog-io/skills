@@ -1,0 +1,10 @@
+{
+  "name": "generator-critic",
+  "description": "Abstract generator-critic loop pattern. Consumed by composer-style skills (HTML, code, schemas, prose) that need iterative refinement against declared criteria.",
+  "version": "0.0.1",
+  "category": "agent-orchestration",
+  "author": {
+    "name": "infolog.io",
+    "email": "bdl@infolog.io"
+  }
+}

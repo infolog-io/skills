@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regression Buggy Fixture</title>
+<style>
+  /* Bug 3 — token_compliance violation: literal color outside :root */
+  .foo { color: #ff0000; }
+
+  :root {
+    --paper: #fafaf7;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+    --accent-warm: #c8553d;
+    --accent-cool: #2c5e6f;
+    --sans: system-ui, -apple-system, sans-serif;
+    --font-size-body: 0.95rem;
+    --font-size-caption: 0.78rem;
+    --space-4: 16px;
+    --space-6: 24px;
+    --space-12: 48px;
+    --serif: ui-serif, Georgia, serif;
+    --font-size-h1: 1.8rem;
+    --font-size-h2: 1.1rem;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: var(--space-12) var(--space-6);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--font-size-body);
+    line-height: 1.5;
+  }
+  .page { max-width: 720px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<main class="page">
+  <h1>Buggy Fixture — Three Defects</h1>
+
+  <!--
+    Bug 1 — text_collision: two SVG text elements at nearly identical positions
+    Bug 2 — hidden_mark: rect with width=1 height=10
+    Bug 3 — token_compliance: .foo { color: #ff0000 } above (outside :root)
+  -->
+
+  <svg width="400" height="200" viewBox="0 0 400 200">
+    <!-- Bug 1: overlapping labels — both at x=50 y=100, same bounding region -->
+    <text x="50" y="100" font-size="14">Jan 2024</text>
+    <text x="52" y="103" font-size="14">Jan 2024</text>
+
+    <!-- Bug 2: bar with width=1 — effectively invisible -->
+    <rect class="bar" x="100" y="50" width="1" height="10" fill="var(--accent-warm)" data-label="Q1"/>
+
+    <!-- A clean bar for contrast -->
+    <rect class="bar" x="150" y="50" width="40" height="80" fill="var(--accent-cool)" data-label="Q2"/>
+  </svg>
+
+  <p class="foo">This paragraph uses a literal color — it should trigger token_compliance.</p>
+</main>
+</body>
+</html>
