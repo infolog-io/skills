@@ -19,6 +19,14 @@ impeccable: a generic design skill paired with a concrete companion site.
 The work began as a tonal button treatment. It grew into the design system. This
 spec fixes the scope so we build by decomposition, not accretion.
 
+## Repo consolidation
+
+The 2026-05-26 spraypixel spin-out is being reversed. The composition family —
+generator-critic, component-composer, spraypixel, spraypixel-terminal, and
+html-sketch — moves back from spraypixel-skills into the infolog-io marketplace,
+under one roof with this design-system skill. CLAUDE.md and marketplace.json,
+which still document the split, update with the move.
+
 ## The pillars
 
 | # | Pillar | Status | Engine / home |
@@ -109,8 +117,6 @@ without an AA/contrast check where color is involved.
 
 ## Non-goals
 
-- Not reversing the 2026-05-26 spraypixel split. Composition machinery stays in
-  spraypixel-skills; this is a token/system engine.
 - Not absorbing atomic-brand or learn2kern.
 - No Apple/HIG references anywhere (scrubbed 2026-05-30).
 - No hardcoded infolog brand values in the skill. Concrete values live in
