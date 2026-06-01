@@ -1,0 +1,11 @@
+{
+  "name": "skillopt-render",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Headless render harness for the spraypixel adapter. run-checks.mjs renders drafted HTML in a real Chromium at three viewports and runs component-composer's mechanical-checks.js; the impeccable dep supplies the static UI-quality detector. Both are invoked as subprocesses from adapters/spraypixel.py.",
+  "dependencies": {
+    "playwright": "1.59.1",
+    "impeccable": "2.3.0"
+  }
+}

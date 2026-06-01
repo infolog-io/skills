@@ -27,10 +27,11 @@ def decide(
     cand_mean = mean_score(candidate_val)
     inc_mean = mean_score(incumbent_val)
 
-    # 1. Token ceiling — prevent bloat-via-edit
+    # 1. Token ceiling — prevent bloat-via-edit (growth only; shrinkage is fine
+    #    and is gated on quality below — a smaller skill that scores better wins)
     if incumbent_skill_tokens > 0:
         bloat = (candidate_skill_tokens - incumbent_skill_tokens) / incumbent_skill_tokens
-        if abs(bloat) > token_ceiling_pct:
+        if bloat > token_ceiling_pct:
             return GateResult(False,
                 f"token-bloat: {bloat:+.1%} (ceiling ±{token_ceiling_pct:.0%})",
                 cand_mean, inc_mean, [])

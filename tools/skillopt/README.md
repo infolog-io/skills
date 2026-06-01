@@ -4,6 +4,8 @@ Local optimizer for skills in `../../skills/`. Drives Claude Code via `claude-ag
 
 Not registered in `.claude-plugin/marketplace.json` — this is tooling, not a plugin.
 
+**New here? Read `HANDOFF.md`** for the proven run pattern, result interpretation, and how to add a new skill to test.
+
 ## Setup
 
 ```bash

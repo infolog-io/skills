@@ -33,11 +33,19 @@ async def run_batch(tasks: list[Task], skill_body: str, adapter, *,
 
     async def _bounded(t):
         async with sem:
-            budget.assert_not_exceeded()
-            return await run_one(t, skill_body, adapter, model=model, budget=budget)
+            budget.assert_not_exceeded()          # budget halt propagates (intended)
+            try:
+                return await run_one(t, skill_body, adapter, model=model, budget=budget)
+            except Exception as e:                 # rollout/judge failure → score 0, keep batch
+                traj = Trajectory(task_id=t.id, final_text="", cost_usd=0.0,
+                                  input_tokens=0, output_tokens=0)
+                sr = ScoreResult(
+                    task_id=t.id, score=0.0,
+                    rationale=f"rollout failed: {type(e).__name__}: {e}"[:200],
+                )
+                return traj, sr
 
-    results = await asyncio.gather(*[_bounded(t) for t in tasks],
-                                    return_exceptions=False)
+    results = await asyncio.gather(*[_bounded(t) for t in tasks])
     trajectories = [r[0] for r in results]
     scores = [r[1] for r in results]
     return trajectories, scores

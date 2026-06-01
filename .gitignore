@@ -7,3 +7,4 @@ scratch/
 tools/skillopt/runs/
 tools/skillopt/.venv/
 tools/skillopt/.pytest_cache/
+node_modules/

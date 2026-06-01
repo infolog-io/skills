@@ -13,6 +13,29 @@ class EditError(ValueError):
 
 
 _HEADING = re.compile(r"^(#{1,6})\s+.+$", re.MULTILINE)
+_FENCE = re.compile(r"^[ \t]*(`{3,}|~{3,})", re.MULTILINE)
+
+
+def _fenced_spans(text: str) -> list[tuple[int, int]]:
+    """Char ranges covered by fenced code blocks, so `#`-lines inside code
+    samples are never mistaken for section headings (silent-corruption guard)."""
+    spans: list[tuple[int, int]] = []
+    open_pos: int | None = None
+    marker = ""
+    for m in _FENCE.finditer(text):
+        if open_pos is None:
+            open_pos, marker = m.start(), m.group(1)[0]      # ` or ~
+        elif m.group(1)[0] == marker:
+            line_end = text.find("\n", m.end())
+            spans.append((open_pos, len(text) if line_end == -1 else line_end + 1))
+            open_pos = None
+    if open_pos is not None:                                  # unclosed fence → to EOF
+        spans.append((open_pos, len(text)))
+    return spans
+
+
+def _in_fence(pos: int, spans: list[tuple[int, int]]) -> bool:
+    return any(lo <= pos < hi for lo, hi in spans)
 
 
 def _section_range(text: str, heading: str) -> tuple[int, int]:
@@ -25,13 +48,17 @@ def _section_range(text: str, heading: str) -> tuple[int, int]:
     if not heading_line.startswith("#"):
         raise EditError(f"heading must start with #: {heading_line!r}")
     level = len(heading_line) - len(heading_line.lstrip("#"))
+    fences = _fenced_spans(text)
     pattern = re.compile(rf"^{re.escape(heading_line)}\s*$", re.MULTILINE)
-    m = pattern.search(text)
+    m = next((mm for mm in pattern.finditer(text)
+              if not _in_fence(mm.start(), fences)), None)
     if not m:
         raise EditError(f"section heading not found: {heading_line!r}")
     start = m.start()
     cursor = m.end()
     for next_m in _HEADING.finditer(text, pos=cursor):
+        if _in_fence(next_m.start(), fences):
+            continue
         next_level = len(next_m.group(1))
         if next_level <= level:
             return start, next_m.start()

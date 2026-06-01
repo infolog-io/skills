@@ -84,21 +84,34 @@ async def propose_edits(
 
 
 def _parse_ops(text: str, edit_budget: int) -> list[EditOp]:
-    """Extract EditOp list from optimizer output. Best-effort JSON parsing."""
-    cleaned = text.strip()
-    cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
-    cleaned = re.sub(r"\s*```$", "", cleaned)
-    try:
-        data = json.loads(cleaned)
-    except json.JSONDecodeError:
-        m = re.search(r"\{[\s\S]*\}", cleaned)
-        if not m:
-            return []
+    """Extract EditOp list from optimizer output. Best-effort JSON parsing.
+
+    Robust to prose around the JSON: tries a fenced ```json block first (by
+    content, not anchored strip), then the whole text, then a bare-brace span.
+    """
+    candidates: list[str] = []
+    fence = re.search(r"```(?:json)?\s*(.*?)```", text, re.DOTALL)
+    if fence:
+        candidates.append(fence.group(1))
+    candidates.append(text.strip())
+    brace = re.search(r"\{[\s\S]*\}", text)
+    if brace:
+        candidates.append(brace.group(0))
+
+    data = None
+    for cand in candidates:
         try:
-            data = json.loads(m.group(0))
+            data = json.loads(cand)
+            break
         except json.JSONDecodeError:
-            return []
-    ops_raw = data.get("ops", [])[:edit_budget]
+            continue
+    if not isinstance(data, dict):
+        return []
+
+    ops_raw = data.get("ops", [])
+    if not isinstance(ops_raw, list):
+        return []
+    ops_raw = ops_raw[:edit_budget]
     out: list[EditOp] = []
     for op in ops_raw:
         if not isinstance(op, dict):

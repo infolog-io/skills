@@ -141,9 +141,27 @@ See `references/`: `spec-vs-conventions.md`, `folder-roles.md`, `naming-rules.md
 
 ## Self-application
 
-This skill must pass its own audit. The audit applies the 8-dimension
-rubric. Self-test target: all skill-layer dimensions at 5; all
-marketplace-layer dimensions at 5; verdict =
-`spec-compliant + marketplace-ready`.
+This skill must pass its own audit with verdict `spec-compliant + marketplace-ready`.
 
-If the skill cannot meet its own bar, fix the rubric or fix the skill.
+## Output format requirements
+
+Every mode must produce complete, untruncated output.
+
+### Audit output
+
+1. **Profile detection** — state single-rule or full-shape
+2. **Forbidden layout check** — pass/fail with evidence
+3. **8-dimension table** — all 8 rows, each with dimension ID, score (1-5), and one-line rationale
+4. **Verdict line** — one of the four verdicts from the Verdicts table, verbatim
+
+Do not stop mid-table. If context limits approach, summarize rather than truncate.
+
+### Scaffold output
+
+Emit the full directory tree, then each required file's complete content:
+- `plugin.json` — valid JSON with name, description, version
+- `SKILL.md` — frontmatter + placeholder body
+- `README.md` — three sections: what, when, install
+- `TESTS.md` — at least one end-condition and one test case
+
+Do not emit partial files.

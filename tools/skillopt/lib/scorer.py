@@ -2,8 +2,14 @@
 from __future__ import annotations
 import re
 import json
+import math
 from .sdk import run_judge
 from .types import Task, Trajectory, ScoreResult
+
+
+def _clamp01(x: float) -> float:
+    """Clamp a judge score to [0,1]; map NaN/inf to 0 (a NaN would poison means)."""
+    return 0.0 if not math.isfinite(x) else max(0.0, min(1.0, x))
 
 
 def match_pattern(output: str, pattern: dict) -> bool:
@@ -70,13 +76,13 @@ async def llm_judge(task: Task, trajectory: Trajectory,
         parsed = json.loads(judge_text)
         result = ScoreResult(
             task_id=task.id,
-            score=float(parsed.get("score", 0.0)),
+            score=_clamp01(float(parsed.get("score", 0.0))),
             rationale=str(parsed.get("rationale", "no rationale")),
         )
     except (json.JSONDecodeError, ValueError):
         # Try to extract score with regex
         m = re.search(r'"score"\s*:\s*([\d.]+)', judge_text)
-        score = float(m.group(1)) if m else 0.0
+        score = _clamp01(float(m.group(1))) if m else 0.0
         result = ScoreResult(task_id=task.id, score=score,
                             rationale=judge_text[:200])
     return result, resp.cost_usd

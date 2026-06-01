@@ -83,6 +83,7 @@ async def _optimize(cfg: RunConfig, start_from: Path | None = None) -> Path:
     best_val_scores = inc_val_scores
     rejected: list[EditOp] = []
     consecutive_rejects = 0
+    accepted_epochs = 0
 
     # ── Epoch loop ────────────────────────────────────────────────────────
     for n in range(1, cfg.epochs + 1):
@@ -103,7 +104,8 @@ async def _optimize(cfg: RunConfig, start_from: Path | None = None) -> Path:
         # Split into success/failure minibatches by score
         pairs = list(zip(train_tasks, trajs, scores))
         pairs.sort(key=lambda p: p[2].score)
-        third = max(2, len(pairs) // 3)
+        # cap at len//2 so failure/success minibatches never overlap (small sets)
+        third = min(max(2, len(pairs) // 3), len(pairs) // 2)
         failure_batch = pairs[:third]
         success_batch = pairs[-third:]
 
@@ -162,6 +164,7 @@ async def _optimize(cfg: RunConfig, start_from: Path | None = None) -> Path:
             best_val_mean = gate.candidate_mean
             best_val_scores = cand_val_scores
             consecutive_rejects = 0
+            accepted_epochs += 1
             # Checkpoint immediately so a kill mid-run doesn't lose this win
             (run_dir / "best_skill.md").write_text(best_body)
             (run_dir / "cost.json").write_text(json.dumps({
@@ -204,7 +207,7 @@ async def _optimize(cfg: RunConfig, start_from: Path | None = None) -> Path:
         "incumbent_val_mean": inc_val_mean,
         "best_val_mean": best_val_mean,
         "best_test_mean": test_mean,
-        "accepted_epochs": sum(1 for line in log_lines if '"accept"' in line),
+        "accepted_epochs": accepted_epochs,
     }, indent=2))
     return run_dir
 
