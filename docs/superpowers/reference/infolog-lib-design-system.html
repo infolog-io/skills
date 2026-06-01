@@ -1199,6 +1199,123 @@
       </div>
       <p class="viz-chapter-lede">The six decisions, applied. Each chart below answers one question, drawn in the house style. Charts we can render honestly are real; charts that need data or compute we cannot reproduce here carry an <em>illustrative</em> tag — the honest-data-viz rule applied to its own limits.</p>
     </div>
+
+    <!-- ─── FLOW / STAGES ─────────────────────────────────────────────── -->
+    <div class="fg-family"><span class="fg-family-name">Flow / stages</span><span class="fg-q">— where does volume drop through a sequence?</span></div>
+
+    <!-- FUNNEL · agent run. Left-aligned bars; width = (value/1000)*180, x from 120. Verified = kept = success. -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <p class="viz-headline">Three in five dispatched runs verify clean.</p>
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Agent run funnel · last 7 days</figcaption>
+      <svg viewBox="0 0 320 220" role="img" aria-label="Agent run funnel: dispatched 1000, tool-call 840, response 720, verified 610." style="width:100%; height:auto; font-family: var(--sans);">
+        <text x="112" y="57"  text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">Dispatched</text>
+        <rect x="120" y="40"  width="180" height="26" fill="var(--gray-700)"/>
+        <text x="308" y="57"  text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">1000</text>
+        <text x="112" y="101" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">Tool-call</text>
+        <rect x="120" y="84"  width="151" height="26" fill="var(--gray-700)"/>
+        <text x="279" y="101" text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">840</text>
+        <text x="120" y="80"  style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">−16%</text>
+        <text x="112" y="145" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">Response</text>
+        <rect x="120" y="128" width="130" height="26" fill="var(--gray-700)"/>
+        <text x="258" y="145" text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">720</text>
+        <text x="120" y="124" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">−14%</text>
+        <text x="112" y="189" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">Verified</text>
+        <rect x="120" y="172" width="110" height="26" fill="var(--success)"/>
+        <text x="238" y="189" text-anchor="start" style="fill: var(--success); font-family: var(--mono); font-size: 11px; font-weight: 600;">610</text>
+        <text x="120" y="168" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">−15%</text>
+      </svg>
+      <p class="fg-use">Use when: sequential stages with monotonic drop-off.</p>
+    </figure>
+
+    <!-- FUNNEL · sales pipeline. Left-aligned bars; width = round((value/480)*180), x from 120. Won = success. -->
+    <!-- Data: Leads 480 → w=180, Qualified 300 → w=113 (−38%), Demo 175 → w=66 (−42%), Proposal 95 → w=36 (−46%), Won 41 → w=15 (−57%) -->
+    <!-- Row y-centres: 36, 76, 116, 156, 196; bar height 24; label x=112 end; value text x=120+width+8 -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <p class="viz-headline">Roughly one in twelve leads closes.</p>
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Sales pipeline · this quarter</figcaption>
+      <svg viewBox="0 0 320 250" role="img" aria-label="Sales pipeline funnel: leads 480, qualified 300, demo 175, proposal 95, won 41." style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- Row 1 · Leads 480 · no drop label -->
+        <text x="112" y="53"  text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">Leads</text>
+        <rect x="120" y="30"  width="180" height="24" fill="var(--gray-700)"/>
+        <text x="308" y="53"  text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">480</text>
+        <!-- Row 2 · Qualified 300 · −38% -->
+        <text x="120" y="68"  style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">−38%</text>
+        <text x="112" y="93"  text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">Qualified</text>
+        <rect x="120" y="70"  width="113" height="24" fill="var(--gray-700)"/>
+        <text x="241" y="93"  text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">300</text>
+        <!-- Row 3 · Demo 175 · −42% -->
+        <text x="120" y="108" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">−42%</text>
+        <text x="112" y="133" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">Demo</text>
+        <rect x="120" y="110" width="66"  height="24" fill="var(--gray-700)"/>
+        <text x="194" y="133" text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">175</text>
+        <!-- Row 4 · Proposal 95 · −46% -->
+        <text x="120" y="148" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">−46%</text>
+        <text x="112" y="173" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">Proposal</text>
+        <rect x="120" y="150" width="36"  height="24" fill="var(--gray-700)"/>
+        <text x="164" y="173" text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">95</text>
+        <!-- Row 5 · Won 41 · −57% · success highlight -->
+        <text x="120" y="188" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">−57%</text>
+        <text x="112" y="213" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">Won</text>
+        <rect x="120" y="190" width="15"  height="24" fill="var(--success)"/>
+        <text x="143" y="213" text-anchor="start" style="fill: var(--success); font-family: var(--mono); font-size: 11px; font-weight: 600;">41</text>
+      </svg>
+      <p class="fg-use">Use when: a sales/ops pipeline with named stages (states).</p>
+    </figure>
+
+    <!-- ARR WATERFALL. viewBox 0 0 420 240. Y-scale: 0→6($M) = y200→y30, so y(v)=round(200-(v/6)*170). -->
+    <!-- Data: Opening 4.20 → gray bar y=81 h=119; New +0.90 → green float 4.20→5.10 y=56 h=25; -->
+    <!-- Expansion +0.55 → green float 5.10→5.65 y=40 h=16; Churn −0.40 → red float 5.65→5.25 y=40 h=11; -->
+    <!-- Closing 5.25 → gray bar y=51 h=149. Dashed connectors link bar edges. -->
+    <!-- Coord math: y(4.20)=200-119=81; y(5.10)=200-144.5≈56; y(5.65)=200-160=40; y(5.25)=200-148.75≈51 -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <p class="viz-headline">Expansion and new logos cover churn — ARR up 25%.</p>
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">ARR bridge · FY opening → closing ($M)</figcaption>
+      <svg viewBox="0 0 420 240" role="img" aria-label="ARR waterfall: opening 4.20M, plus new 0.90, plus expansion 0.55, minus churn 0.40, closing 5.25M." style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- x-axis baseline -->
+        <line x1="30" y1="200" x2="395" y2="200" stroke="var(--gray-500)" stroke-width="1"/>
+
+        <!-- Opening bar: total 0→4.20, x=40, w=50, y=81, h=119 -->
+        <rect x="40" y="81" width="50" height="119" fill="var(--gray-700)"/>
+        <text x="65" y="77" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">4.20</text>
+
+        <!-- Connector: Opening top (y=81) → New bottom (y=81), dashed horizontal -->
+        <line x1="90" y1="81" x2="110" y2="81" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+
+        <!-- New bar: float 4.20→5.10, x=110, w=50, y=56, h=25 -->
+        <rect x="110" y="56" width="50" height="25" fill="var(--success)"/>
+        <text x="135" y="52" text-anchor="middle" style="fill: var(--success); font-family: var(--mono); font-size: 10px; font-weight: 600;">+0.90</text>
+
+        <!-- Connector: New top (y=56) → Expansion bottom (y=56), dashed horizontal -->
+        <line x1="160" y1="56" x2="180" y2="56" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+
+        <!-- Expansion bar: float 5.10→5.65, x=180, w=50, y=40, h=16 -->
+        <rect x="180" y="40" width="50" height="16" fill="var(--success)"/>
+        <text x="205" y="36" text-anchor="middle" style="fill: var(--success); font-family: var(--mono); font-size: 10px; font-weight: 600;">+0.55</text>
+
+        <!-- Connector: Expansion top (y=40) → Churn top (y=40), dashed horizontal -->
+        <line x1="230" y1="40" x2="250" y2="40" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+
+        <!-- Churn bar: float 5.65→5.25 (down), x=250, w=50, rect y=40 h=11 -->
+        <rect x="250" y="40" width="50" height="11" fill="var(--danger)"/>
+        <text x="275" y="36" text-anchor="middle" style="fill: var(--danger); font-family: var(--mono); font-size: 10px; font-weight: 600;">−0.40</text>
+
+        <!-- Connector: Churn bottom (y=51) → Closing top (y=51), dashed horizontal -->
+        <line x1="300" y1="51" x2="320" y2="51" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+
+        <!-- Closing bar: total 0→5.25, x=320, w=50, y=51, h=149 -->
+        <rect x="320" y="51" width="50" height="149" fill="var(--gray-700)"/>
+        <text x="345" y="47" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">5.25</text>
+
+        <!-- x-axis labels (mono 9px ink-soft, y=216, centered under each bar at x+25) -->
+        <text x="65"  y="216" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">Opening</text>
+        <text x="135" y="216" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">New</text>
+        <text x="205" y="216" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">Expansion</text>
+        <text x="275" y="216" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">Churn</text>
+        <text x="345" y="216" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">Closing</text>
+      </svg>
+      <p class="fg-use">Use when: a running total built from signed components.</p>
+    </figure>
+
   </div>
 </section>
 
