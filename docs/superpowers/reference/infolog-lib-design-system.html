@@ -1316,6 +1316,138 @@
       <p class="fg-use">Use when: a running total built from signed components.</p>
     </figure>
 
+    <!-- ─── CONTINUOUS XY ────────────────────────────────────────────────── -->
+    <div class="fg-family"><span class="fg-family-name">Continuous XY</span><span class="fg-q">— how does Y move over X, with what certainty?</span></div>
+
+    <!-- LINE: p95 latency · 30 days -->
+    <!-- x(day) = 40 + ((day-1)/29)*360; y(ms) = 190 - (ms/400)*160 -->
+    <!-- Data: [218,222,215,225,212,228,220,216,224,219,226,214,221,217,223,240,290,340,300,255,228,220,215,222,210,218,212,216,208,205] -->
+    <!-- Breach: days 16-20 (indices 15-19): 226.2,94.0 238.6,74.0 251.0,54.0 263.4,70.0 275.9,88.0 -->
+    <!-- SLO 250ms → y=90.0 -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <p class="viz-headline">p95 held under SLO except the day-18 incident.</p>
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Response latency p95 · 30 days (ms)</figcaption>
+      <svg viewBox="0 0 420 220" role="img" aria-label="p95 response latency over 30 days; a spike to 340ms on day 18 breaches the 250ms SLO." style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- horizontal gridlines y=30(400ms) y=90(250ms) y=110(200ms) y=190(0ms) -->
+        <line x1="40" y1="30"  x2="400" y2="30"  stroke="var(--gray-300)" stroke-width="1"/>
+        <line x1="40" y1="110" x2="400" y2="110" stroke="var(--gray-300)" stroke-width="1"/>
+        <line x1="40" y1="190" x2="400" y2="190" stroke="var(--gray-500)" stroke-width="1"/>
+
+        <!-- SLO reference line at 250ms (y=90) dashed, color=info -->
+        <line x1="40" y1="90" x2="345" y2="90" stroke="var(--info)" stroke-width="1" stroke-dasharray="1 4"/>
+        <text x="352" y="93" style="fill: var(--info); font-family: var(--mono); font-size: 10px;">SLO 250</text>
+
+        <!-- Full series: neutral gray (all 30 days) -->
+        <polyline points="40.0,102.8 52.4,101.2 64.8,104.0 77.2,100.0 89.7,105.2 102.1,98.8 114.5,102.0 126.9,103.6 139.3,100.4 151.7,102.4 164.1,99.6 176.6,104.4 189.0,101.6 201.4,103.2 213.8,100.8 226.2,94.0 238.6,74.0 251.0,54.0 263.4,70.0 275.9,88.0 288.3,98.8 300.7,102.0 313.1,104.0 325.5,101.2 337.9,106.0 350.3,102.8 362.8,105.2 375.2,103.6 387.6,106.8 400.0,108.0" stroke="var(--gray-700)" stroke-width="1.5" fill="none"/>
+
+        <!-- Breach overdraw: days 16-20 in danger red -->
+        <polyline points="226.2,94.0 238.6,74.0 251.0,54.0 263.4,70.0 275.9,88.0" stroke="var(--danger)" stroke-width="1.5" fill="none"/>
+
+        <!-- Y-axis ticks: 0, 200, 400 -->
+        <text x="36" y="193" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">0</text>
+        <text x="36" y="113" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">200</text>
+        <text x="36" y="33"  text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">400</text>
+
+        <!-- X-axis ticks: day 1, 15, 30 -->
+        <text x="40.0"  y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">1</text>
+        <text x="213.8" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">15</text>
+        <text x="400.0" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">30</text>
+        <text x="220"   y="218" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">day</text>
+      </svg>
+      <p class="fg-use">Use when: one metric over a continuous time axis.</p>
+    </figure>
+
+    <!-- LINE + SCATTER: throughput vs concurrency -->
+    <!-- x(c) = 40 + (c/64)*360; y(t) = 190 - (t/500)*160 -->
+    <!-- Points: [[2,90],[4,170],[8,300],[12,375],[16,410],[20,440],[24,455],[32,475],[40,478],[48,472],[56,470],[64,468]] -->
+    <!-- Trend (success): polyline through all points -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <p class="viz-headline">Throughput plateaus past ~32 concurrent.</p>
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Throughput vs. concurrency · samples + fit</figcaption>
+      <svg viewBox="0 0 420 220" role="img" aria-label="Throughput rises with concurrency then plateaus around 475 req/s past 32 concurrent." style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- horizontal gridlines y=30(500) y=110(250) y=190(0) -->
+        <line x1="40" y1="30"  x2="400" y2="30"  stroke="var(--gray-300)" stroke-width="1"/>
+        <line x1="40" y1="110" x2="400" y2="110" stroke="var(--gray-300)" stroke-width="1"/>
+        <line x1="40" y1="190" x2="400" y2="190" stroke="var(--gray-500)" stroke-width="1"/>
+
+        <!-- Fitted trend line (success green) -->
+        <polyline points="51.2,161.2 62.5,135.6 85.0,94.0 107.5,70.0 130.0,58.8 152.5,49.2 175.0,44.4 220.0,38.0 265.0,37.0 310.0,39.0 355.0,39.6 400.0,40.2" stroke="var(--success)" stroke-width="1.5" fill="none"/>
+
+        <!-- Data points (gray circles) -->
+        <circle cx="51.2"  cy="161.2" r="3" fill="var(--gray-700)"/>
+        <circle cx="62.5"  cy="135.6" r="3" fill="var(--gray-700)"/>
+        <circle cx="85.0"  cy="94.0"  r="3" fill="var(--gray-700)"/>
+        <circle cx="107.5" cy="70.0"  r="3" fill="var(--gray-700)"/>
+        <circle cx="130.0" cy="58.8"  r="3" fill="var(--gray-700)"/>
+        <circle cx="152.5" cy="49.2"  r="3" fill="var(--gray-700)"/>
+        <circle cx="175.0" cy="44.4"  r="3" fill="var(--gray-700)"/>
+        <circle cx="220.0" cy="38.0"  r="3" fill="var(--gray-700)"/>
+        <circle cx="265.0" cy="37.0"  r="3" fill="var(--gray-700)"/>
+        <circle cx="310.0" cy="39.0"  r="3" fill="var(--gray-700)"/>
+        <circle cx="355.0" cy="39.6"  r="3" fill="var(--gray-700)"/>
+        <circle cx="400.0" cy="40.2"  r="3" fill="var(--gray-700)"/>
+
+        <!-- Y-axis ticks: 0, 250, 500 -->
+        <text x="36" y="193" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">0</text>
+        <text x="36" y="113" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">250</text>
+        <text x="36" y="33"  text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">500</text>
+        <text x="14" y="113" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px; writing-mode: vertical-rl; transform: rotate(180deg);">req/s</text>
+
+        <!-- X-axis ticks: 0, 16, 32, 48, 64 -->
+        <text x="40.0"  y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">0</text>
+        <text x="130.0" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">16</text>
+        <text x="220.0" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">32</text>
+        <text x="310.0" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">48</text>
+        <text x="400.0" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">64</text>
+        <text x="220"   y="218" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">concurrency</text>
+      </svg>
+      <p class="fg-use">Use when: observed samples plus a fitted relationship.</p>
+    </figure>
+
+    <!-- CONTINUOUS ERROR BARS: forecast queue depth -->
+    <!-- x(i) = 40 + (i/29)*360; y(q) = 190 - (q/28)*160 -->
+    <!-- Actual (i=0..19): [12,14,11,15,13,16,12,14,13,15,12,14,16,13,15,14,13,15,14,16] -->
+    <!-- Forecast (i=20..29): [15,16,15,17,16,18,17,19,18,20]; halfwidth=[2,2.7,3.3,4,4.7,5.3,6,6.7,7.3,8] -->
+    <!-- Band polygon: upper then lower reversed, Z -->
+    <!-- Divider x = 282.1 (between i=19 and i=20) -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <p class="viz-headline">Queue depth forecast holds, with widening uncertainty.</p>
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Queue depth · actual + 10-step forecast (± 90%)</figcaption>
+      <svg viewBox="0 0 420 220" role="img" aria-label="Queue depth: 20 actual points then a 10-step forecast with a widening 90 percent confidence band." style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- horizontal gridlines y=30(28) y=110(14) y=190(0) -->
+        <line x1="40" y1="30"  x2="400" y2="30"  stroke="var(--gray-300)" stroke-width="1"/>
+        <line x1="40" y1="110" x2="400" y2="110" stroke="var(--gray-300)" stroke-width="1"/>
+        <line x1="40" y1="190" x2="400" y2="190" stroke="var(--gray-500)" stroke-width="1"/>
+
+        <!-- Forecast confidence band (drawn first so lines sit on top) -->
+        <!-- Upper edge i=20..29; lower edge i=29..20 (reversed) -->
+        <path d="M 288.3 92.9 L 300.7 83.1 L 313.1 85.4 L 325.5 70.0 L 337.9 71.7 L 350.3 56.9 L 362.8 58.6 L 375.2 43.1 L 387.6 45.4 L 400.0 30.0 L 400.0 121.4 L 387.6 128.9 L 375.2 119.7 L 362.8 127.1 L 350.3 117.4 L 337.9 125.4 L 325.5 115.7 L 313.1 123.1 L 300.7 114.0 L 288.3 115.7 Z" fill="color-mix(in srgb, var(--info), white 82%)" stroke="none"/>
+
+        <!-- Vertical divider at actual/forecast boundary (x=282.1) -->
+        <line x1="282.1" y1="28" x2="282.1" y2="190" stroke="var(--gray-300)" stroke-width="1"/>
+        <text x="285" y="40" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">forecast →</text>
+
+        <!-- Actual line (solid, i=0..19) -->
+        <polyline points="40.0,121.4 52.4,110.0 64.8,127.1 77.2,104.3 89.7,115.7 102.1,98.6 114.5,121.4 126.9,110.0 139.3,115.7 151.7,104.3 164.1,121.4 176.6,110.0 189.0,98.6 201.4,115.7 213.8,104.3 226.2,110.0 238.6,115.7 251.0,104.3 263.4,110.0 275.9,98.6" stroke="var(--gray-700)" stroke-width="1.5" fill="none"/>
+
+        <!-- Forecast line (dashed, i=20..29) -->
+        <polyline points="275.9,98.6 288.3,104.3 300.7,98.6 313.1,104.3 325.5,92.9 337.9,98.6 350.3,87.1 362.8,92.9 375.2,81.4 387.6,87.1 400.0,75.7" stroke="var(--gray-700)" stroke-width="1.5" stroke-dasharray="4 3" fill="none"/>
+
+        <!-- Y-axis ticks: 0, 14, 28 -->
+        <text x="36" y="193" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">0</text>
+        <text x="36" y="113" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">14</text>
+        <text x="36" y="33"  text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">28</text>
+
+        <!-- X-axis ticks: i=0,10,20,29 -->
+        <text x="40.0"  y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">0</text>
+        <text x="164.1" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">10</text>
+        <text x="288.3" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">20</text>
+        <text x="400.0" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">29</text>
+        <text x="220"   y="218" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">step</text>
+      </svg>
+      <p class="fg-use">Use when: a projection carrying its confidence interval.</p>
+    </figure>
+
   </div>
 </section>
 
