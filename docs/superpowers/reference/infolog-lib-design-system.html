@@ -325,6 +325,14 @@
   .a11y-bar:focus { outline: 3px solid var(--info); outline-offset: 2px; }
   .viz-a11y-readout { font-family: var(--mono); font-size: 0.95rem; font-weight: var(--weight-medium); color: var(--ink); margin: var(--space-3) 0 0; }
 
+  /* --- Field guide: applied chart vocabulary, by job ------------------ */
+  .fg-family { grid-column: 1 / -1; margin-top: var(--space-6); display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
+  .fg-family:first-of-type { margin-top: var(--space-2); }
+  .fg-family-name { font-family: var(--sans); font-size: var(--font-size-h5); font-weight: var(--weight-semibold); color: var(--ink); }
+  .fg-q { font-family: var(--mono); font-size: 0.78rem; color: var(--ink-soft); }
+  .fg-use { font-size: var(--font-size-caption); color: var(--ink-soft); margin: var(--space-2) 0 0; line-height: var(--leading-snug); }
+  .fg-tag { display: inline-block; font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--ink-soft); border: 1px solid var(--gray-300); border-radius: 3px; padding: 1px 6px; margin-left: var(--space-2); vertical-align: middle; }
+
   /* --- Form controls (text input / textarea / select / check / radio / toggle) */
   .form-block-label { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-weight: var(--weight-medium); margin: 0 0 var(--space-4); }
 
@@ -1182,6 +1190,15 @@
         </svg>
       </div>
     </div>
+
+    <!-- ===== FIELD GUIDE — applied chart vocabulary, by job ===== -->
+    <!-- viz-chapter class is load-bearing: it stops dv-color's feedback-injection walk. -->
+    <div class="viz-chapter" id="dv-guide">
+      <div class="viz-chapter-head">
+        <span class="viz-chapter-name">A field guide to chart types</span>
+      </div>
+      <p class="viz-chapter-lede">The six decisions, applied. Each chart below answers one question, drawn in the house style. Charts we can render honestly are real; charts that need data or compute we cannot reproduce here carry an <em>illustrative</em> tag — the honest-data-viz rule applied to its own limits.</p>
+    </div>
   </div>
 </section>
 
@@ -1496,6 +1513,7 @@
       { id: 'dv-desc',  label: '08 · Descriptions' },
       { id: 'dv-a11y',  label: '08 · Accessibility' },
       { id: 'dv-color', label: '08 · Color' },
+      { id: 'dv-guide', label: '08 · Field guide' },
     ];
     const ALL = SECTIONS.slice(0, 7).concat(VIZ, SECTIONS.slice(7));
     const PREFIX = 'spraypixel-state-fb-';
