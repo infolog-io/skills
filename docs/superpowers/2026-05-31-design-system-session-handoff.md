@@ -77,11 +77,32 @@ sparkline gallery now inside the Marks dimension) · 09 Inputs & forms · 10 Ele
   getBoundingClientRect.** Big structural moves: content-anchored Python transform with
   assertions, not 50-line string edits.
 
+## Session update — 2026-06-01
+
+- **§11 Motion feedback panel — DONE.** Added `{ id: 'motion', label: '11 · Motion & animation' }`
+  to `SECTIONS`; `ALL`'s `slice(7)` auto-flows it last. Verified light/dark, feedback compiles.
+  Commit `1a42226`.
+- **§08 Chart field guide — DONE.** 13 figures in 5 job families + a catch-all, appended after
+  the six dimensions. Opener `id="dv-guide"` carries the `viz-chapter` class — that is the
+  feedback-injection boundary (stops `dv-color`'s sibling walk; without it the Color panel jumps
+  past the guide). 8 figures implemented for real, 5 tagged `illustrative` (kNN, PCA, UMAP,
+  network, correlation heatmap). New CSS `.fg-family/.fg-family-name/.fg-q/.fg-use/.fg-tag`; new
+  `VIZ` entry `dv-guide`. Examples span AI/ML, finance, ops. Built subagent-driven (7 tasks,
+  independent review each), verified light+dark, console clean, feedback live, three mirrors
+  md5-identical. Spec `docs/superpowers/specs/2026-05-31-chart-field-guide-design.md`; plan
+  `docs/superpowers/plans/2026-06-01-chart-field-guide.md`. Commits `9b7fe99` → `2caafbe`.
+- Open design note: large `color-mix(... white N%)` region fills (kNN zones, heatmap cells) read
+  as a light plotting surface on dark — intentional + legible, cell strokes keep edges visible.
+  If a subtler dark treatment is wanted, switch those fills to mix toward `--paper` instead of
+  `white` (consistent across both charts). Flagged, not changed.
+
 ## Still queued
 
-- **§11 Motion has no feedback panel** — it was never added to the `SECTIONS` array. Quick
-  fix: add `{ id: 'motion', label: '11 · Motion & animation' }`. (Offered, not yet done.)
-- **Card / section height tokens** — 8px-baseline `--h-*`, max-height + scroll.
+- **Layout section (A)** — approved in brainstorm, not yet spec'd. Combined section documenting
+  the existing column grid (4/8/12 + `.span-full`/`.md-span-*`/`.lg-span-*`, currently
+  undocumented) AND adding `--h-*` height tokens (8px baseline) + max-height/scroll. Card/section
+  height tokens fold into this. Placement (early-with-renumber vs append) still open. Needs its
+  own spec → plan.
 - **Build the generic `design-system` skill** per
   `docs/superpowers/plans/2026-05-30-design-system-skill.md`.
 
@@ -96,10 +117,10 @@ sparkline gallery now inside the Marks dimension) · 09 Inputs & forms · 10 Ele
     now gitignored), test_alignment, semantic-organization SKILL.md. 36 unit tests pass; NOT
     reviewed/optimized. `tasks/todo.md`'s scoped single-file PR plan is now stale (committed
     directly instead of as that PR).
-- Branch is ~69 commits ahead of `origin/main`, nothing pushed. Pushing publishes all of
-  them + needs a PR-base decision — left to the user.
+- Branch is ~78 commits ahead of `origin/main` (9 added 2026-06-01), nothing pushed. Pushing
+  publishes all of them + needs a PR-base decision — left to the user.
 - Untracked, left out on purpose: `tasks/` (planning TODO), `docs/BACKLOG.md` (design
-  backlog), stray `./--full-page` PNG (junk — offered to delete).
+  backlog). The stray `./--full-page` PNG was deleted this session.
 
 ## PIP status
 
