@@ -1,0 +1,1674 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>infolog.lib · current state</title>
+<style>
+  :root {
+    --sans:  "DM Sans", system-ui, "Segoe UI", Roboto, sans-serif;
+    --mono:  "JetBrains Mono", ui-monospace, "Courier New", monospace;
+    --font-size-h1: 5.063rem; --font-size-h2: 3.375rem; --font-size-h3: 2.25rem;
+    --font-size-h4: 1.5rem;   --font-size-h5: 1.125rem;
+    --font-size-body: 1rem;   --font-size-caption: 0.875rem;
+    --weight-regular: 400; --weight-medium: 500; --weight-semibold: 600; --weight-bold: 700;
+    --leading-tight: 1.15; --leading-snug: 1.3; --leading-normal: 1.5;
+    --tracking-tight: -0.02em; --tracking-normal: 0; --tracking-wide: 0.06em;
+    --space-1: 4px;  --space-2: 8px;   --space-3: 12px;
+    --space-4: 16px; --space-6: 24px;  --space-8: 32px; --space-12: 48px;
+    --paper: #ffffff; --paper-soft: #eaeaef;
+    --ink: #2a2a2a; --ink-soft: #555555;
+    --gray-100: #E5E5EA; --gray-300: #D1D1D6; --gray-500: #8E8E93; --gray-700: #3A3A3C;
+    --success: #34C759; --info: #007AFF; --danger: #FF3B30;
+    /* Tonal tier — OKLCH pale fill + AA-safe vivid label (lever a, locked 2026-05-30) */
+    --tonal-success-fill: #ddf9df; --tonal-success-ink: #008104;
+    --tonal-info-fill: #def2ff;    --tonal-info-ink: #0063e6;    --tonal-danger-fill: #ffe6df;  --tonal-danger-ink: #da0000;
+    --accent-warm: var(--success);
+    --radius-panel: 10px;
+    --border: 1px solid var(--gray-300);
+    --grid-cols: 4; --grid-gutter: var(--space-3); --grid-margin: var(--space-4); --grid-max-width: 1280px;
+    /* Elevation — C-hybrid: light = soft shadow (locked 2026-05-31) */
+    --surface-raised: var(--paper); --surface-overlay: var(--paper); --surface-modal: var(--paper);
+    --border-raised: 0; --border-overlay: 0; --border-modal: 0;
+    --shadow-raised: 0 1px 3px rgba(0,0,0,.06); --shadow-overlay: 0 6px 16px rgba(0,0,0,.10); --shadow-modal: 0 16px 40px rgba(0,0,0,.18);
+    --scrim: rgba(0,0,0,.32);
+    /* z-index scale */
+    --z-base: 0; --z-sticky: 50; --z-popover: 100; --z-scrim: 1000; --z-modal: 1001; --z-toast: 1100;
+    /* Motion — quiet & tight, honored by prefers-reduced-motion (locked 2026-05-31) */
+    --dur-fast: 120ms;  --dur-base: 160ms;  --dur-slow: 240ms;
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);  /* in-place changes: accel then decel */
+    --ease-out:      cubic-bezier(0, 0, 0.2, 1);     /* entrances: decelerate to rest */
+  }
+  @media (min-width: 641px)  { :root { --grid-cols: 8;  --grid-gutter: var(--space-4); --grid-margin: var(--space-8); } }
+  @media (min-width: 1024px) { :root { --grid-cols: 12; --grid-gutter: var(--space-6); --grid-margin: var(--space-12); } }
+
+  [data-theme="dark"] {
+    --paper: #161413; --paper-soft: #1C1C1E;
+    --ink: #f5f1e9; --ink-soft: #a8a39b;
+    --gray-100: #2C2C2E; --gray-300: #3A3A3C; --gray-500: #8E8E93; --gray-700: #AEAEB2;
+    --success: #30D158; --info: #0A84FF; --danger: #FF453A;
+    --tonal-success-fill: #194220; --tonal-success-ink: #30d158;
+    --tonal-info-fill: #1b385e;    --tonal-info-ink: #3ca5ff;
+    --tonal-danger-fill: #592721;  --tonal-danger-ink: #ff5f51;
+    /* Elevation — dark = lighter surface + hairline, shadows don't read on dark */
+    --surface-raised: var(--paper-soft); --surface-overlay: #242426; --surface-modal: #2b2b2d;
+    --border-raised: 1px solid var(--gray-100); --border-overlay: 1px solid var(--gray-300); --border-modal: 1px solid var(--gray-300);
+    --shadow-raised: none; --shadow-overlay: 0 6px 16px rgba(0,0,0,.55); --shadow-modal: 0 16px 40px rgba(0,0,0,.65);
+    --scrim: rgba(0,0,0,.55);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #161413; --paper-soft: #1C1C1E;
+      --ink: #f5f1e9; --ink-soft: #a8a39b;
+      --gray-100: #2C2C2E; --gray-300: #3A3A3C; --gray-500: #8E8E93; --gray-700: #AEAEB2;
+      --success: #30D158; --info: #0A84FF; --danger: #FF453A;
+      --tonal-success-fill: #194220; --tonal-success-ink: #30d158;
+      --tonal-info-fill: #1b385e;    --tonal-info-ink: #3ca5ff;
+      --tonal-danger-fill: #592721;  --tonal-danger-ink: #ff5f51;
+      --surface-raised: var(--paper-soft); --surface-overlay: #242426; --surface-modal: #2b2b2d;
+      --border-raised: 1px solid var(--gray-100); --border-overlay: 1px solid var(--gray-300); --border-modal: 1px solid var(--gray-300);
+      --shadow-raised: none; --shadow-overlay: 0 6px 16px rgba(0,0,0,.55); --shadow-modal: 0 16px 40px rgba(0,0,0,.65);
+      --scrim: rgba(0,0,0,.55);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: var(--font-size-body); line-height: var(--leading-normal); }
+  h1, h2, h3, h4, h5 { font-family: var(--sans); margin: 0; color: var(--ink); }
+  h1 { font-size: clamp(2.5rem, 8vw, var(--font-size-h1)); font-weight: var(--weight-bold); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); text-wrap: balance; }
+  h2 { font-size: var(--font-size-h2); font-weight: var(--weight-semibold); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); text-wrap: balance; }
+  h3 { font-size: var(--font-size-h3); font-weight: var(--weight-semibold); line-height: var(--leading-snug); text-wrap: balance; }
+  h4 { font-size: var(--font-size-h4); font-weight: var(--weight-medium); line-height: var(--leading-snug); text-wrap: balance; }
+  h5 { font-size: var(--font-size-h5); font-weight: var(--weight-medium); line-height: var(--leading-snug); color: var(--ink-soft); }
+  p { margin: 0; max-width: 66ch; text-wrap: pretty; }
+  small { font-family: var(--sans); font-size: var(--font-size-caption); color: var(--ink-soft); }
+  code { font-family: var(--mono); font-size: 0.92em; background: var(--paper-soft); padding: 0 var(--space-1); border-radius: 3px; font-feature-settings: "liga" 0; }
+  kbd { font-family: var(--mono); font-size: 0.85em; padding: 2px 6px; border: var(--border); border-bottom-width: 2px; border-radius: 4px; background: var(--paper-soft); }
+  time { font-family: var(--mono); font-feature-settings: "tnum" 1, "liga" 0; color: var(--ink); }
+  .id { font-family: var(--mono); font-size: 0.92em; color: var(--ink-soft); font-feature-settings: "liga" 0; }
+  .metric { font-family: var(--sans); font-size: var(--font-size-h3); font-weight: var(--weight-bold); line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: var(--tracking-tight); }
+  .unit { font-family: var(--sans); font-size: var(--font-size-caption); font-weight: var(--weight-regular); color: var(--ink-soft); margin-left: var(--space-2); }
+  .delta { font-family: var(--mono); font-feature-settings: "tnum" 1, "liga" 0; font-weight: var(--weight-medium); }
+  .delta-up { color: var(--success); }
+  .delta-down { color: var(--danger); }
+  .meta { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+
+  .grid { display: grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap: var(--grid-gutter); max-width: var(--grid-max-width); margin: 0 auto; padding: 0 var(--grid-margin); }
+  .span-full { grid-column: 1 / -1; }
+  @media (min-width: 641px) { .md-span-4 { grid-column: span 4; } .md-span-6 { grid-column: span 6; } .md-span-8 { grid-column: span 8; } }
+  @media (min-width: 1024px) { .lg-span-3 { grid-column: span 3; } .lg-span-4 { grid-column: span 4; } .lg-span-6 { grid-column: span 6; } .lg-span-8 { grid-column: span 8; } }
+
+  /* --- Topbar ---------------------------------------------------------- */
+  .topbar { position: sticky; top: 0; z-index: var(--z-sticky); background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px); border-bottom: var(--border); }
+  .topbar-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); max-width: var(--grid-max-width); margin: 0 auto; padding: var(--space-3) var(--grid-margin); }
+  .topbar .brand { font-family: var(--mono); font-size: var(--font-size-caption); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--ink); text-decoration: none; }
+  .topbar .brand b { color: var(--tonal-success-ink); background: var(--tonal-success-fill); font-weight: var(--weight-semibold); padding: 1px 7px; border-radius: 5px; }
+  .topbar .nav { display: flex; gap: var(--space-4); font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--ink-soft); }
+  .topbar .nav a { color: inherit; text-decoration: none; }
+  .topbar .nav a:hover { color: var(--tonal-info-ink); }
+  .theme-switch { display: flex; gap: 0; background: var(--paper-soft); border: 1px solid var(--gray-300); border-radius: 6px; padding: 2px; font-family: var(--mono); }
+  .theme-switch button { border: 0; background: transparent; width: 28px; height: 24px; font-size: var(--font-size-caption); line-height: 1; cursor: pointer; color: var(--ink-soft); border-radius: 4px; }
+  .theme-switch button[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: 0 1px 2px rgba(0,0,0,0.18); }
+
+  /* --- Section frame -------------------------------------------------- */
+  section { padding: var(--space-12) 0; border-bottom: var(--border); }
+  section:last-of-type { border-bottom: 0; }
+  section .eyebrow { margin-bottom: var(--space-2); }
+  section header h2 { font-size: var(--font-size-h3); font-weight: var(--weight-semibold); line-height: var(--leading-snug); letter-spacing: normal; text-wrap: balance; margin-bottom: var(--space-3); }
+  section .desc { color: var(--ink-soft); max-width: 56ch; margin-bottom: var(--space-8); }
+  section.tight { padding: var(--space-8) 0; }
+  section.loose { padding: var(--space-12) 0 var(--space-12); }
+
+  /* --- Hero ----------------------------------------------------------- */
+  .hero { padding: var(--space-12) 0; border-bottom: var(--border); }
+  .hero h1 em { font-style: normal; color: var(--success); }
+  .hero .deck { font-size: 1.25rem; line-height: var(--leading-snug); color: var(--ink-soft); max-width: 54ch; margin-top: var(--space-6); }
+
+  /* --- Type spec rows ------------------------------------------------- */
+  .type-row { display: grid; grid-template-columns: 80px 1fr; gap: var(--space-6); align-items: baseline; padding: var(--space-3) 0; border-bottom: 1px solid var(--gray-100); }
+  .type-row:last-child { border-bottom: 0; }
+  .type-row .tag { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+  .type-row .sample { color: var(--ink); }
+  /* Small / caption-level samples render mono — no sans→mono jumps inside small text */
+  .type-row small.sample { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); }
+  .type-row small.sample time { font-family: inherit; }
+  /* Type-scale specimens render the visual scale only; they are not document headings, so the page outline stays h1 then h2. */
+  .type-row .sample.t-h1 { font-size: var(--font-size-h1); font-weight: var(--weight-bold);     line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); }
+  .type-row .sample.t-h2 { font-size: var(--font-size-h2); font-weight: var(--weight-semibold); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); }
+  .type-row .sample.t-h3 { font-size: var(--font-size-h3); font-weight: var(--weight-semibold); line-height: var(--leading-snug); }
+  .type-row .sample.t-h4 { font-size: var(--font-size-h4); font-weight: var(--weight-medium);   line-height: var(--leading-snug); }
+  .type-row .sample.t-h5 { font-size: var(--font-size-h5); font-weight: var(--weight-medium);   line-height: var(--leading-snug); }
+
+  /* --- Color tokens grid --------------------------------------------- */
+  .token-card { padding: var(--space-4); border-radius: var(--radius-panel); display: flex; flex-direction: column; gap: var(--space-2); border: var(--border); background: var(--paper); }
+  .token-swatch { aspect-ratio: 4 / 2.4; border-radius: 6px; margin-bottom: var(--space-2); }
+  .swatch-success { background: var(--success); }
+  .swatch-info    { background: var(--info); }  .swatch-danger  { background: var(--danger); }
+  .swatch-paper   { background: var(--paper); border: var(--border); }
+  .swatch-paper-soft { background: var(--paper-soft); border: var(--border); }  .swatch-ink { background: var(--ink); }
+  .token-card .name { font-family: var(--mono); font-size: 0.8rem; color: var(--ink); font-weight: var(--weight-semibold); }
+  .token-card .hex  { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); }
+  .token-card .role { font-size: 0.8125rem; color: var(--ink-soft); line-height: var(--leading-snug); margin-top: 2px; }
+
+  /* --- Buttons --------------------------------------------------------- */
+  .btn-row { display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: center; }
+  .btn { font-family: var(--sans); font-size: 0.9375rem; font-weight: var(--weight-medium); padding: var(--space-2) var(--space-4); border-radius: 16px; border: 1px solid transparent; cursor: pointer; transition: opacity var(--dur-fast) var(--ease-standard); }
+  .btn:hover { opacity: 0.92; }
+  .btn.primary { background: var(--success); color: #fff; }
+  .btn.info    { background: var(--info);    color: var(--paper); }  .btn.danger  { background: var(--danger);  color: var(--paper); }
+  .btn.ghost   { background: transparent; color: var(--ink); border-color: var(--gray-300); }
+  /* Tonal — medium tier (hierarchy: solid > tonal > neutral > ghost). Pale fill, vivid AA-safe label. */
+  .btn.tonal.success { background: var(--tonal-success-fill); color: var(--tonal-success-ink); }
+  .btn.tonal.info    { background: var(--tonal-info-fill);    color: var(--tonal-info-ink); }  .btn.tonal.danger  { background: var(--tonal-danger-fill);  color: var(--tonal-danger-ink); }
+  /* Neutral — grey tier: gray-100 fill + gray-300 hairline + ink text. For Cancel/secondary. */
+  .btn.neutral { background: var(--gray-100); color: var(--ink); border-color: transparent; }
+  /* Tonal pill — reusable chip (brand mark, table statuses). Same tonal tokens. */
+  .pill { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 0.85em; font-weight: var(--weight-medium); line-height: 1.5; white-space: nowrap; }
+  .pill.success { background: var(--tonal-success-fill); color: var(--tonal-success-ink); }
+  .pill.info    { background: var(--tonal-info-fill);    color: var(--tonal-info-ink); }  .pill.danger  { background: var(--tonal-danger-fill);  color: var(--tonal-danger-ink); }
+
+  /* --- Alerts (semantic, no stripe) ----------------------------------- */
+  .alert { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-radius: 4px; font-size: var(--font-size-body); margin-bottom: var(--space-2); }
+  .alert > .alert-body { flex: 1; }
+  .alert-close { flex: 0 0 auto; background: transparent; border: 0; cursor: pointer; color: currentColor; font-family: var(--sans); font-size: 1.15rem; line-height: 1; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 5px; opacity: 0.55; margin: -3px -5px -3px 0; }
+  .alert-close:hover { opacity: 1; background: color-mix(in srgb, currentColor 14%, transparent); }
+  .alert-close:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; opacity: 1; }
+  .alert.dismissed { display: none; }
+  .alert.success { background: color-mix(in srgb, var(--success) 12%, var(--paper)); color: color-mix(in srgb, var(--success) 60%, var(--ink)); }
+  .alert.info    { background: color-mix(in srgb, var(--info)    12%, var(--paper)); color: color-mix(in srgb, var(--info)    60%, var(--ink)); }  .alert.danger  { background: color-mix(in srgb, var(--danger)  12%, var(--paper)); color: color-mix(in srgb, var(--danger)  60%, var(--ink)); }
+  /* Inline emphasis inside an alert — time, b, strong pop at full semantic color */
+  .alert.success time, .alert.success b, .alert.success strong { color: var(--success); font-weight: var(--weight-semibold); }
+  .alert.info    time, .alert.info    b, .alert.info    strong { color: var(--info);    font-weight: var(--weight-semibold); }  .alert.danger  time, .alert.danger  b, .alert.danger  strong { color: var(--danger);  font-weight: var(--weight-semibold); }
+
+  /* --- Inline status dots --------------------------------------------- */
+  .dots-row { display: flex; gap: var(--space-6); flex-wrap: wrap; font-family: var(--mono); font-size: 0.875rem; color: var(--ink); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+  .dots-row span { display: inline-flex; align-items: center; gap: var(--space-2); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .dot.success { background: var(--success); }
+  .dot.info { background: var(--info); }  .dot.danger { background: var(--danger); }
+
+  /* --- Stat tiles ----------------------------------------------------- */
+  .stat-tile { padding: var(--space-4); background: var(--paper-soft); border-radius: var(--radius-panel); display: flex; flex-direction: column; gap: var(--space-1); }
+  .stat-tile.success { background: var(--tonal-success-fill); }
+  .stat-tile.success .metric, .stat-tile.success .unit, .stat-tile.success .label { color: var(--tonal-success-ink); }
+  .stat-tile.info    { background: var(--tonal-info-fill); }
+  .stat-tile.info    .metric, .stat-tile.info    .unit, .stat-tile.info    .label { color: var(--tonal-info-ink); }  .stat-tile.danger  { background: var(--tonal-danger-fill); }
+  .stat-tile.danger  .metric, .stat-tile.danger  .unit, .stat-tile.danger  .label { color: var(--tonal-danger-ink); }
+  .stat-tile .label { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+  .stat-tile .unit  { font-family: var(--mono); font-size: var(--font-size-caption); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+  .stat-tile .pair { display: flex; align-items: baseline; gap: var(--space-2); margin-top: var(--space-1); }
+
+  /* --- Mockup chrome variants (Foundation primitives) ------------------ */
+  .mockup { display: flex; flex-direction: column; gap: var(--space-2); margin: 0; }
+  .mockup-label { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+  .mockup-frame { position: relative; border-radius: var(--radius-panel); overflow: hidden; aspect-ratio: 16 / 10; display: flex; flex-direction: column; }
+  .mockup-chrome { display: flex; align-items: center; gap: var(--space-2); }
+  .mockup-traffic { display: inline-flex; gap: 5px; flex-shrink: 0; }
+  .mockup-traffic > span { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .mockup-body { flex: 1; display: flex; flex-direction: column; gap: var(--space-2); }
+
+  /* Content blocks — chunky, not text-line bars */
+  .mockup-block { background: var(--gray-100); border-radius: 4px; }
+  .mockup-block.hero { flex: 1; min-height: 32px; }
+  .mockup-block.row  { height: 12px; }
+  .mockup-block.row.short { width: 55%; }
+  .mockup-block.cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); flex: 1; min-height: 52px; background: transparent; }
+  .mockup-block.cols > span { background: var(--gray-100); border-radius: 4px; }
+
+  /* Browser variant — light, minimal chrome strip, colored traffic dots, empty URL pill */
+  .mockup-frame.browser { background: var(--paper); border: var(--border); }
+  .mockup-frame.browser .mockup-chrome { background: var(--paper-soft); padding: var(--space-2) var(--space-3); border-bottom: var(--border); min-height: 0; }
+  .mockup-frame.browser .mockup-traffic { gap: 4px; }
+  .mockup-frame.browser .mockup-traffic > span { width: 7px; height: 7px; }
+  .mockup-frame.browser .mockup-traffic > span:nth-child(1) { background: #ed6a5e; }
+  .mockup-frame.browser .mockup-traffic > span:nth-child(2) { background: #f4be4f; }
+  .mockup-frame.browser .mockup-traffic > span:nth-child(3) { background: #62c554; }
+  .mockup-frame.browser .mockup-url { background: var(--paper); border: 1px solid var(--gray-300); border-radius: 999px; padding: 0; flex: 0 1 auto; margin: 0 auto; height: 9px; width: 55%; }
+  .mockup-frame.browser .mockup-body { padding: var(--space-3); }
+
+  /* Document variant — paper, title row */
+  .mockup-frame.document { background: var(--paper); border: var(--border); padding: var(--space-3); gap: var(--space-2); }
+  .mockup-frame.document .mockup-chrome { padding-bottom: var(--space-2); border-bottom: 1px solid var(--gray-100); }
+  .mockup-frame.document .mockup-title { color: var(--ink); font-family: var(--mono); font-size: var(--font-size-caption); letter-spacing: var(--tracking-wide); text-transform: uppercase; }
+
+  /* Sketch variant — bento grid of gray blocks, no frame border */
+  .mockup-frame.sketch { background: var(--paper); padding: var(--space-2); gap: 0; }
+  .mockup-frame.sketch .mockup-bento { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: var(--space-2); flex: 1; min-height: 0; }
+  .mockup-frame.sketch .mockup-bento > * { background: var(--gray-100); border-radius: 4px; }
+  .mockup-frame.sketch .mockup-bento .b1 { grid-column: 1; grid-row: 1 / span 2; }
+  .mockup-frame.sketch .mockup-bento .b2 { grid-column: 2 / span 2; grid-row: 1; }
+  .mockup-frame.sketch .mockup-bento .b3 { grid-column: 2; grid-row: 2; }
+  .mockup-frame.sketch .mockup-bento .b4 { grid-column: 3; grid-row: 2; }
+  .mockup-frame.sketch .mockup-bento .b5 { grid-column: 1 / span 3; grid-row: 3; }
+
+  /* Terminal variant — dark surface, all text/marks in --success green (light) or --info blue (dark) */
+  .mockup-frame.terminal { background: #1c1c1e; padding: var(--space-3); gap: var(--space-2); }
+  .mockup-frame.terminal .mockup-chrome { padding-bottom: var(--space-2); }
+  .mockup-frame.terminal .mockup-prompt { font-family: var(--mono); font-size: 0.7rem; color: var(--success); flex: 1; }
+  .mockup-frame.terminal .mockup-line { height: 4px; background: var(--success); border-radius: 1px; width: 60%; }
+  .mockup-frame.terminal .mockup-line.wide { width: 100%; }
+  .mockup-frame.terminal .mockup-line.narrow { width: 30%; }
+  .mockup-frame.terminal .mockup-line.accent { background: var(--success); width: 80%; }
+  .mockup-frame.terminal .mockup-line.indent { margin-left: 20px; }
+  .mockup-frame.terminal .mockup-cursor { width: 6px; height: 11px; background: var(--success); margin-top: 3px; }
+  /* Dark-mode (explicit + system) — terminal switches to info blue against the dark page bg */
+  [data-theme="dark"] .mockup-frame.terminal .mockup-prompt,
+  [data-theme="dark"] .mockup-frame.terminal .mockup-line,
+  [data-theme="dark"] .mockup-frame.terminal .mockup-cursor { color: var(--info); background: var(--info); }
+  [data-theme="dark"] .mockup-frame.terminal .mockup-prompt { background: transparent; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .mockup-frame.terminal .mockup-prompt { color: var(--info); }
+    :root:not([data-theme="light"]) .mockup-frame.terminal .mockup-line,
+    :root:not([data-theme="light"]) .mockup-frame.terminal .mockup-cursor { background: var(--info); }
+  }
+
+  /* --- Data table ----------------------------------------------------- */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; }
+  .data-table th, .data-table td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--gray-100); vertical-align: baseline; }
+  .data-table td time { white-space: nowrap; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .data-table td.status { white-space: nowrap; }
+  .data-table th { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); border-bottom: var(--border); }
+  .data-table .spark { width: 80px; height: 20px; display: block; }
+  .spark-types { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-3); margin-top: var(--space-4); }
+  .spark-types figure { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3); border: var(--border); border-radius: var(--radius-panel); background: var(--surface-raised); }
+  .spark-types figcaption { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); white-space: nowrap; }
+  .spark-types .spark-lg { width: 100%; height: auto; display: block; }
+  .data-table td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .data-table tr:last-child td { border-bottom: 0; }
+  .data-table td.status { font-family: var(--mono); font-size: 0.8rem; text-transform: uppercase; letter-spacing: var(--tracking-wide); font-weight: var(--weight-medium); }
+  /* Direct labeling: color IS the label, no dot icon */
+  .data-table td.status.success { color: var(--success); }
+  .data-table td.status.info    { color: var(--info); }  .data-table td.status.danger  { color: var(--danger); }
+
+  /* --- Footer --------------------------------------------------------- */
+  footer.colophon { padding: var(--space-8) 0 var(--space-12); border-top: var(--border); margin-top: var(--space-12); }
+  footer .colo { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); display: flex; gap: var(--space-4); flex-wrap: wrap; }
+
+  /* --- Data viz semantic color rules + lint --------------------------- */
+  .viz-rules-label { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); margin: var(--space-6) 0 var(--space-2); font-weight: var(--weight-medium); }
+  .viz-rules-foot { font-size: var(--font-size-caption); color: var(--ink-soft); margin: var(--space-3) 0 0; max-width: 80ch; font-style: italic; }
+
+  .viz-rules, .viz-lint { width: 100%; max-width: 96ch; border-collapse: collapse; font-size: var(--font-size-caption); }
+  .viz-rules th, .viz-lint th { font-family: var(--mono); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: 0.7rem; color: var(--ink-soft); font-weight: var(--weight-medium); text-align: left; padding: var(--space-2) var(--space-3); border-bottom: var(--border); }
+  .viz-rules td, .viz-lint td { padding: var(--space-3); border-bottom: 1px solid var(--gray-100); vertical-align: baseline; color: var(--ink); line-height: var(--leading-snug); }
+  .viz-rules tr:last-child td, .viz-lint tr:last-child td { border-bottom: 0; }
+
+  .viz-rules td:first-child { width: 24px; padding-right: 0; }
+  .viz-rules td:nth-child(2) { font-family: var(--mono); white-space: nowrap; width: 1%; padding-right: var(--space-6); }
+  .viz-rules td:nth-child(3) { color: var(--ink-soft); }
+
+  .viz-lint td:first-child { font-family: var(--mono); width: 1%; padding-right: var(--space-4); }
+  .viz-lint td:first-child code { background: var(--paper-soft); padding: 2px 6px; border-radius: 3px; font-size: 0.7rem; }
+  .viz-lint td:nth-child(2) { font-family: var(--mono); color: var(--ink); white-space: nowrap; width: 1%; padding-right: var(--space-6); font-size: 0.8rem; }
+  .viz-lint td:nth-child(3) { color: var(--ink); max-width: 60ch; }
+  .viz-lint code { font-family: var(--mono); font-size: 0.85em; background: var(--paper-soft); padding: 1px 4px; border-radius: 3px; }
+
+  .viz-swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+  .viz-swatch-quiet { background: var(--gray-700); }
+
+  /* --- Data viz: six-dimension chapters ------------------------------- */
+  .viz-chapter { grid-column: 1 / -1; margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--gray-300); }
+  .viz-chapter:first-of-type { margin-top: var(--space-4); }
+  .viz-chapter-head { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: var(--space-3); }
+  .viz-chapter-code { font-family: var(--mono); font-weight: var(--weight-semibold); font-size: 0.8rem; color: var(--tonal-info-ink); background: var(--tonal-info-fill); border: 1px solid transparent; border-radius: 4px; padding: 2px 9px; }
+  .viz-chapter-name { font-family: var(--sans); font-size: var(--font-size-h4); font-weight: var(--weight-semibold); line-height: var(--leading-snug); color: var(--ink); }
+  .viz-chapter-lede { color: var(--ink-soft); max-width: 64ch; margin: 0 0 var(--space-4); }
+
+  /* D — headline + macro/medium/micro caption on the cumulative line */
+  .viz-headline { font-family: var(--sans); font-size: 1.0625rem; font-weight: var(--weight-medium); color: var(--ink); line-height: var(--leading-snug); margin: 0 0 var(--space-3); max-width: 56ch; }
+  .viz-caption { display: flex; flex-direction: column; gap: 3px; margin-top: var(--space-4); font-size: var(--font-size-caption); color: var(--ink-soft); }
+  .viz-caption b { font-family: var(--mono); font-weight: var(--weight-medium); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-size: 0.68rem; color: var(--ink); margin-right: var(--space-2); }
+
+  /* A — keyboard-navigable exemplar */
+  .a11y-bar { fill: var(--gray-700); cursor: pointer; }
+  .a11y-bar:hover { fill: var(--gray-500); }
+  .a11y-bar:focus { outline: 3px solid var(--info); outline-offset: 2px; }
+  .viz-a11y-readout { font-family: var(--mono); font-size: 0.95rem; font-weight: var(--weight-medium); color: var(--ink); margin: var(--space-3) 0 0; }
+
+  /* --- Form controls (text input / textarea / select / check / radio / toggle) */
+  .form-block-label { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-weight: var(--weight-medium); margin: 0 0 var(--space-4); }
+
+  .field { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-4); }
+  .field-label { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-weight: var(--weight-medium); }
+  .field-hint { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-soft); }
+  .field-error { font-family: var(--mono); font-size: 0.75rem; color: var(--danger); }
+  .field-success { font-family: var(--mono); font-size: 0.75rem; color: var(--success); }
+
+  .input, .textarea-input, .select {
+    font-family: var(--sans); font-size: 0.9375rem; line-height: var(--leading-snug);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--gray-300); border-radius: 6px;
+    background: var(--paper); color: var(--ink);
+    width: 100%; box-sizing: border-box;
+  }
+  .input:focus, .textarea-input:focus, .select:focus {
+    outline: 2px solid var(--success); outline-offset: -1px; border-color: transparent;
+  }
+  .input::placeholder, .textarea-input::placeholder { color: var(--gray-500); }
+  .input:disabled, .textarea-input:disabled, .select:disabled {
+    background: var(--paper-soft); color: var(--ink-soft); cursor: not-allowed;
+  }
+  .input.is-error, .textarea-input.is-error { border-color: var(--danger); }
+  .input.is-success, .textarea-input.is-success { border-color: var(--success); }
+  .textarea-input { min-height: 80px; resize: vertical; }
+
+  /* Select chevron via background SVG */
+  .select { appearance: none; -webkit-appearance: none; padding-right: 36px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23555' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; background-size: 12px; cursor: pointer;
+  }
+
+  /* Checkbox + radio — square / circle, success when checked */
+  .checkbox, .radio { appearance: none; -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border: 1px solid var(--gray-500); background: var(--paper);
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative; vertical-align: middle;
+    transition: border-color var(--dur-fast) var(--ease-standard), background var(--dur-fast) var(--ease-standard);
+  }
+  .checkbox { border-radius: 3px; }
+  .radio    { border-radius: 50%; }
+  .checkbox:checked { background: var(--success); border-color: var(--success); }
+  .checkbox:checked::after {
+    content: ""; position: absolute; left: 4px; top: 1px;
+    width: 4px; height: 8px;
+    border: solid var(--paper); border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .radio:checked { border-color: var(--success); }
+  .radio:checked::after {
+    content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--success);
+  }
+  .checkbox:focus-visible, .radio:focus-visible {
+    outline: 2px solid var(--success); outline-offset: 2px;
+  }
+  .checkbox:disabled, .radio:disabled { background: var(--paper-soft); border-color: var(--gray-300); cursor: not-allowed; }
+
+  .check-row { display: flex; align-items: center; gap: var(--space-2); cursor: pointer; padding: 2px 0; }
+  .check-row .check-label { font-size: var(--font-size-body); color: var(--ink); }
+
+  /* Toggle — pill switch */
+  .toggle { appearance: none; -webkit-appearance: none;
+    width: 32px; height: 18px; border-radius: 999px; background: var(--gray-300);
+    position: relative; cursor: pointer; transition: background var(--dur-base) var(--ease-standard); flex-shrink: 0; vertical-align: middle;
+    border: 0;
+  }
+  .toggle::after {
+    content: ""; position: absolute; top: 2px; left: 2px;
+    width: 14px; height: 14px; border-radius: 50%; background: var(--paper);
+    transition: left var(--dur-base) var(--ease-standard); box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+  }
+  .toggle:checked { background: var(--success); }
+  .toggle:checked::after { left: 16px; }
+  .toggle:focus-visible { outline: 2px solid var(--success); outline-offset: 2px; }
+
+  /* Composed form layout */
+  .form-card { background: var(--paper); border: 2px solid var(--gray-300); padding: var(--space-6); border-radius: var(--radius-panel); display: flex; flex-direction: column; gap: var(--space-2); }
+  .form-card .field { margin-bottom: 0; }
+  .field-row { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-4); }
+  @media (max-width: 640px) { .field-row { grid-template-columns: 1fr; } }
+  .form-actions { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; padding-top: var(--space-3); border-top: 1px solid var(--gray-100); margin-top: var(--space-2); }
+  .form-meta { font-family: var(--mono); font-size: 0.75rem; color: var(--ink-soft); margin-left: auto; }
+  .form-meta time { font-variant-numeric: tabular-nums; }
+
+  /* --- Per-section feedback panels ------------------------------------ */
+  section .feedback { max-width: var(--grid-max-width); margin: var(--space-6) auto 0; padding: 0 var(--grid-margin); }
+  .feedback.viz-fb { max-width: none; margin: var(--space-4) 0 var(--space-6); padding: 0; }
+  .fb { background: var(--paper-soft); border-radius: var(--radius-panel); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
+  .fb-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
+  .fb-head label { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink); text-transform: uppercase; letter-spacing: var(--tracking-wide); font-weight: var(--weight-medium); }
+  .fb-head .status { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+  .fb-head .status.saved { color: var(--success); }
+  .fb textarea { font-family: var(--sans); font-size: 0.9375rem; line-height: var(--leading-snug); padding: var(--space-3); border: 1px solid var(--gray-300); border-radius: 6px; background: var(--paper); color: var(--ink); resize: vertical; min-height: 100px; width: 100%; box-sizing: border-box; }
+  .fb textarea:focus { outline: 2px solid var(--success); outline-offset: -1px; border-color: transparent; }
+  .fb textarea::placeholder { color: var(--gray-500); }
+  .fb-hint { font-size: 0.75rem; color: var(--ink-soft); font-style: italic; }
+
+  /* --- Summary / copy-as-prompt --------------------------------------- */
+  .summary-section { padding: var(--space-12) 0; background: var(--paper-soft); border-top: var(--border); border-bottom: var(--border); margin-top: var(--space-12); }
+  .summary-section h2 { margin-bottom: var(--space-3); }
+  .summary-section .desc { color: var(--ink-soft); max-width: 56ch; margin-bottom: var(--space-8); }
+  .summary-section pre.compiled { background: var(--paper); padding: var(--space-4); border-radius: var(--radius-panel); border: var(--border); white-space: pre-wrap; font-family: var(--mono); font-size: 0.875rem; line-height: 1.55; color: var(--ink); max-height: 400px; overflow-y: auto; }
+  .summary-section pre.compiled:empty::before { content: "No feedback yet. Fill out the panels above and your notes will compile here."; color: var(--ink-soft); font-style: italic; }
+  .summary-row { display: flex; gap: var(--space-3); margin-top: var(--space-4); flex-wrap: wrap; align-items: center; }
+  .copy-btn { background: var(--tonal-success-fill); color: var(--tonal-success-ink); font-family: var(--mono); font-size: var(--font-size-caption); padding: var(--space-3) var(--space-6); border-radius: 6px; border: 0; cursor: pointer; text-transform: uppercase; letter-spacing: var(--tracking-wide); transition: opacity var(--dur-fast) var(--ease-standard); }
+  .copy-btn:hover { opacity: 0.9; }
+  .copy-btn.copied { background: var(--tonal-info-fill); color: var(--tonal-info-ink); }
+  .clear-btn { background: transparent; color: var(--ink-soft); font-family: var(--mono); font-size: var(--font-size-caption); padding: var(--space-3) var(--space-4); border-radius: 6px; border: 1px solid var(--gray-300); cursor: pointer; text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+  .clear-btn:hover { color: var(--danger); border-color: var(--danger); }
+  .fb-counter { font-family: var(--mono); font-size: var(--font-size-caption); color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); margin-left: auto; }
+
+  /* --- 10 · Elevation & overlays -------------------------------------- */
+  .e-raised  { background: var(--surface-raised);  border: var(--border-raised);  box-shadow: var(--shadow-raised);  border-radius: var(--radius-panel); }
+  .e-overlay { background: var(--surface-overlay); border: var(--border-overlay); box-shadow: var(--shadow-overlay); border-radius: var(--radius-panel); }
+  .e-modal   { background: var(--surface-modal);   border: var(--border-modal);   box-shadow: var(--shadow-modal);   border-radius: var(--radius-panel); }
+
+  .elev-card { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-1); min-height: 132px; margin: 0; }
+  .elev-card .lvl  { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+  .elev-card .name { font-family: var(--mono); font-size: 0.85rem; font-weight: var(--weight-semibold); color: var(--ink); }
+  .elev-card .note { font-size: 0.8125rem; color: var(--ink-soft); line-height: var(--leading-snug); margin-top: auto; }
+
+  .z-scale { display: flex; flex-direction: column; max-width: 64ch; margin-top: var(--space-2); }
+  .z-row { display: grid; grid-template-columns: 168px 64px 1fr; gap: var(--space-4); align-items: baseline; padding: var(--space-2) 0; border-bottom: 1px solid var(--gray-100); }
+  .z-row:last-child { border-bottom: 0; }
+  .z-row .z-tok { font-family: var(--mono); font-size: 0.8rem; color: var(--ink); }
+  .z-row .z-val { font-family: var(--mono); font-size: 0.8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; text-align: right; }
+  .z-row .z-use { font-size: 0.8125rem; color: var(--ink-soft); }
+  .elev-actions { display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: center; margin-top: var(--space-2); }
+
+  /* Native dialog modal */
+  dialog.modal { padding: 0; border: var(--border-modal); border-radius: var(--radius-panel); background: var(--surface-modal); box-shadow: var(--shadow-modal); color: var(--ink); width: calc(100% - var(--space-8)); max-width: 440px; }
+  dialog.modal::backdrop { background: var(--scrim); }
+  .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); padding: var(--space-4) var(--space-4) var(--space-3); border-bottom: 1px solid var(--gray-100); }
+  .modal-head h3 { font-size: var(--font-size-h4); font-weight: var(--weight-semibold); line-height: var(--leading-snug); color: var(--ink); }
+  .modal-body { padding: var(--space-4); }
+  .modal-body p { color: var(--ink-soft); }
+  .modal-foot { display: flex; justify-content: flex-end; gap: var(--space-3); padding: var(--space-3) var(--space-4) var(--space-4); }
+  dialog.modal[open] { animation: modal-in var(--dur-base) var(--ease-out); }
+  dialog.modal[open]::backdrop { animation: scrim-in var(--dur-base) var(--ease-out); }
+  @keyframes modal-in { from { opacity: 0; transform: translateY(6px) scale(0.985); } to { opacity: 1; transform: none; } }
+  @keyframes scrim-in { from { opacity: 0; } to { opacity: 1; } }
+
+  /* Toast — .e-overlay card, semantic dot, no stripe, top-right */
+  .toast-stack { position: fixed; top: var(--space-4); right: var(--space-4); z-index: var(--z-toast); display: flex; flex-direction: column; gap: var(--space-2); width: 320px; max-width: calc(100vw - var(--space-8)); }
+  .toast { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-4); animation: toast-in var(--dur-base) var(--ease-out); }
+  .toast .dot { margin-top: 7px; }
+  .toast .toast-msg { flex: 1; font-size: 0.9375rem; color: var(--ink); line-height: var(--leading-snug); }
+  .toast .alert-close { color: var(--ink-soft); }
+  .toast.toast-out { animation: toast-out var(--dur-base) var(--ease-standard) forwards; }
+  @keyframes toast-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+  @keyframes toast-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(12px); } }
+
+  /* §11 motion demo */
+  .motion-demo { display: flex; flex-direction: column; gap: var(--space-2); max-width: 64ch; margin-top: var(--space-2); }
+  .motion-lane { display: grid; grid-template-columns: 148px 1fr; gap: var(--space-4); align-items: center; padding: var(--space-2) 0; border-bottom: 1px solid var(--gray-100); }
+  .motion-lane:last-child { border-bottom: 0; }
+  .motion-tag { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+  .motion-track { position: relative; height: 14px; }
+  .motion-dot { position: absolute; left: 0; top: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--tonal-info-ink); }
+  .motion-dot.standard { transition: left var(--dur-slow) var(--ease-standard); }
+  .motion-dot.out      { transition: left var(--dur-slow) var(--ease-out); }
+  .motion-demo.is-playing .motion-dot { left: calc(100% - 14px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root { --dur-fast: 0.01ms; --dur-base: 0.01ms; --dur-slow: 0.01ms; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/"><b>infolog.lib</b> · current state · v0.0.3</a>
+    <nav class="nav">
+      <a href="#type">type</a>
+      <a href="#color">color</a>
+      <a href="#alerts">alerts</a>
+      <a href="#data">data</a>
+      <a href="#chrome">chrome</a>
+      <a href="#forms">forms</a>
+      <a href="#feedback-summary">feedback</a>
+    </nav>
+    <div class="theme-switch" role="group" aria-label="Theme">
+      <button data-mode="light"  aria-pressed="false" title="Light">☀</button>
+      <button data-mode="dark"   aria-pressed="false" title="Dark">☾</button>
+      <button data-mode="system" aria-pressed="true"  title="System">⌘</button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero ============================================================= -->
+<section class="hero">
+  <div class="grid">
+    <div class="span-full lg-span-8">
+      <p class="meta">Where we are · <time datetime="2026-05-27">2026-05-27</time></p>
+      <h1>Aesthetic state, <em>scannable.</em></h1>
+      <p class="deck">Every layer of the infolog.lib foundation on one page: type stack, color palette, semantic UI feedback, the mockup primitives, and a sample data presentation. Dial what you want to change. Toggle light/dark to test both.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Type =============================================================== -->
+<section id="type">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">01 · Typography</p>
+      <h2>Perfect-5th heading scale + body floor.</h2>
+      <p class="desc">DM Sans for everything (with system fallback). JetBrains Mono for numerics, code, identifiers, labels. h5 floored at 18px so it stays distinct from body 16px. AAA contrast on light, AA on dark.</p>
+    </header>
+
+    <div class="span-full lg-span-8">
+      <div class="type-row"><span class="tag">h1</span><div class="sample t-h1">The ratchet</div></div>
+      <div class="type-row"><span class="tag">h2</span><div class="sample t-h2">Skills compound</div></div>
+      <div class="type-row"><span class="tag">h3</span><div class="sample t-h3">Why teams underinvest</div></div>
+      <div class="type-row"><span class="tag">h4</span><div class="sample t-h4">How to start the ratchet</div></div>
+      <div class="type-row"><span class="tag">h5</span><div class="sample t-h5">More from the studio</div></div>
+      <div class="type-row"><span class="tag">p</span><p class="sample">A skill is a directory with a <code>SKILL.md</code> that declares <em>when</em> it activates and <em>where</em> the reference material lives. The runtime decides whether to invoke it.</p></div>
+      <div class="type-row"><span class="tag">small</span><small class="sample">Source · GitHub schema-LD · pulled <time datetime="2026-05-27">2026-05-27</time></small></div>
+      <div class="type-row"><span class="tag">code</span><span class="sample">Inline <code>infolog-io/skills</code> · keystroke <kbd>⌘K</kbd> · timestamp <time datetime="2026-05-26T17:42">2026-05-26 17:42</time></span></div>
+      <div class="type-row"><span class="tag">metric</span><span class="sample"><span class="metric">15</span><span class="unit">skills shipped</span> · delta <span class="delta delta-up">+1</span> · <span class="delta delta-down">−3 days</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Color ============================================================== -->
+<section id="color">
+  <div class="grid">
+    <header class="span-full">
+      <p class="meta eyebrow">02 · Color</p>
+      <h2>Semantic communication colors.</h2>
+      <p class="desc">Three UI feedback colors: success / info / danger. Foundation-level — every theme inherits; components opt in via <code>.success</code> / <code>.info</code> modifiers. No yellow: non-critical warnings read as info, critical as danger.</p>
+    </header>
+
+    <div class="token-card span-full md-span-4 lg-span-3"><div class="token-swatch swatch-success"></div><div class="name">--success</div><div class="hex">#34C759</div><div class="role">positive, OK, complete, live</div></div>
+    <div class="token-card span-full md-span-4 lg-span-3"><div class="token-swatch swatch-info"></div><div class="name">--info</div><div class="hex">#007AFF</div><div class="role">neutral information, references</div></div>    <div class="token-card span-full md-span-4 lg-span-3"><div class="token-swatch swatch-danger"></div><div class="name">--danger</div><div class="hex">#FF3B30</div><div class="role">error, destructive, critical</div></div>
+  </div>
+
+  <div class="grid" style="margin-top: var(--space-8);">
+    <div class="token-card span-full md-span-4 lg-span-3"><div class="token-swatch swatch-paper"></div><div class="name">--paper</div><div class="hex">#FFFFFF</div><div class="role">page surface</div></div>
+    <div class="token-card span-full md-span-4 lg-span-3"><div class="token-swatch swatch-paper-soft"></div><div class="name">neutral</div><div class="hex">#EAEAEF</div><div class="role">neutral surface</div></div>
+    <div class="token-card span-full md-span-4 lg-span-3"><div class="token-swatch swatch-ink"></div><div class="name">ink</div><div class="hex">#2a2a2a</div><div class="role">body text</div></div>  </div>
+</section>
+
+<!-- Buttons ============================================================ -->
+<section class="tight" id="buttons">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">03 · Buttons</p>
+      <h2>Three emphasis tiers: tonal semantic, neutral, ghost.</h2>
+    </header>
+    <div class="span-full">
+      <div class="btn-row">        <button class="btn tonal success">Deploy</button>
+        <button class="btn tonal info">Learn more</button>
+        <button class="btn tonal danger">Delete</button>
+        <button class="btn neutral">Cancel</button>
+        <button class="btn ghost">Dismiss</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Alerts ============================================================= -->
+<section id="alerts">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">04 · Alerts</p>
+      <h2>Dismissible semantic banners. Tinted background, accent text.</h2>
+      <p class="desc">The semantic intent reads through two channels: the background tint (12% accent over paper) and the text color (60% accent + 40% ink). AA-pass on all three against tinted backgrounds, each with a dismiss button.</p>
+    </header>
+
+    <div class="span-full lg-span-8">
+      <div class="alert success"><span class="alert-body">Deploy succeeded · build #1247 shipped to production at <time datetime="2026-05-26T12:34Z">12:34 UTC</time></span><button class="alert-close" aria-label="Dismiss" onclick="this.closest('.alert').classList.add('dismissed')">×</button></div>
+      <div class="alert info"><span class="alert-body">New documentation available · check the changelog for the v0.5 release notes</span><button class="alert-close" aria-label="Dismiss" onclick="this.closest('.alert').classList.add('dismissed')">×</button></div>      <div class="alert danger"><span class="alert-body">Authentication failed · token expired 3 minutes ago, please re-authenticate</span><button class="alert-close" aria-label="Dismiss" onclick="this.closest('.alert').classList.add('dismissed')">×</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- Inline + Stat tiles =============================================== -->
+<section class="tight" id="data">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">05 · Inline + tiles</p>
+      <h2>Status dots, stat tiles, semantic data.</h2>
+      <p class="desc">For dashboards and live status sections. Stat tiles can opt into tinted backgrounds. Dots scale down to inline within prose.</p>
+    </header>
+
+    <div class="span-full" style="margin-bottom: var(--space-8);">
+      <div class="dots-row">
+        <span><span class="dot success"></span>Up</span>
+        <span><span class="dot info"></span>Syncing</span>        <span><span class="dot danger"></span>Down</span>
+      </div>
+    </div>
+
+    <div class="stat-tile success span-full md-span-4 lg-span-3"><span class="label">Uptime</span><div class="pair"><span class="metric">99.97%</span></div></div>    <div class="stat-tile info span-full md-span-4 lg-span-3"><span class="label">Queue</span><div class="pair"><span class="metric">128</span><span class="unit">pending</span></div></div>
+    <div class="stat-tile danger span-full md-span-4 lg-span-3"><span class="label">Errors · 24h</span><div class="pair"><span class="metric">7</span><span class="unit">resolved</span></div></div>
+  </div>
+</section>
+
+<!-- Mockup chrome ===================================================== -->
+<section id="chrome">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">06 · Mockup primitives</p>
+      <h2>Four chrome surfaces.</h2>
+      <p class="desc">Browser with traffic dots + minimal URL pill. Document with paper + title. Sketch as a bento grid of gray blocks, no frame. Terminal as a separate always-dark mono surface (green text in light theme, info-blue in dark). Body uses chunky content blocks, not text-line bars.</p>
+    </header>
+  </div>
+
+  <div class="grid" style="margin-top: var(--space-6);">
+    <figure class="mockup span-full md-span-4 lg-span-3">
+      <figcaption class="mockup-label">Browser</figcaption>
+      <div class="mockup-frame browser">
+        <div class="mockup-chrome">
+          <span class="mockup-traffic"><span></span><span></span><span></span></span>
+          <span class="mockup-url"></span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-block hero"></div>
+          <div class="mockup-block cols"><span></span><span></span></div>
+        </div>
+      </div>
+    </figure>
+
+    <figure class="mockup span-full md-span-4 lg-span-3">
+      <figcaption class="mockup-label">Document</figcaption>
+      <div class="mockup-frame document">
+        <div class="mockup-chrome"><span class="mockup-title">SPEC.MD</span></div>
+        <div class="mockup-body">
+          <div class="mockup-block row"></div>
+          <div class="mockup-block row short"></div>
+          <div class="mockup-block cols"><span></span><span></span></div>
+        </div>
+      </div>
+    </figure>
+
+    <figure class="mockup span-full md-span-4 lg-span-3">
+      <figcaption class="mockup-label">Sketch</figcaption>
+      <div class="mockup-frame sketch">
+        <div class="mockup-bento">
+          <div class="b1"></div>
+          <div class="b2"></div>
+          <div class="b3"></div>
+          <div class="b4"></div>
+          <div class="b5"></div>
+        </div>
+      </div>
+    </figure>
+
+    <figure class="mockup span-full md-span-4 lg-span-3">
+      <figcaption class="mockup-label">Terminal</figcaption>
+      <div class="mockup-frame terminal">
+        <div class="mockup-chrome">
+          <span class="mockup-prompt">~/infolog.lib zsh</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-line wide"></div>
+          <div class="mockup-line narrow"></div>
+          <div class="mockup-line indent"></div>
+          <div class="mockup-line accent indent"></div>
+          <div class="mockup-line"></div>
+          <div class="mockup-cursor"></div>
+        </div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- Data table sample ================================================= -->
+<section id="datatable">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">07 · Data table</p>
+      <h2>Tabular sample with <code>&lt;time&gt;</code>, <code>.id</code>, pill status, trend sparklines.</h2>
+      <p class="desc">Tufte-style table. Mono numerics, status as tonal pills (the same chip the brand mark uses), L→R narrative columns, dense vertical rhythm.</p>
+    </header>
+
+    <div class="span-full">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th style="width: 80px">Type</th>
+            <th class="num" style="width: 70px">V</th>
+            <th style="width: 110px">Status</th>
+            <th style="width: 96px">Trend</th>
+            <th style="width: 110px">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="id">infolog-io/skills</span> · Atomic Foundation</td><td>skill</td><td class="num">0.0.2</td><td><span class="pill success">shipped</span></td><td><svg class="spark" viewBox="0 0 84 22" aria-hidden="true"><path d="M0 17 L14 15 L28 16 L42 10 L56 11 L70 5 L84 3" fill="none" stroke="var(--success)" stroke-width="1.5"/></svg></td><td><time datetime="2026-05-26">2026-05-26</time></td></tr>
+          <tr><td>component-composer end-to-end run</td><td>e2e</td><td class="num">—</td><td><span class="pill danger">6/10 pass</span></td><td><svg class="spark" viewBox="0 0 84 22" aria-hidden="true"><path d="M0 4 L14 6 L28 5 L42 11 L56 10 L70 16 L84 19" fill="none" stroke="var(--danger)" stroke-width="1.5"/></svg></td><td><time datetime="2026-05-23">2026-05-23</time></td></tr>
+          <tr><td><span class="id">github-issues-kanban</span></td><td>skill</td><td class="num">0.1.0</td><td><span class="pill success">shipped</span></td><td><svg class="spark" viewBox="0 0 84 22" aria-hidden="true"><rect x="2" y="14" width="8" height="8" fill="var(--success)"/><rect x="14" y="10" width="8" height="12" fill="var(--success)"/><rect x="26" y="15" width="8" height="7" fill="var(--success)"/><rect x="38" y="8" width="8" height="14" fill="var(--success)"/><rect x="50" y="12" width="8" height="10" fill="var(--success)"/><rect x="62" y="6" width="8" height="16" fill="var(--success)"/><rect x="74" y="11" width="8" height="11" fill="var(--success)"/></svg></td><td><time datetime="2026-05-19">2026-05-19</time></td></tr>
+          <tr><td><span class="id">ac-mktg-translation-extraction</span></td><td>skill</td><td class="num">0.1.0</td><td><span class="pill info">internal</span></td><td><svg class="spark" viewBox="0 0 84 22" aria-hidden="true"><rect x="4" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="4" y="9" width="10" height="5" fill="var(--success)"/><rect x="17" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="17" y="7" width="10" height="7" fill="var(--success)"/><rect x="30" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="30" y="10" width="10" height="4" fill="var(--success)"/><rect x="43" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="43" y="6" width="10" height="8" fill="var(--success)"/><rect x="56" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="56" y="8" width="10" height="6" fill="var(--success)"/><rect x="69" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="69" y="5" width="10" height="9" fill="var(--success)"/></svg></td><td><time datetime="2026-05-14">2026-05-14</time></td></tr>
+          <tr><td><span class="id">infolog-io-control-plane</span></td><td>repo</td><td class="num">—</td><td><span class="pill info">private</span></td><td><svg class="spark" viewBox="0 0 84 22" aria-hidden="true"><path d="M0 18 L14 14 L28 15 L42 12 L56 8 L70 9 L84 4" fill="none" stroke="var(--success)" stroke-width="1.5"/></svg></td><td><time datetime="2026-05-05">2026-05-05</time></td></tr>
+          <tr><td><span class="id">aircall-brand-site</span></td><td>brand</td><td class="num">1.0</td><td><span class="pill success">handoff</span></td><td><svg class="spark" viewBox="0 0 84 22" aria-hidden="true"><rect x="2" y="10" width="8" height="12" fill="var(--success)"/><rect x="14" y="13" width="8" height="9" fill="var(--success)"/><rect x="26" y="8" width="8" height="14" fill="var(--success)"/><rect x="38" y="14" width="8" height="8" fill="var(--success)"/><rect x="50" y="9" width="8" height="13" fill="var(--success)"/><rect x="62" y="12" width="8" height="10" fill="var(--success)"/><rect x="74" y="7" width="8" height="15" fill="var(--success)"/></svg></td><td><time datetime="2026-04-28">2026-04-28</time></td></tr>
+          <tr><td><span class="id">piper-marketing</span> · Next.js 16 + Payload</td><td>web</td><td class="num">—</td><td><span class="pill success">live</span></td><td><svg class="spark" viewBox="0 0 84 22" aria-hidden="true"><rect x="4" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="4" y="7" width="10" height="7" fill="var(--success)"/><rect x="17" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="17" y="10" width="10" height="4" fill="var(--success)"/><rect x="30" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="30" y="6" width="10" height="8" fill="var(--success)"/><rect x="43" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="43" y="9" width="10" height="5" fill="var(--success)"/><rect x="56" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="56" y="5" width="10" height="9" fill="var(--success)"/><rect x="69" y="14" width="10" height="8" fill="var(--gray-300)"/><rect x="69" y="8" width="10" height="6" fill="var(--success)"/></svg></td><td><time datetime="2026-04-23">2026-04-23</time></td></tr>
+          <tr><td><span class="id">MrKRABZ</span> · cost-aware model router</td><td>tool</td><td class="num">0.1.0</td><td><span class="pill info">alpha</span></td><td><svg class="spark" viewBox="0 0 84 22" aria-hidden="true"><rect x="2" y="16" width="8" height="6" fill="var(--success)"/><rect x="14" y="12" width="8" height="10" fill="var(--success)"/><rect x="26" y="14" width="8" height="8" fill="var(--success)"/><rect x="38" y="10" width="8" height="12" fill="var(--success)"/><rect x="50" y="13" width="8" height="9" fill="var(--success)"/><rect x="62" y="8" width="8" height="14" fill="var(--success)"/><rect x="74" y="11" width="8" height="11" fill="var(--success)"/></svg></td><td><time datetime="2026-04-16">2026-04-16</time></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Charts ========================================================== -->
+<section id="dataviz">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">08 · Charts</p>
+      <h2>An effective chart decides six things.</h2>
+      <p class="desc">Goal, marks, axes, descriptions, accessibility, color: the six dimensions of an effective chart. Color discipline is necessary, not sufficient. A chart with perfect color but the wrong mark, or a truncated axis, still fails. Tufte governs the ink; these six dimensions govern the decisions made before it.</p>
+
+    </header>
+
+    <!-- CHAPTER G · Goal -->
+    <div class="viz-chapter" id="dv-goal">
+      <div class="viz-chapter-head">
+        <span class="viz-chapter-code">G</span>
+        <span class="viz-chapter-name">Goal</span>
+      </div>
+      <p class="viz-chapter-lede">Decide the question before the mark. The cumulative line below answers one question (is the count growing?) in a form every reader already knows.</p>
+      <table class="viz-lint">
+        <tbody>
+          <tr><td><code>G01</code></td><td>core-question</td><td>Name the one question the chart answers before drawing. Cannot state it in a sentence? Not ready to chart.</td></tr>
+          <tr><td><code>G02</code></td><td>design-for-focus</td><td>One chart, one variable cluster. Crowding three stories into a single frame buries all three.</td></tr>
+          <tr><td><code>G03</code></td><td>familiar-forms</td><td>Prefer bar and line. Novel forms (radial, sankey, packed bubbles) cost the reader decoding time they rarely have.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- LINE: skills shipped over time -->
+    <figure class="span-full lg-span-8" style="margin: 0;">
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Skills shipped · cumulative · Feb–May 2026</figcaption>
+      <p class="viz-headline">Fifteen skills shipped, with output accelerating through spring.</p>
+      <svg viewBox="0 0 720 220" role="img" style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- range-frame axes -->
+        <line x1="50" y1="180" x2="690" y2="180" stroke="var(--gray-500)" stroke-width="1"/>
+        <line x1="50" y1="30"  x2="50"  y2="180" stroke="var(--gray-500)" stroke-width="1"/>
+        <!-- y ticks: 1, 5, 10, 15 (range-frame: data min=1, max=15) -->
+        <text x="42" y="174" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">1</text>
+        <text x="42" y="134" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">5</text>
+        <text x="42" y="84"  text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">10</text>
+        <text x="42" y="34"  text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">15</text>
+        <!-- x ticks -->
+        <text x="80"  y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">FEB</text>
+        <text x="230" y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">MAR</text>
+        <text x="385" y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">APR</text>
+        <text x="555" y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">MAY</text>
+        <!-- area + line: cumulative from 1 to 15 -->
+        <path d="M 80 174 L 150 164 L 220 154 L 280 144 L 340 134 L 380 124 L 425 114 L 485 104 L 530 94 L 553 84 L 566 74 L 575 64 L 585 54 L 595 44 L 600 34"
+              stroke="var(--success)" stroke-width="2" fill="none"/>
+        <path d="M 80 174 L 150 164 L 220 154 L 280 144 L 340 134 L 380 124 L 425 114 L 485 104 L 530 94 L 553 84 L 566 74 L 575 64 L 585 54 L 595 44 L 600 34 L 600 180 L 80 180 Z"
+              fill="color-mix(in srgb, var(--success) 12%, transparent)"/>
+        <!-- dots (gray for past, accent for latest) -->
+        <circle cx="80"  cy="174" r="3" fill="var(--success)"/>
+        <circle cx="150" cy="164" r="3" fill="var(--success)"/>
+        <circle cx="220" cy="154" r="3" fill="var(--success)"/>
+        <circle cx="280" cy="144" r="3" fill="var(--success)"/>
+        <circle cx="340" cy="134" r="3" fill="var(--success)"/>
+        <circle cx="380" cy="124" r="3" fill="var(--success)"/>
+        <circle cx="425" cy="114" r="3" fill="var(--success)"/>
+        <circle cx="485" cy="104" r="3" fill="var(--success)"/>
+        <circle cx="530" cy="94"  r="3" fill="var(--success)"/>
+        <circle cx="553" cy="84"  r="3" fill="var(--success)"/>
+        <circle cx="566" cy="74"  r="3" fill="var(--success)"/>
+        <circle cx="575" cy="64"  r="3" fill="var(--success)"/>
+        <circle cx="585" cy="54"  r="3" fill="var(--success)"/>
+        <circle cx="595" cy="44"  r="3" fill="var(--success)"/>
+        <circle cx="600" cy="34"  r="5" fill="var(--success)"/>
+        <!-- annotation on latest -->
+        <text x="615" y="34" dy="4" style="fill: var(--ink); font-family: var(--mono); font-size: 11px; font-weight: 600;">15</text>
+        <text x="615" y="47" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">today</text>
+      </svg>
+      <figcaption class="viz-caption">
+        <span><b>Macro</b> 15 skills shipped since February.</span>
+        <span><b>Medium</b> the spring sprint, March to April, added eight.</span>
+        <span><b>Micro</b> today: skill 15, atomic-brand.</span>
+      </figcaption>
+    </figure>
+
+    <!-- CHAPTER M · Marks -->
+    <div class="viz-chapter" id="dv-marks">
+      <div class="viz-chapter-head">
+        <span class="viz-chapter-code">M</span>
+        <span class="viz-chapter-name">Marks</span>
+      </div>
+      <p class="viz-chapter-lede">Three marks, three jobs. The line in Goal traces a trend (M01); the bar below counts discrete months (M02); the dot plot ranks languages (M03).</p>
+      <table class="viz-lint">
+        <tbody>
+          <tr><td><code>M01</code></td><td>line-is-trend</td><td>Line marks encode rates of change and continuous trends. Never connect unordered categories; the slope implies a sequence that is not there.</td></tr>
+          <tr><td><code>M02</code></td><td>bar-is-discrete</td><td>Bar marks encode discrete categories and cumulative sums. A bar tolerates a true zero, so a missing month reads as zero, not as a gap.</td></tr>
+          <tr><td><code>M03</code></td><td>point-is-relationship</td><td>Point marks encode relationships, clusters, and outliers across two properties. Avoid raw points for dense noisy data; they smear into ink.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BAR: repos by month, April peak highlighted -->
+    <figure class="span-full lg-span-4" style="margin: 0;">
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Repos created by month</figcaption>
+      <svg viewBox="0 0 320 220" role="img" style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- baseline -->
+        <line x1="35" y1="180" x2="305" y2="180" stroke="var(--gray-500)" stroke-width="1"/>
+        <!-- y reference label -->
+        <text x="28" y="74" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">6</text>
+        <text x="28" y="180" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">0</text>
+        <!-- bars: Nov=2, Dec=2, Jan=0, Feb=5, Mar=5, Apr=6 (peak), May=3 -->
+        <!-- height = (value / 6) * 100; y = 180 - height; x positions: 50, 90, 130, 170, 210, 250, 290 -->
+        <rect x="42"  y="148" width="22" height="32"  fill="var(--gray-700)"/>
+        <rect x="80"  y="148" width="22" height="32"  fill="var(--gray-700)"/>
+        <rect x="118" y="180" width="22" height="0"   fill="var(--gray-700)"/>
+        <!-- explicit zero indicator for JAN (no bar = no data confusion) -->
+        <line x1="118" y1="180" x2="140" y2="180" stroke="var(--ink-soft)" stroke-width="1.5"/>
+        <text x="129" y="172" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">0</text>
+        <rect x="156" y="98"  width="22" height="82"  fill="var(--gray-700)"/>
+        <rect x="194" y="98"  width="22" height="82"  fill="var(--gray-700)"/>
+        <rect x="232" y="82"  width="22" height="98"  fill="var(--success)"/>
+        <rect x="270" y="132" width="22" height="48"  fill="var(--gray-700)"/>
+        <!-- values above bars -->
+        <text x="53"  y="143" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">2</text>
+        <text x="91"  y="143" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">2</text>
+        <text x="167" y="93"  text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">5</text>
+        <text x="205" y="93"  text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">5</text>
+        <text x="243" y="77"  text-anchor="middle" style="fill: var(--success); font-family: var(--mono); font-size: 11px; font-weight: 600;">6</text>
+        <text x="281" y="127" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">3</text>
+        <!-- month labels -->
+        <text x="53"  y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">NOV</text>
+        <text x="91"  y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">DEC</text>
+        <text x="129" y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">JAN</text>
+        <text x="167" y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">FEB</text>
+        <text x="205" y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">MAR</text>
+        <text x="243" y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">APR</text>
+        <text x="281" y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">MAY</text>
+      </svg>
+    </figure>
+
+    <!-- DOT PLOT: language distribution -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Primary language across repos</figcaption>
+      <svg viewBox="0 0 420 220" role="img" style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- baseline -->
+        <line x1="120" y1="200" x2="400" y2="200" stroke="var(--gray-500)" stroke-width="1"/>
+        <!-- x ticks: 0..6 -->
+        <text x="120" y="214" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">0</text>
+        <text x="166" y="214" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">1</text>
+        <text x="213" y="214" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">2</text>
+        <text x="260" y="214" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">3</text>
+        <text x="306" y="214" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">4</text>
+        <text x="353" y="214" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">5</text>
+        <text x="400" y="214" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">6</text>
+        <!-- dots: TS=6 (peak, accent=INFO as neutral reference), HTML=6, none=5, Python=2, JS=2, CSS=1, Shell=1 -->
+        <!-- rows step 25 -->
+        <g style="font-family: var(--sans); font-size: 11px; fill: var(--ink);">
+          <text x="112" y="33" text-anchor="end">TypeScript</text>
+          <line x1="120" y1="30" x2="400" y2="30" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+          <circle cx="400" cy="30" r="5" fill="var(--info)"/>
+          <text x="412" y="34" style="fill: var(--info); font-family: var(--mono); font-size: 11px; font-weight: 600;">6</text>
+
+          <text x="112" y="58" text-anchor="end">HTML</text>
+          <line x1="120" y1="55" x2="400" y2="55" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+          <circle cx="400" cy="55" r="5" fill="var(--gray-700)"/>
+          <text x="412" y="59" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">6</text>
+
+          <text x="112" y="83" text-anchor="end">none</text>
+          <line x1="120" y1="80" x2="353" y2="80" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+          <circle cx="353" cy="80" r="5" fill="var(--gray-700)"/>
+          <text x="365" y="84" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">5</text>
+
+          <text x="112" y="108" text-anchor="end">Python</text>
+          <line x1="120" y1="105" x2="213" y2="105" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+          <circle cx="213" cy="105" r="5" fill="var(--gray-700)"/>
+          <text x="225" y="109" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">2</text>
+
+          <text x="112" y="133" text-anchor="end">JavaScript</text>
+          <line x1="120" y1="130" x2="213" y2="130" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+          <circle cx="213" cy="130" r="5" fill="var(--gray-700)"/>
+          <text x="225" y="134" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">2</text>
+
+          <text x="112" y="158" text-anchor="end">CSS</text>
+          <line x1="120" y1="155" x2="166" y2="155" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+          <circle cx="166" cy="155" r="5" fill="var(--gray-700)"/>
+          <text x="178" y="159" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">1</text>
+
+          <text x="112" y="183" text-anchor="end">Shell</text>
+          <line x1="120" y1="180" x2="166" y2="180" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
+          <circle cx="166" cy="180" r="5" fill="var(--gray-700)"/>
+          <text x="178" y="184" style="fill: var(--ink); font-family: var(--mono); font-size: 11px;">1</text>
+        </g>
+      </svg>
+    </figure>
+
+    <div class="span-full" style="margin-top: var(--space-2);">
+      <p class="viz-chapter-lede">The same marks shrink to sparklines — a compact vocabulary for tables and inline trends.</p>
+      <div class="spark-types">
+        <figure><figcaption>Line</figcaption><svg class="spark-lg" viewBox="0 0 104 28" aria-hidden="true"><path d="M0 22 L17 19 L34 20 L51 13 L68 14 L85 7 L104 4" fill="none" stroke="var(--success)" stroke-width="1.5"/></svg></figure>
+        <figure><figcaption>Bar</figcaption><svg class="spark-lg" viewBox="0 0 104 28" aria-hidden="true"><rect x="1" y="17" width="9" height="9" fill="var(--success)"/><rect x="14" y="12" width="9" height="14" fill="var(--success)"/><rect x="27" y="19" width="9" height="7" fill="var(--success)"/><rect x="40" y="10" width="9" height="16" fill="var(--success)"/><rect x="53" y="15" width="9" height="11" fill="var(--success)"/><rect x="66" y="8" width="9" height="18" fill="var(--success)"/><rect x="79" y="14" width="9" height="12" fill="var(--success)"/><rect x="92" y="11" width="9" height="15" fill="var(--success)"/></svg></figure>
+        <figure><figcaption>Stacked</figcaption><svg class="spark-lg" viewBox="0 0 104 28" aria-hidden="true"><rect x="2" y="18" width="12" height="8" fill="var(--success)"/><rect x="2" y="12" width="12" height="6" fill="color-mix(in srgb, var(--success), white 45%)"/><rect x="18" y="18" width="12" height="8" fill="var(--success)"/><rect x="18" y="9" width="12" height="9" fill="color-mix(in srgb, var(--success), white 45%)"/><rect x="34" y="18" width="12" height="8" fill="var(--success)"/><rect x="34" y="13" width="12" height="5" fill="color-mix(in srgb, var(--success), white 45%)"/><rect x="50" y="18" width="12" height="8" fill="var(--success)"/><rect x="50" y="8" width="12" height="10" fill="color-mix(in srgb, var(--success), white 45%)"/><rect x="66" y="18" width="12" height="8" fill="var(--success)"/><rect x="66" y="11" width="12" height="7" fill="color-mix(in srgb, var(--success), white 45%)"/><rect x="82" y="18" width="12" height="8" fill="var(--success)"/><rect x="82" y="7" width="12" height="11" fill="color-mix(in srgb, var(--success), white 45%)"/></svg></figure>
+        <figure><figcaption>Tristate</figcaption><svg class="spark-lg" viewBox="0 0 104 28" aria-hidden="true"><line x1="0" y1="14" x2="104" y2="14" stroke="var(--gray-300)" stroke-width="1"/><rect x="1" y="5" width="7" height="8" fill="var(--success)"/><rect x="11" y="5" width="7" height="8" fill="var(--success)"/><rect x="21" y="15" width="7" height="8" fill="var(--danger)"/><rect x="31" y="5" width="7" height="8" fill="var(--success)"/><rect x="41" y="15" width="7" height="8" fill="var(--danger)"/><rect x="51" y="15" width="7" height="8" fill="var(--danger)"/><rect x="61" y="5" width="7" height="8" fill="var(--success)"/><rect x="71" y="11" width="7" height="6" fill="var(--info)"/><rect x="81" y="5" width="7" height="8" fill="var(--success)"/><rect x="91" y="5" width="7" height="8" fill="var(--success)"/></svg></figure>
+        <figure><figcaption>Discrete</figcaption><svg class="spark-lg" viewBox="0 0 104 28" aria-hidden="true"><g stroke="var(--success)" stroke-width="1.5"><line x1="4" y1="18" x2="4" y2="26"/><line x1="12" y1="14" x2="12" y2="26"/><line x1="20" y1="16" x2="20" y2="26"/><line x1="28" y1="10" x2="28" y2="26"/><line x1="36" y1="13" x2="36" y2="26"/><line x1="44" y1="8" x2="44" y2="26"/><line x1="52" y1="12" x2="52" y2="26"/><line x1="60" y1="6" x2="60" y2="26"/><line x1="68" y1="11" x2="68" y2="26"/><line x1="76" y1="9" x2="76" y2="26"/><line x1="84" y1="7" x2="84" y2="26"/><line x1="92" y1="10" x2="92" y2="26"/><line x1="100" y1="5" x2="100" y2="26"/></g></svg></figure>
+        <figure><figcaption>Bullet</figcaption><svg class="spark-lg" viewBox="0 0 104 28" aria-hidden="true"><rect x="0" y="7" width="104" height="14" rx="1" fill="var(--gray-100)"/><rect x="62" y="7" width="42" height="14" fill="var(--gray-300)"/><rect x="0" y="10" width="72" height="8" rx="1" fill="var(--gray-700)"/><line x1="86" y1="4" x2="86" y2="24" stroke="var(--ink)" stroke-width="2.5"/></svg></figure>
+        <figure><figcaption>Box</figcaption><svg class="spark-lg" viewBox="0 0 104 28" aria-hidden="true"><line x1="10" y1="14" x2="94" y2="14" stroke="var(--info)" stroke-width="1.5"/><line x1="10" y1="9" x2="10" y2="19" stroke="var(--info)" stroke-width="1.5"/><line x1="94" y1="9" x2="94" y2="19" stroke="var(--info)" stroke-width="1.5"/><rect x="32" y="7" width="34" height="14" fill="var(--tonal-info-fill)" stroke="var(--info)" stroke-width="1.5"/><line x1="52" y1="7" x2="52" y2="21" stroke="var(--info)" stroke-width="2"/></svg></figure>
+      </div>
+    </div>
+
+    <!-- CHAPTER X · Axes -->
+    <div class="viz-chapter" id="dv-axes">
+      <div class="viz-chapter-head">
+        <span class="viz-chapter-code">X</span>
+        <span class="viz-chapter-name">Axes</span>
+      </div>
+      <p class="viz-chapter-lede">The axis is where charts lie. The bar in Marks starts at zero (X01); the candlestick below frames a price range that does not (X02).</p>
+      <table class="viz-lint">
+        <tbody>
+          <tr><td><code>X01</code></td><td>bars-start-at-zero</td><td>A bar's lower bound is zero. Truncating the axis inflates short bars and misstates proportion.</td></tr>
+          <tr><td><code>X02</code></td><td>fixed-vs-dynamic</td><td>Fix the range when limits carry meaning, like 0 to 100 percent. Free it when small variations matter and zero would flatten them.</td></tr>
+          <tr><td><code>X03</code></td><td>intuitive-ticks</td><td>Label with familiar increments, like 5, 10, 25. Avoid math-driven splits like 1, 6, 11.</td></tr>
+          <tr><td><code>X04</code></td><td>sparse-grid</td><td>Four to five horizontal grid lines. Go lighter and fewer when the chart supports tap-to-inspect.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CANDLESTICK: weekly commit OHLC -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Weekly commit OHLC · last 6 weeks · latest in accent</figcaption>
+      <svg viewBox="0 0 420 220" role="img" style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- range-frame baseline -->
+        <line x1="42" y1="190" x2="400" y2="190" stroke="var(--gray-500)" stroke-width="1"/>
+        <line x1="42" y1="40"  x2="42"  y2="190" stroke="var(--gray-500)" stroke-width="1"/>
+        <!-- y ticks: 0 and 30 (data extents) -->
+        <text x="36" y="44"  text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">30</text>
+        <text x="36" y="194" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">0</text>
+        <!-- W16  O=8 H=15 L=4 C=12 → UP (green) -->
+        <line x1="90"  y1="169" x2="90"  y2="110" stroke="var(--success)" stroke-width="1"/>
+        <rect x="84"  y="126" width="12" height="21" fill="var(--success)"/>
+        <!-- W17  O=12 H=18 L=8 C=10 → DOWN (hollow red) -->
+        <line x1="145" y1="147" x2="145" y2="94" stroke="var(--danger)" stroke-width="1"/>
+        <rect x="139" y="126" width="12" height="11" fill="var(--paper)" stroke="var(--danger)" stroke-width="1"/>
+        <!-- W18  O=10 H=22 L=6 C=20 → UP (green) -->
+        <line x1="200" y1="158" x2="200" y2="73" stroke="var(--success)" stroke-width="1"/>
+        <rect x="194" y="83"  width="12" height="54" fill="var(--success)"/>
+        <!-- W19  O=20 H=24 L=12 C=15 → DOWN (hollow red) -->
+        <line x1="255" y1="126" x2="255" y2="62" stroke="var(--danger)" stroke-width="1"/>
+        <rect x="249" y="83"  width="12" height="27" fill="var(--paper)" stroke="var(--danger)" stroke-width="1"/>
+        <!-- W20  O=15 H=18 L=10 C=11 → DOWN (hollow red) -->
+        <line x1="310" y1="137" x2="310" y2="94" stroke="var(--danger)" stroke-width="1"/>
+        <rect x="304" y="110" width="12" height="22" fill="var(--paper)" stroke="var(--danger)" stroke-width="1"/>
+        <!-- W21 LATEST  O=11 H=28 L=8 C=26 → UP, ACCENT -->
+        <line x1="365" y1="147" x2="365" y2="41" stroke="var(--success)" stroke-width="1.25"/>
+        <rect x="359" y="52"  width="12" height="80" fill="var(--success)"/>
+        <!-- x labels -->
+        <text x="90"  y="210" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">W16</text>
+        <text x="145" y="210" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">W17</text>
+        <text x="200" y="210" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">W18</text>
+        <text x="255" y="210" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">W19</text>
+        <text x="310" y="210" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">W20</text>
+        <text x="365" y="210" text-anchor="middle" style="fill: var(--success); font-family: var(--mono); font-size: 11px; font-weight: 600;">W21</text>
+      </svg>
+    </figure>
+
+    <!-- CHAPTER D · Descriptions -->
+    <div class="viz-chapter" id="dv-desc">
+      <div class="viz-chapter-head">
+        <span class="viz-chapter-code">D</span>
+        <span class="viz-chapter-name">Descriptions</span>
+      </div>
+      <p class="viz-chapter-lede">Words carry the chart. The cumulative line in Goal headlines its takeaway, then layers macro, medium, and micro in the caption beneath it.</p>
+      <table class="viz-lint">
+        <tbody>
+          <tr><td><code>D01</code></td><td>headline-takeaway</td><td>Text above the chart states the primary insight. Do not make the reader derive the trend unaided.</td></tr>
+          <tr><td><code>D02</code></td><td>macro-medium-micro</td><td>Layer context at three levels: macro is the whole dataset, medium is a meaningful subset, micro is one focus point.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CHAPTER A · Accessibility -->
+    <div class="viz-chapter" id="dv-a11y">
+      <div class="viz-chapter-head">
+        <span class="viz-chapter-code">A</span>
+        <span class="viz-chapter-name">Accessibility</span>
+      </div>
+      <p class="viz-chapter-lede">A chart no one can read is decoration. The specimen below keeps a thick focus ring on the selected bar and speaks its value as context first, then number.</p>
+      <table class="viz-lint">
+        <tbody>
+          <tr><td><code>A01</code></td><td>context-then-value</td><td>Labels say "June 6, 850 installs," not "850." Spell it out: "June 6," not "6/6"; "60 minutes," not "60m."</td></tr>
+          <tr><td><code>A02</code></td><td>visible-focus</td><td>Focus rings are large, thick, and high-contrast against the marks they select.</td></tr>
+          <tr><td><code>A03</code></td><td>input-parity</td><td>Every pointer gesture maps to keyboard, screen readers, voice input, and switch access.</td></tr>
+          <tr><td><code>A04</code></td><td>audio-graph</td><td>Expose each point to the platform audio layer for pitch-shifted playback. The readout below carries the aria note.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- A11Y EXEMPLAR: keyboard-navigable bar chart with focus ring + live readout -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Daily skill installs · first week of June · keyboard-navigable</figcaption>
+      <svg id="a11yChart" viewBox="0 0 420 220" role="group" aria-label="Daily skill installs, first week of June. Use Tab or arrow keys to move between days." style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- range-frame: fixed 0..1000, intuitive ticks 0/500/1000 (X03) -->
+        <line x1="50" y1="190" x2="400" y2="190" stroke="var(--gray-500)" stroke-width="1"/>
+        <line x1="50" y1="30"  x2="50"  y2="190" stroke="var(--gray-500)" stroke-width="1"/>
+        <text x="42" y="194" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">0</text>
+        <text x="42" y="114" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">500</text>
+        <text x="42" y="34"  text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 11px;">1000</text>
+        <!-- selection ring: default on June 6, moved on focus via script -->
+        <rect id="a11yRing" x="312" y="50" width="32" height="144" rx="3" fill="none" stroke="var(--info)" stroke-width="3" opacity="0"/>
+        <!-- bars June 1..7 = 320,410,380,540,690,850,610 ; 0..1000 over 160px ; bars start at zero (X01) -->
+        <rect class="a11y-bar" tabindex="0" role="img" aria-label="June 1, 320 installs" data-label="June 1, 320 installs" x="66"  y="139" width="24" height="51"/>
+        <rect class="a11y-bar" tabindex="0" role="img" aria-label="June 2, 410 installs" data-label="June 2, 410 installs" x="116" y="124" width="24" height="66"/>
+        <rect class="a11y-bar" tabindex="0" role="img" aria-label="June 3, 380 installs" data-label="June 3, 380 installs" x="166" y="129" width="24" height="61"/>
+        <rect class="a11y-bar" tabindex="0" role="img" aria-label="June 4, 540 installs" data-label="June 4, 540 installs" x="216" y="104" width="24" height="86"/>
+        <rect class="a11y-bar" tabindex="0" role="img" aria-label="June 5, 690 installs" data-label="June 5, 690 installs" x="266" y="80"  width="24" height="110"/>
+        <rect class="a11y-bar" tabindex="0" role="img" aria-label="June 6, 850 installs" data-label="June 6, 850 installs" x="316" y="54"  width="24" height="136"/>
+        <rect class="a11y-bar" tabindex="0" role="img" aria-label="June 7, 610 installs" data-label="June 7, 610 installs" x="366" y="92"  width="24" height="98"/>
+        <text x="78"  y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">JUN 1</text>
+        <text x="128" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">JUN 2</text>
+        <text x="178" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">JUN 3</text>
+        <text x="228" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">JUN 4</text>
+        <text x="278" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">JUN 5</text>
+        <text x="328" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">JUN 6</text>
+        <text x="378" y="208" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">JUN 7</text>
+      </svg>
+      <p class="viz-a11y-readout" id="a11yReadout" aria-live="polite">June 6, 850 installs</p>
+      <p class="viz-rules-foot">Tab or arrow to move focus; the ring and readout follow. <code>A04</code> audio-graph would pitch-shift each bar's value through the platform audio layer, noted here, not rendered.</p>
+    </figure>
+
+    <!-- CHAPTER R · Color -->
+    <div class="viz-chapter" id="dv-color">
+      <div class="viz-chapter-head">
+        <span class="viz-chapter-code">R</span>
+        <span class="viz-chapter-name">Color</span>
+      </div>
+      <p class="viz-chapter-lede">Color is the sixth decision, not the first. It enhances a chart that already chose its goal, mark, axis, and description; it never rescues one that did not. Green for up, red for down, blue for a reference or neutral mark, gray for everything else. Test each against color blindness, dark mode, and high-contrast modes.</p>
+
+      <p class="viz-rules-label">Palette · what each color means</p>
+      <table class="viz-rules">
+        <thead>
+          <tr><th></th><th>Token</th><th>When to use</th><th>Examples in this section</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="viz-swatch" style="background: var(--success)"></span></td>
+            <td>success · green</td>
+            <td>up · positive · growing · target hit · latest = good</td>
+            <td>cumulative line + dots, up candles, every rising sparkline, atomic-brand rising in the slopegraph</td>
+          </tr>
+          <tr>
+            <td><span class="viz-swatch" style="background: var(--danger)"></span></td>
+            <td>danger · red</td>
+            <td>down · negative · declining · missed target · post-incident</td>
+            <td>down candles, monet sparkline, the falling lines in the slopegraph, 6/10 pass</td>
+          </tr>
+          <tr>
+            <td><span class="viz-swatch" style="background: var(--info)"></span></td>
+            <td>info · blue</td>
+            <td>non-directional reference, baseline, or neutral metric</td>
+            <td>box-plot sparkline, reference/threshold lines</td>
+          </tr>
+          <tr>
+            <td><span class="viz-swatch viz-swatch-quiet"></span></td>
+            <td>gray · quiet</td>
+            <td>non-directional context: axes, gridlines, ticks, frames, labels</td>
+            <td>every axis, tick, and frame on the page</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="viz-rules-label">Lint · six rules an LLM can apply</p>
+      <table class="viz-lint">
+        <thead>
+          <tr><th>Rule</th><th>Name</th><th>Lint</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>R01</code></td><td>binary-direction</td><td>Every data mark is green (up · positive · growing) or red (down · negative · declining). No third hue on data.</td></tr>
+          <tr><td><code>R02</code></td><td>symmetric</td><td>The rule holds across every chart. If one rising series is green, all rising series are green and all falling series red. No per-chart taste.</td></tr>
+          <tr><td><code>R03</code></td><td>quiet-context</td><td>Axes and ticks use <code>--gray-500</code>; gridlines, frames, and labels stay quiet. Anything non-directional is gray, never colored.</td></tr>
+          <tr><td><code>R04</code></td><td>reference-blue</td><td>Green up, red down. Blue (info) for a non-directional reference, baseline, or neutral mark. No yellow, ever.</td></tr>
+          <tr><td><code>R05</code></td><td>latest-weight</td><td>The latest or highlighted mark may go heavier — thicker stroke, larger dot — but keeps its directional color. Weight draws the eye, not a special hue.</td></tr>
+          <tr><td><code>R06</code></td><td>no-legend</td><td>Green-up / red-down is universal and needs no legend. Add a one-line caption only when direction is ambiguous.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="viz-rules-foot">Pass: every data mark is green or red by direction; everything else is gray. Every chart above obeys it — the slopegraph (rising green, falling red), the candlesticks (up green, down red), the sparklines (growing green, declining red). One rule, no exceptions.</p>
+    </div>
+
+    <!-- SLOPEGRAPH: skill rank shift Feb → May -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Skill rank shift · Feb → May · rising green, falling red</figcaption>
+      <svg viewBox="0 0 420 240" role="img" style="width:100%; height:auto; font-family: var(--sans);">
+        <!-- column headers -->
+        <text x="155" y="20" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;">FEB</text>
+        <text x="265" y="20" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;">MAY</text>
+        <!-- column anchor lines -->
+        <line x1="160" y1="30" x2="160" y2="220" stroke="var(--gray-300)" stroke-width="1"/>
+        <line x1="260" y1="30" x2="260" y2="220" stroke="var(--gray-300)" stroke-width="1"/>
+        <!-- Feb ranks (y): 1=45, 2=75, 3=105, 4=135, 5=165, 6=195, 7=225 -->
+        <!-- May ranks (y): 1=45, 2=75, 3=105, 4=135, 5=165, 6=195, 7=225 -->
+        <!-- atomic-brand    5 → 1 (UP 4) success -->
+        <line x1="160" y1="165" x2="260" y2="45" stroke="var(--success)" stroke-width="1.5"/>
+        <text x="155" y="169" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">atomic-brand</text>
+        <text x="265" y="49"  text-anchor="start" style="fill: var(--success); font-family: var(--sans); font-size: 11px; font-weight: 600;">atomic-brand</text>
+        <!-- semantic-org    3 → 2 (UP 1) success -->
+        <line x1="160" y1="105" x2="260" y2="75" stroke="var(--success)" stroke-width="1"/>
+        <text x="155" y="109" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">semantic-org</text>
+        <text x="265" y="79"  text-anchor="start" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">semantic-org</text>
+        <!-- claude-pip      1 → 3 (DOWN 2) danger -->
+        <line x1="160" y1="45" x2="260" y2="105" stroke="var(--danger)" stroke-width="1"/>
+        <text x="155" y="49"  text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">claude-pip</text>
+        <text x="265" y="109" text-anchor="start" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">claude-pip</text>
+        <!-- jtbd-prd        2 → 4 (DOWN 2) danger -->
+        <line x1="160" y1="75" x2="260" y2="135" stroke="var(--danger)" stroke-width="1"/>
+        <text x="155" y="79"  text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">jtbd-prd</text>
+        <text x="265" y="139" text-anchor="start" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">jtbd-prd</text>
+        <!-- estimatrix      6 → 5 (UP 1) success -->
+        <line x1="160" y1="195" x2="260" y2="165" stroke="var(--success)" stroke-width="1"/>
+        <text x="155" y="199" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">estimatrix</text>
+        <text x="265" y="169" text-anchor="start" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">estimatrix</text>
+        <!-- gh-issues-kanban 7 → 6 (UP 1) success -->
+        <line x1="160" y1="225" x2="260" y2="195" stroke="var(--success)" stroke-width="1"/>
+        <text x="155" y="229" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">gh-kanban</text>
+        <text x="265" y="199" text-anchor="start" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">gh-kanban</text>
+        <!-- learn2kern      4 → 7 (DOWN 3) danger -->
+        <line x1="160" y1="135" x2="260" y2="225" stroke="var(--danger)" stroke-width="1"/>
+        <text x="155" y="139" text-anchor="end" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">learn2kern</text>
+        <text x="265" y="229" text-anchor="start" style="fill: var(--ink); font-family: var(--sans); font-size: 11px;">learn2kern</text>
+      </svg>
+    </figure>
+
+    <!-- SPARKLINE row: inline + 3-up -->
+    <div class="span-full lg-span-6" style="display: flex; flex-direction: column; gap: var(--space-4); margin: 0;">
+      <p class="meta">Inline sparklines (row-level trend at a glance)</p>
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--gray-100); align-items: baseline;">
+        <span><b>infolog-io/skills</b> · activity · last 30 days · <span style="color: var(--success);">growing</span></span>
+        <svg width="120" height="24" viewBox="0 0 120 24" style="display: block;">
+          <path d="M 0 18 L 10 16 L 20 19 L 30 14 L 40 17 L 50 10 L 60 12 L 70 6 L 80 9 L 90 4 L 100 7 L 110 3 L 120 5"
+                stroke="var(--success)" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--gray-100); align-items: baseline;">
+        <span><b>infolog-io/themes</b> · activity · last 30 days · <span style="color: var(--success);">growing</span></span>
+        <svg width="120" height="24" viewBox="0 0 120 24" style="display: block;">
+          <path d="M 0 22 L 10 22 L 20 22 L 30 22 L 40 22 L 50 22 L 60 22 L 70 20 L 80 16 L 90 12 L 100 8 L 110 4 L 120 2"
+                stroke="var(--success)" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--gray-100); align-items: baseline;">
+        <span><b>monet</b> · activity · last 30 days · <span style="color: var(--danger);">declining</span></span>
+        <svg width="120" height="24" viewBox="0 0 120 24" style="display: block;">
+          <path d="M 0 8 L 10 10 L 20 12 L 30 9 L 40 14 L 50 11 L 60 16 L 70 18 L 80 15 L 90 20 L 100 17 L 110 19 L 120 22"
+                stroke="var(--danger)" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); padding: var(--space-3) 0; align-items: baseline;">
+        <span><b>crow.pet</b> · activity · last 30 days · <span style="color: var(--success);">growing</span></span>
+        <svg width="120" height="24" viewBox="0 0 120 24" style="display: block;">
+          <path d="M 0 16 L 10 18 L 20 14 L 30 19 L 40 11 L 50 13 L 60 8 L 70 10 L 80 6 L 90 9 L 100 4 L 110 7 L 120 3"
+                stroke="var(--success)" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Inputs & forms ===================================================== -->
+<section id="forms" class="tight">
+  <div class="grid">
+    <header class="span-full">
+      <p class="meta eyebrow">09 · Inputs & forms</p>
+      <h2>Sans labels caps-tracked, mono helper text, semantic states.</h2>
+      <p class="desc">Six native control primitives. Focus uses the 2px success outline (same as feedback panels). Error border in <code>--danger</code>, success border in <code>--success</code>. Disabled fields tint to <code>--paper-soft</code>.</p>
+    </header>
+
+    <!-- Text input: 4 states -->
+    <div class="span-full lg-span-6">
+      <p class="form-block-label">Text input · four states</p>
+
+      <div class="field">
+        <label class="field-label" for="i1">Project name</label>
+        <input class="input" id="i1" type="text" placeholder="e.g., infolog-io/skills">
+        <span class="field-hint">Lowercase, kebab-case, no spaces.</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="i2">Email · filled</label>
+        <input class="input is-success" id="i2" type="email" value="bdl@infolog.lib">
+        <span class="field-success">Verified · 12 hours ago</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="i3">API key · error</label>
+        <input class="input is-error" id="i3" type="text" value="sk-revoked-NOTREAL">
+        <span class="field-error">Key revoked. Generate a new one in Settings.</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="i4">Slug · disabled</label>
+        <input class="input" id="i4" type="text" value="auto-generated-slug" disabled>
+        <span class="field-hint">Derived from project name. Locked.</span>
+      </div>
+    </div>
+
+    <!-- Other primitives: select, textarea, checkboxes/radio/toggle -->
+    <div class="span-full lg-span-6">
+      <p class="form-block-label">Select · textarea · check / radio / toggle</p>
+
+      <div class="field">
+        <label class="field-label" for="s1">Type</label>
+        <select class="select" id="s1">
+          <option>skill</option>
+          <option>repo</option>
+          <option>brand</option>
+          <option>tool</option>
+          <option>web</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="t1">Description</label>
+        <textarea class="textarea-input" id="t1" rows="3" placeholder="One sentence about what this ships…"></textarea>
+        <span class="field-hint">Markdown supported. Max 280 chars.</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Options · checkboxes</label>
+        <label class="check-row"><input type="checkbox" class="checkbox" checked> <span class="check-label">Publish to marketplace</span></label>
+        <label class="check-row"><input type="checkbox" class="checkbox"> <span class="check-label">Auto-tag releases</span></label>
+        <label class="check-row"><input type="checkbox" class="checkbox" disabled> <span class="check-label" style="color: var(--ink-soft);">Require code review (pro)</span></label>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Visibility · radio</label>
+        <label class="check-row"><input type="radio" name="vis" class="radio" checked> <span class="check-label">Public</span></label>
+        <label class="check-row"><input type="radio" name="vis" class="radio"> <span class="check-label">Private</span></label>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Beta features · toggle</label>
+        <label class="check-row"><input type="checkbox" class="toggle" checked> <span class="check-label">Enabled</span></label>
+      </div>
+    </div>
+
+    <!-- Composed form -->
+    <div class="span-full">
+      <p class="form-block-label">Composed form · field group</p>
+      <form class="form-card" onsubmit="event.preventDefault();">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="cf1">Name</label>
+            <input class="input" id="cf1" type="text" value="Atomic Foundation">
+          </div>
+          <div class="field">
+            <label class="field-label" for="cf2">Version</label>
+            <input class="input" id="cf2" type="text" value="0.0.2">
+            <span class="field-hint">SemVer · pre-0.1 stays 0.0.x</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="cf3">Release notes</label>
+          <textarea class="textarea-input" id="cf3" rows="3">Type stack + grid + theme switch. Added .mockup primitives (browser/document/sketch/terminal). Semantic communication colors at Foundation level.</textarea>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Visibility</label>
+          <label class="check-row"><input type="radio" name="cf-vis" class="radio" checked> <span class="check-label">Public · listed in marketplace</span></label>
+          <label class="check-row"><input type="radio" name="cf-vis" class="radio"> <span class="check-label">Private · authorized installs only</span></label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn tonal success">Ship it</button>
+          <button type="button" class="btn ghost">Save draft</button>
+          <span class="form-meta">Last saved · <time datetime="2026-05-26T17:42">2026-05-26 17:42</time></span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Elevation + overlays ============================================== -->
+<section id="elevation" class="tight">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">10 · Elevation & overlays</p>
+      <h2>Three depth levels, encoded per theme.</h2>
+      <p class="desc">Light leans on soft shadows. Dark drops them — shadows vanish on a dark page — and lifts instead with a lighter surface plus a hairline border. One set of tokens (raised, overlay, modal) drives cards, popovers, dialogs and toasts. A z-index scale keeps stacking order honest.</p>
+    </header>
+  </div>
+
+  <div class="grid" style="margin-top: var(--space-6);">
+    <div class="elev-card e-raised span-full md-span-4 lg-span-4">
+      <span class="lvl">Raised</span>
+      <span class="name">.e-raised</span>
+      <span class="note">Cards, stat tiles, row hover. Barely off the page.</span>
+    </div>
+    <div class="elev-card e-overlay span-full md-span-4 lg-span-4">
+      <span class="lvl">Overlay</span>
+      <span class="name">.e-overlay</span>
+      <span class="note">Popovers, menus, toasts. Clearly floating above content.</span>
+    </div>
+    <div class="elev-card e-modal span-full md-span-4 lg-span-4">
+      <span class="lvl">Modal</span>
+      <span class="name">.e-modal</span>
+      <span class="note">Dialogs over a scrim. The top of the stack.</span>
+    </div>
+
+    <div class="span-full lg-span-8">
+      <p class="form-block-label">z-index scale</p>
+      <div class="z-scale">
+        <div class="z-row"><span class="z-tok">--z-base</span><span class="z-val">0</span><span class="z-use">page content</span></div>
+        <div class="z-row"><span class="z-tok">--z-sticky</span><span class="z-val">50</span><span class="z-use">sticky topbar</span></div>
+        <div class="z-row"><span class="z-tok">--z-popover</span><span class="z-val">100</span><span class="z-use">menus, popovers, tooltips</span></div>
+        <div class="z-row"><span class="z-tok">--z-scrim</span><span class="z-val">1000</span><span class="z-use">modal backdrop</span></div>
+        <div class="z-row"><span class="z-tok">--z-modal</span><span class="z-val">1001</span><span class="z-use">dialog panel</span></div>
+        <div class="z-row"><span class="z-tok">--z-toast</span><span class="z-val">1100</span><span class="z-use">toasts — above everything</span></div>
+      </div>
+    </div>
+
+    <div class="span-full">
+      <p class="form-block-label">Live</p>
+      <div class="elev-actions">
+        <button class="btn tonal info" type="button" onclick="document.getElementById('demoModal').showModal()">Open dialog</button>
+        <button class="btn neutral" type="button" onclick="spawnToast('success', 'Shipped · build #1247 is live')">Show toast</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal (native <dialog>) + toast stack for 10 --------------------- -->
+<dialog class="modal" id="demoModal" aria-labelledby="demoModalTitle">
+  <div class="modal-head">
+    <h3 id="demoModalTitle">Ship this release?</h3>
+    <button class="alert-close" type="button" aria-label="Close" onclick="this.closest('dialog').close()">×</button>
+  </div>
+  <div class="modal-body">
+    <p>This publishes <b>build #1247</b> to production and notifies subscribers. You can roll back within 10 minutes.</p>
+  </div>
+  <div class="modal-foot">
+    <button class="btn ghost" type="button" onclick="this.closest('dialog').close()">Cancel</button>
+    <button class="btn tonal success" type="button" onclick="this.closest('dialog').close(); spawnToast('success', 'Shipped · build #1247 is live')">Ship it</button>
+  </div>
+</dialog>
+<div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="false"></div>
+
+<!-- §11 Motion & animation ======================================== -->
+<section id="motion" class="tight">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">11 · Motion & animation</p>
+      <h2>Three speeds, two curves — quiet by default.</h2>
+      <p class="desc">Motion marks state changes and entrances. Nothing decorates. Every transition routes through duration and easing tokens. One media query flattens the whole system when the operating system requests reduced motion.</p>
+    </header>
+
+    <div class="span-full lg-span-6">
+      <p class="form-block-label">Duration</p>
+      <div class="z-scale">
+        <div class="z-row"><span class="z-tok">--dur-fast</span><span class="z-val">120ms</span><span class="z-use">opacity, hover, micro-feedback</span></div>
+        <div class="z-row"><span class="z-tok">--dur-base</span><span class="z-val">160ms</span><span class="z-use">toggles, modal &amp; toast entrance</span></div>
+        <div class="z-row"><span class="z-tok">--dur-slow</span><span class="z-val">240ms</span><span class="z-use">larger travel — the demo below</span></div>
+      </div>
+    </div>
+
+    <div class="span-full lg-span-6">
+      <p class="form-block-label">Easing</p>
+      <div class="z-scale">
+        <div class="z-row"><span class="z-tok">--ease-standard</span><span class="z-val">.4,0,.2,1</span><span class="z-use">in-place changes</span></div>
+        <div class="z-row"><span class="z-tok">--ease-out</span><span class="z-val">0,0,.2,1</span><span class="z-use">entrances — decelerate</span></div>
+      </div>
+    </div>
+
+    <div class="span-full">
+      <p class="form-block-label">Live</p>
+      <div class="motion-demo">
+        <div class="motion-lane"><span class="motion-tag">--ease-standard</span><span class="motion-track"><span class="motion-dot standard"></span></span></div>
+        <div class="motion-lane"><span class="motion-tag">--ease-out</span><span class="motion-track"><span class="motion-dot out"></span></span></div>
+      </div>
+      <div class="elev-actions">
+        <button class="btn tonal info" type="button" onclick="replayMotion()">Replay</button>
+        <span class="meta">at --dur-slow · flattens under reduced-motion</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Compiled feedback · summary coda ============================== -->
+<section class="summary-section" id="feedback-summary">
+  <div class="grid">
+    <header class="span-full lg-span-8">
+      <p class="meta eyebrow">Your feedback, compiled</p>
+      <h2>Section notes, ready to paste back as a single prompt.</h2>
+      <p class="desc">Fill out any panel above and it lands here. Hit copy, send it to me, I work through it in one pass. Persists to your browser, refresh-safe.</p>
+    </header>
+    <div class="span-full">
+      <pre class="compiled" id="compiled-out"></pre>
+      <div class="summary-row">
+        <button type="button" class="copy-btn" id="copy-feedback">Copy as prompt</button>
+        <button type="button" class="clear-btn" id="clear-feedback">Clear all</button>
+        <span class="fb-counter" id="fb-counter">0 sections with feedback</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer ============================================================ -->
+<footer class="colophon">
+  <div class="grid">
+    <div class="colo span-full">
+      <span>infolog.lib foundation</span><span>·</span>
+      <span>DM Sans + JetBrains Mono</span><span>·</span>
+      <span>perfect-5th type scale</span><span>·</span>
+      <span>4/8/12 grid · 641/1024 breakpoints</span><span>·</span>
+      <span>semantic: success / info / danger</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* file:// guard - Safari (and some setups) reject web storage on file:// origins; */
+  /* fall back to in-memory so the theme switch + feedback panels keep working. */
+  var safeStorage = (function () {
+    var mem = {}, live = false;
+    try { localStorage.setItem('__ls_probe__', '1'); localStorage.removeItem('__ls_probe__'); live = true; } catch (e) { live = false; }
+    return {
+      get: function (k) { if (live) { try { return localStorage.getItem(k); } catch (e) {} } return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null; },
+      set: function (k, v) { if (live) { try { localStorage.setItem(k, v); return; } catch (e) {} } mem[k] = String(v); },
+      remove: function (k) { if (live) { try { localStorage.removeItem(k); return; } catch (e) {} } delete mem[k]; }
+    };
+  })();
+
+  (function () {
+    const KEY = 'composer-theme-mode';
+    const html = document.documentElement;
+    const apply = (mode) => {
+      if (mode === 'system') delete html.dataset.theme;
+      else html.dataset.theme = mode;
+      document.querySelectorAll('.theme-switch button').forEach(b => {
+        b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+      });
+    };
+    const init = () => {
+      const saved = safeStorage.get(KEY) || 'system';
+      apply(saved);
+      document.querySelectorAll('.theme-switch button').forEach(b => {
+        b.addEventListener('click', () => {
+          const m = b.dataset.mode;
+          safeStorage.set(KEY, m);
+          apply(m);
+        });
+      });
+    };
+    if (document.readyState !== 'loading') init();
+    else document.addEventListener('DOMContentLoaded', init);
+  })();
+
+  /* -------- Per-section feedback panels ------------------------------- */
+  (function () {
+    const SECTIONS = [
+      { id: 'type',      label: '01 · Typography' },
+      { id: 'color',     label: '02 · Color' },
+      { id: 'buttons',   label: '03 · Buttons' },
+      { id: 'alerts',    label: '04 · Alerts' },
+      { id: 'data',      label: '05 · Inline + stat tiles' },
+      { id: 'chrome',    label: '06 · Mockup chrome' },
+      { id: 'datatable', label: '07 · Data table' },
+      { id: 'forms',     label: '09 · Inputs & forms' },
+      { id: 'elevation', label: '10 · Elevation & overlays' },
+    ];
+    const VIZ = [
+      { id: 'dv-goal',  label: '08 · Goal' },
+      { id: 'dv-marks', label: '08 · Marks' },
+      { id: 'dv-axes',  label: '08 · Axes' },
+      { id: 'dv-desc',  label: '08 · Descriptions' },
+      { id: 'dv-a11y',  label: '08 · Accessibility' },
+      { id: 'dv-color', label: '08 · Color' },
+    ];
+    const ALL = SECTIONS.slice(0, 7).concat(VIZ, SECTIONS.slice(7));
+    const PREFIX = 'spraypixel-state-fb-';
+    const escapeHtml = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    const inject = () => {
+      SECTIONS.forEach(sec => {
+        const section = document.getElementById(sec.id);
+        if (!section) return;
+        const saved = safeStorage.get(PREFIX + sec.id) || '';
+        const wrap = document.createElement('div');
+        wrap.className = 'feedback';
+        wrap.innerHTML =
+          '<div class="fb">' +
+            '<div class="fb-head">' +
+              '<label for="fb-' + sec.id + '">Feedback · ' + sec.label + '</label>' +
+              '<span class="status' + (saved ? ' saved' : '') + '" data-status="' + sec.id + '">' + (saved ? 'saved' : 'empty') + '</span>' +
+            '</div>' +
+            '<textarea id="fb-' + sec.id + '" data-section="' + sec.id + '" rows="4" placeholder="What to change in this section? e.g., \'tighten h2 leading\', \'kill the dotted reference line\', \'make the bar peak warmer\'…">' + escapeHtml(saved) + '</textarea>' +
+            '<span class="fb-hint">Saved locally on input. Compiled below.</span>' +
+          '</div>';
+        section.appendChild(wrap);
+      });
+
+      VIZ.forEach(v => {
+        const chapter = document.getElementById(v.id);
+        if (!chapter) return;
+        const saved = safeStorage.get(PREFIX + v.id) || '';
+        const wrap = document.createElement('div');
+        wrap.className = 'feedback viz-fb span-full';
+        wrap.innerHTML =
+          '<div class="fb">' +
+            '<div class="fb-head">' +
+              '<label for="fb-' + v.id + '">Feedback · ' + v.label + '</label>' +
+              '<span class="status' + (saved ? ' saved' : '') + '" data-status="' + v.id + '">' + (saved ? 'saved' : 'empty') + '</span>' +
+            '</div>' +
+            '<textarea id="fb-' + v.id + '" data-section="' + v.id + '" rows="4" placeholder="What to change in this visualization?"></textarea>' +
+            '<span class="fb-hint">Saved locally on input. Compiled below.</span>' +
+          '</div>';
+        wrap.querySelector('textarea').value = saved;
+        let node = chapter;
+        while (node.nextElementSibling && !node.nextElementSibling.classList.contains('viz-chapter')) {
+          node = node.nextElementSibling;
+        }
+        node.after(wrap);
+      });
+
+      const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+      const compile = () => {
+        const parts = ['Iterate on /tmp/composer-e2e/spraypixel-state.html. Section-level feedback:\n'];
+        let count = 0;
+        ALL.forEach(sec => {
+          const v = (document.getElementById('fb-' + sec.id)?.value || '').trim();
+          if (v) { parts.push('## ' + sec.label + '\n' + v + '\n'); count++; }
+        });
+        document.getElementById('compiled-out').textContent = count === 0 ? '' : parts.join('\n');
+        const counter = document.getElementById('fb-counter');
+        counter.textContent = count === 0 ? '0 sections with feedback'
+                            : count === 1 ? '1 section with feedback'
+                            : count + ' sections with feedback';
+      };
+
+      const persist = debounce((e) => {
+        const id = e.target.dataset.section;
+        const val = e.target.value;
+        if (val) safeStorage.set(PREFIX + id, val);
+        else safeStorage.remove(PREFIX + id);
+        const status = document.querySelector('.status[data-status="' + id + '"]');
+        if (status) { status.textContent = val ? 'saved' : 'empty'; status.classList.toggle('saved', !!val); }
+        compile();
+      }, 250);
+
+      document.querySelectorAll('.fb textarea').forEach(t => {
+        t.addEventListener('input', persist);
+      });
+
+      document.getElementById('copy-feedback').addEventListener('click', async (e) => {
+        const text = document.getElementById('compiled-out').textContent;
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+          const btn = e.currentTarget;
+          const orig = btn.textContent;
+          btn.textContent = '✓ Copied';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
+        } catch (err) {
+          alert('Copy failed. Select text manually. ' + err.message);
+        }
+      });
+
+      document.getElementById('clear-feedback').addEventListener('click', () => {
+        if (!confirm('Clear feedback from every section?')) return;
+        ALL.forEach(sec => {
+          safeStorage.remove(PREFIX + sec.id);
+          const ta = document.getElementById('fb-' + sec.id);
+          if (ta) ta.value = '';
+          const status = document.querySelector('.status[data-status="' + sec.id + '"]');
+          if (status) { status.textContent = 'empty'; status.classList.remove('saved'); }
+        });
+        compile();
+      });
+
+      compile();
+    };
+
+    if (document.readyState !== 'loading') inject();
+    else document.addEventListener('DOMContentLoaded', inject);
+  })();
+
+  /* A — accessibility specimen: move the focus ring + update the live readout */
+  (function () {
+    const ring = document.getElementById('a11yRing');
+    const readout = document.getElementById('a11yReadout');
+    const bars = document.querySelectorAll('#a11yChart .a11y-bar');
+    if (!ring || !readout || !bars.length) return;
+    bars.forEach(function (bar) {
+      bar.addEventListener('focus', function () {
+        readout.textContent = bar.getAttribute('data-label');
+        const x = parseFloat(bar.getAttribute('x'));
+        const y = parseFloat(bar.getAttribute('y'));
+        const w = parseFloat(bar.getAttribute('width'));
+        const h = parseFloat(bar.getAttribute('height'));
+        ring.setAttribute('x', x - 4);
+        ring.setAttribute('y', y - 4);
+        ring.setAttribute('width', w + 8);
+        ring.setAttribute('height', h + 8);
+        ring.setAttribute('opacity', '1');
+      });
+    });
+  })();
+</script>
+
+<script>
+  /* 10 · elevation — modal backdrop-click + global toast spawner ------ */
+  (function () {
+    const modal = document.getElementById('demoModal');
+    if (modal) {
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
+    }
+  })();
+
+  function spawnToast(variant, message) {
+    const stack = document.getElementById('toastStack');
+    if (!stack) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast e-overlay';
+    toast.setAttribute('role', 'status');
+    const dot = document.createElement('span');
+    dot.className = 'dot ' + variant;
+    const msg = document.createElement('span');
+    msg.className = 'toast-msg';
+    msg.textContent = message;
+    const close = document.createElement('button');
+    close.className = 'alert-close';
+    close.type = 'button';
+    close.setAttribute('aria-label', 'Dismiss');
+    close.textContent = '×';
+    toast.append(dot, msg, close);
+    let timer;
+    const dismiss = () => {
+      clearTimeout(timer);
+      toast.classList.add('toast-out');
+      toast.addEventListener('animationend', () => toast.remove(), { once: true });
+      setTimeout(() => toast.remove(), 400);
+    };
+    close.addEventListener('click', dismiss);
+    stack.appendChild(toast);
+    timer = setTimeout(dismiss, 4000);
+  }
+
+  function replayMotion(){ document.querySelector('.motion-demo').classList.toggle('is-playing'); }
+</script>
+
+</body>
+</html>
