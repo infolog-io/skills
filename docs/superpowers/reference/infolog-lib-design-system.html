@@ -1850,6 +1850,136 @@
       <p class="fg-use">Use when: relationships and topology, not magnitudes.</p>
     </figure>
 
+    <!-- CATCH-ALL ──────────────────────────────────────────────────────────── -->
+    <div class="fg-family"><span class="fg-family-name">Anything else</span><span class="fg-q">— a chart the eleven do not name?</span></div>
+    <div class="span-full lg-span-6">
+      <p class="fg-use" style="max-width: 60ch;">The guide is not a closed list. Any chart not shown — heatmap, treemap, sankey, choropleth (e.g. sales by state), radar, histogram, area — inherits the same six decisions and the house palette: quiet gray context, green up, red down, blue reference, and an <em>illustrative</em> tag whenever the data is not computed. One representative below.</p>
+    </div>
+
+    <!-- CORRELATION HEATMAP (ILLUSTRATIVE) ─────────────────────────────────── -->
+    <!-- viewBox 320×300; 6×6 symmetric matrix; rows/cols: LAT THR ERR QUE COST CSAT -->
+    <!-- Grid origin: cell(0,0) top-left at x=78,y=42; cell size 36×34 -->
+    <figure class="span-full lg-span-6" style="margin: 0;">
+      <p class="viz-headline">Latency and error rate move together; cost trades against CSAT.</p>
+      <figcaption class="meta" style="margin-bottom: var(--space-3);">Ops metric correlation <span class="fg-tag">illustrative</span></figcaption>
+      <svg viewBox="0 0 320 300" role="img" aria-label="Illustrative 6 by 6 correlation heatmap of operations metrics; green positive, red negative; not a computed analysis." style="width:100%; height:auto; font-family: var(--sans);">
+
+        <!-- COLUMN LABELS (above grid, y=36, centered on each column) -->
+        <text x="96"  y="36" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">LAT</text>
+        <text x="132" y="36" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">THR</text>
+        <text x="168" y="36" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">ERR</text>
+        <text x="204" y="36" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">QUE</text>
+        <text x="240" y="36" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">COST</text>
+        <text x="276" y="36" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">CSAT</text>
+
+        <!-- ROW LABELS (right-anchored at x=74, vertically centered on each row) -->
+        <text x="74" y="63"  text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">LAT</text>
+        <text x="74" y="97"  text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">THR</text>
+        <text x="74" y="131" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">ERR</text>
+        <text x="74" y="165" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">QUE</text>
+        <text x="74" y="199" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">COST</text>
+        <text x="74" y="233" text-anchor="end" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">CSAT</text>
+
+        <!-- GRID CELLS — row 0: LAT -->
+        <!-- (LAT,LAT) r=1.0 -->
+        <rect x="78"  y="42" width="36" height="34" fill="var(--success)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (LAT,THR) r=-0.6 -->
+        <rect x="114" y="42" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 58%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (LAT,ERR) r=0.7 -->
+        <rect x="150" y="42" width="36" height="34" fill="color-mix(in srgb, var(--success), white 51%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (LAT,QUE) r=0.5 -->
+        <rect x="186" y="42" width="36" height="34" fill="color-mix(in srgb, var(--success), white 65%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (LAT,COST) r=0.3 -->
+        <rect x="222" y="42" width="36" height="34" fill="color-mix(in srgb, var(--success), white 79%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (LAT,CSAT) r=-0.5 -->
+        <rect x="258" y="42" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 65%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+
+        <!-- GRID CELLS — row 1: THR -->
+        <!-- (THR,LAT) r=-0.6 -->
+        <rect x="78"  y="76" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 58%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (THR,THR) r=1.0 -->
+        <rect x="114" y="76" width="36" height="34" fill="var(--success)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (THR,ERR) r=-0.3 -->
+        <rect x="150" y="76" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 79%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (THR,QUE) r=-0.4 -->
+        <rect x="186" y="76" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 72%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (THR,COST) r=0.6 -->
+        <rect x="222" y="76" width="36" height="34" fill="color-mix(in srgb, var(--success), white 58%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (THR,CSAT) r=0.4 -->
+        <rect x="258" y="76" width="36" height="34" fill="color-mix(in srgb, var(--success), white 72%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+
+        <!-- GRID CELLS — row 2: ERR -->
+        <!-- (ERR,LAT) r=0.7 -->
+        <rect x="78"  y="110" width="36" height="34" fill="color-mix(in srgb, var(--success), white 51%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (ERR,THR) r=-0.3 -->
+        <rect x="114" y="110" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 79%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (ERR,ERR) r=1.0 -->
+        <rect x="150" y="110" width="36" height="34" fill="var(--success)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (ERR,QUE) r=0.4 -->
+        <rect x="186" y="110" width="36" height="34" fill="color-mix(in srgb, var(--success), white 72%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (ERR,COST) r=0.2 -->
+        <rect x="222" y="110" width="36" height="34" fill="color-mix(in srgb, var(--success), white 86%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (ERR,CSAT) r=-0.6 -->
+        <rect x="258" y="110" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 58%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+
+        <!-- GRID CELLS — row 3: QUE -->
+        <!-- (QUE,LAT) r=0.5 -->
+        <rect x="78"  y="144" width="36" height="34" fill="color-mix(in srgb, var(--success), white 65%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (QUE,THR) r=-0.4 -->
+        <rect x="114" y="144" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 72%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (QUE,ERR) r=0.4 -->
+        <rect x="150" y="144" width="36" height="34" fill="color-mix(in srgb, var(--success), white 72%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (QUE,QUE) r=1.0 -->
+        <rect x="186" y="144" width="36" height="34" fill="var(--success)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (QUE,COST) r=0.3 -->
+        <rect x="222" y="144" width="36" height="34" fill="color-mix(in srgb, var(--success), white 79%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (QUE,CSAT) r=-0.4 -->
+        <rect x="258" y="144" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 72%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+
+        <!-- GRID CELLS — row 4: COST -->
+        <!-- (COST,LAT) r=0.3 -->
+        <rect x="78"  y="178" width="36" height="34" fill="color-mix(in srgb, var(--success), white 79%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (COST,THR) r=0.6 -->
+        <rect x="114" y="178" width="36" height="34" fill="color-mix(in srgb, var(--success), white 58%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (COST,ERR) r=0.2 -->
+        <rect x="150" y="178" width="36" height="34" fill="color-mix(in srgb, var(--success), white 86%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (COST,QUE) r=0.3 -->
+        <rect x="186" y="178" width="36" height="34" fill="color-mix(in srgb, var(--success), white 79%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (COST,COST) r=1.0 -->
+        <rect x="222" y="178" width="36" height="34" fill="var(--success)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (COST,CSAT) r=-0.7 -->
+        <rect x="258" y="178" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 51%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+
+        <!-- GRID CELLS — row 5: CSAT -->
+        <!-- (CSAT,LAT) r=-0.5 -->
+        <rect x="78"  y="212" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 65%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (CSAT,THR) r=0.4 -->
+        <rect x="114" y="212" width="36" height="34" fill="color-mix(in srgb, var(--success), white 72%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (CSAT,ERR) r=-0.6 -->
+        <rect x="150" y="212" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 58%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (CSAT,QUE) r=-0.4 -->
+        <rect x="186" y="212" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 72%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (CSAT,COST) r=-0.7 -->
+        <rect x="222" y="212" width="36" height="34" fill="color-mix(in srgb, var(--danger), white 51%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- (CSAT,CSAT) r=1.0 -->
+        <rect x="258" y="212" width="36" height="34" fill="var(--success)" stroke="var(--gray-300)" stroke-width="0.5"/>
+
+        <!-- LEGEND STRIP (y≈272): r=-1, -0.5, 0, +0.5, +1; 5 cells 22×14 centered in viewBox -->
+        <!-- center strip at x=160: 5*22=110px wide, start x=(320-110)/2=105 -->
+        <rect x="105" y="262" width="22" height="14" fill="var(--danger)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <rect x="127" y="262" width="22" height="14" fill="color-mix(in srgb, var(--danger), white 65%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <rect x="149" y="262" width="22" height="14" fill="white" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <rect x="171" y="262" width="22" height="14" fill="color-mix(in srgb, var(--success), white 65%)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <rect x="193" y="262" width="22" height="14" fill="var(--success)" stroke="var(--gray-300)" stroke-width="0.5"/>
+        <!-- Legend labels -->
+        <text x="116" y="290" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">−1</text>
+        <text x="160" y="290" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">0</text>
+        <text x="204" y="290" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">+1</text>
+
+      </svg>
+      <p class="fg-use">Use when: pairwise relationships across many variables (the long-tail representative).</p>
+    </figure>
+
   </div>
 </section>
 
