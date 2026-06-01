@@ -29,7 +29,7 @@ top, then exercise. Memory: `file-url-localstorage-guard`.
    `--ease-standard` / `--ease-out`. All 9 hardcoded transitions/animations graduated to
    `var(--dur/--ease)`. Reduced-motion = one `:root` token override (`0.01ms`, not `none`,
    so `animationend` still fires). §11 section: duration + easing readout tables + a
-   ping-pong Replay demo (two lanes, `--dur-slow`). Spec/plan: `docs/superpowers/specs/2026-05-31-motion-animation-design.md`, `docs/superpowers/plans/2026-05-31-motion-animation.md` (both untracked).
+   ping-pong Replay demo (two lanes, `--dur-slow`). Spec/plan: `docs/superpowers/specs/2026-05-31-motion-animation-design.md`, `docs/superpowers/plans/2026-05-31-motion-animation.md` (committed in `c60a96e`).
 2. **Ghost button** border 2px → 1px (dropped the `.btn.ghost` `border-width` override;
    it now inherits the base 1px, distinguished only by grey colour).
 3. **Removed chart skeletons** from §06 Mockup primitives (4 SVG figures + the dead
@@ -41,18 +41,23 @@ top, then exercise. Memory: `file-url-localstorage-guard`.
    blue. Bullet → all greyscale (`gray-100` track / `gray-300` range / `gray-700` measure /
    `ink` target).
 5. **Charts section reorg.** Relocated the entire former §07 Data viz to AFTER §08 Data
-   table, renamed it **Charts**, folded the sparkline showcase in as its own grid at the
-   end. Renumbered: Data table → `07`, Charts → `08`. Updated the JS feedback arrays:
-   `SECTIONS` datatable label → 07, `VIZ` labels 07 → 08, and `ALL = SECTIONS.slice(0, 7)
-   .concat(VIZ, SECTIONS.slice(7))` so compiled order tracks the new DOM order.
+   table, renamed it **Charts**. Renumbered: Data table → `07`, Charts → `08`. Updated the
+   JS feedback arrays: `SECTIONS` datatable label → 07, `VIZ` labels 07 → 08, and
+   `ALL = SECTIONS.slice(0, 7).concat(VIZ, SECTIONS.slice(7))` so compiled order tracks DOM.
+7. **Sparklines integrated into Marks (de-bolted).** The sparkline gallery was first
+   appended as a trailing grid (felt bolted on), then moved INTO the **Marks** dimension
+   (dv-marks group) after the bar/dot examples, introduced by a lede ("The same marks
+   shrink to sparklines…"). The "08 · Marks" feedback panel now follows it. All §08
+   sparkline fixes (above) carried over.
 6. **§10 Elevation alignment fix.** `.e-raised/.e-overlay/.e-modal` were misaligned: the
    `lg-span-8` header + `lg-span-4` first card summed to 12 cols, pulling the first card
    into the header row. Split into two grids (header, then cards) — the §06 pattern.
    Verified all three cards now top=47 / h=132.
 
 Current section order: 01 Type · 02 Color · 03 Buttons · 04 Alerts · 05 Inline + tiles ·
-06 Mockup primitives · **07 Data table** · **08 Charts** (doctrine + example charts +
-sparkline gallery) · 09 Inputs & forms · 10 Elevation · 11 Motion · feedback coda.
+06 Mockup primitives · **07 Data table** · **08 Charts** (doctrine + example charts;
+sparkline gallery now inside the Marks dimension) · 09 Inputs & forms · 10 Elevation ·
+11 Motion · feedback coda.
 
 ## Lessons / cautions for next session
 
@@ -82,14 +87,19 @@ sparkline gallery) · 09 Inputs & forms · 10 Elevation · 11 Motion · feedback
 
 ## Housekeeping
 
-- Committed this session (one commit on `feat/component-composer`, not pushed, no tag):
-  the canonical reference page + the §11 motion spec/plan + this handoff. The canonical
-  page is now **TRACKED** — future edits show as modifications; keep `cp`-ing to the two
-  `/tmp` mirrors after each change.
-- The unrelated in-progress SkillOpt work (`tools/skillopt/*`,
-  `skills/semantic-organization/SKILL.md`, `tasks/`, `docs/BACKLOG.md`) stays UNCOMMITTED
-  — separate effort, do NOT clobber or fold into design-system commits.
-- Stray `./--full-page` PNG at repo root predates this session; untracked.
+- Two commits this session on `feat/component-composer` (NOT pushed, no tag):
+  - `c60a96e` feat(design-system) — canonical reference page (now **TRACKED**) + §11 motion
+    spec/plan + this handoff. Future edits show as modifications; keep `cp`-ing to the two
+    `/tmp` mirrors after each change.
+  - `69a6372` chore(skillopt) — SkillOpt harness WIP (separate effort): accepted_epochs +
+    minibatch fixes, lib refinements, 5 new adapters, `render/` node module (node_modules
+    now gitignored), test_alignment, semantic-organization SKILL.md. 36 unit tests pass; NOT
+    reviewed/optimized. `tasks/todo.md`'s scoped single-file PR plan is now stale (committed
+    directly instead of as that PR).
+- Branch is ~69 commits ahead of `origin/main`, nothing pushed. Pushing publishes all of
+  them + needs a PR-base decision — left to the user.
+- Untracked, left out on purpose: `tasks/` (planning TODO), `docs/BACKLOG.md` (design
+  backlog), stray `./--full-page` PNG (junk — offered to delete).
 
 ## PIP status
 
