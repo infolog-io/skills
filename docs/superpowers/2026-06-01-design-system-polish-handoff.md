@@ -5,6 +5,37 @@ Branch: `feat/component-composer` (repo: infolog-skills)
 Supersedes for active work: continues from `docs/superpowers/2026-05-31-design-system-session-handoff.md`
 (that doc has the field-guide BUILD history; this doc is the POLISH iteration, mid-flight).
 
+## UPDATE — P4 + P5 COMPLETE (commit `aeff763`)
+
+The Apple-augmented polish pass landed and is verified light + dark. What shipped:
+
+- **Rounded corners** — `rx="2"` on 36 data-bar rects (both funnels, ARR waterfall,
+  Repos-by-month, §08 Marks "Bar", a11y installs); `rx="1.5"` on 41 heatmap cells +
+  legend. OHLC candles, box-plot box, stacked/tristate marks left sharp by convention.
+- **Network edges** `gray-300 → gray-500` (10 Bézier paths) — now traceable on both
+  themes; the dark-mode win is large (gray-300 `#3A3A3C` was near-invisible on `#161413`).
+- **Stroke orphan** — the lone `1.25` (latest OHLC wick) normalized to `1`. Vocab now
+  clean: 0.5 / 1 / 1.5 + accents 2 / 2.5 / 3 (median tick, bullet target, focus ring).
+- **Two clipping fixes** found in the squint pass (item 7):
+  - Funnel values `1000`/`480` were clipped to `10`/`48` at the 320 viewBox edge →
+    both funnel viewBoxes widened to **340**; values now render in full.
+  - Throughput `req/s` used a CSS `rotate(180deg)` (spins about SVG origin → off-canvas)
+    → switched to the house `transform="rotate(-90,14,113)"`; now sits on the y-axis.
+- **No-change verifications**: tabular-nums already satisfied (mono + CSS `font-variant-numeric`
+  on `.metric`/`td.num`/`.z-val`); ink-soft AA contrast **7.5:1** light / **7.3:1** dark;
+  plot insets fine (continuous series span full width by design; scatters have margins).
+
+Deliberately **not** done: thousands separators (tried `1000→1,000`, reverted — off-brand
+for this mono-tabular terminal aesthetic and it over-ran the funnel edge). Residual: x-axis
+titles `day`/`concurrency`/`step` clip **1.2px** at descender tips — sub-perceptual, verified
+legible by eye, left as-is. Marks `Stacked`/`Tristate` left sharp (rounding stacked segments
+notches the joins) — easy opt-in if wanted.
+
+**Next: push + PR-base decision — still the user's call (HELD).** Branch `feat/component-composer`
+is now 83 commits ahead of `origin/main`. Field-guide polish iteration is complete.
+
+---
+
 ## State: where we are
 
 The §08 chart field guide is **built and verified** (13 figures, 5 families + catch-all, 5
