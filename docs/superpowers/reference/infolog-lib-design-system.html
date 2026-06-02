@@ -1799,56 +1799,55 @@
     <figure class="span-full lg-span-6" style="margin: 0;">
       <p class="viz-headline">Plugins fan out to skills; a few skills are shared hubs.</p>
       <figcaption class="meta" style="margin-bottom: var(--space-3);">Plugin → skill dependency graph <span class="fg-tag">illustrative</span></figcaption>
-      <svg viewBox="0 0 360 300" role="img" aria-label="Illustrative node-link graph of plugins pointing to skills, with a few shared skill hubs; hand-placed, not computed." style="width:100%; height:auto; font-family: var(--sans);">
+      <svg viewBox="0 0 480 300" role="img" aria-label="Illustrative bipartite dependency graph: three plugins on the left each connect to the skills they use; html-sketch and generator-critic are shared by two plugins each." style="width:100%; height:auto; font-family: var(--sans);">
 
-        <!-- EDGES first — gentle quadratic Bézier curves -->
-        <!-- Coords: P1(75,74) P2(185,62) P3(290,78) A(55,182) B(112,206) H(142,148) C(206,196) D(168,246) G(248,160) E(302,206) F(272,248) -->
+        <!-- BIPARTITE fan-out: plugins (left x=150, blue r=8) → skills (right x=340, gray r=5). Edges first, under nodes. -->
+        <!-- Plugins: atomic-brand(70) component-composer(150) claude-pip(230). -->
+        <!-- Skills: type-scale(52) html-sketch(110,shared) layout-grid(150) generator-critic(200,shared) rule-lint(252). -->
 
-        <!-- P1→A: mid≈(65,128) nudge right +10 -->
-        <path d="M 75 74 Q 78 128 55 182" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
-        <!-- P1→B: mid≈(94,140) nudge left −10 -->
-        <path d="M 75 74 Q 84 140 112 206" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
-        <!-- P1→H: mid≈(109,111) nudge left −12 -->
-        <path d="M 75 74 Q 97 108 142 148" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
-        <!-- P2→H: mid≈(164,105) nudge up −12 -->
-        <path d="M 185 62 Q 152 100 142 148" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
-        <!-- P2→C: mid≈(196,129) nudge right +12 -->
-        <path d="M 185 62 Q 208 126 206 196" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
-        <!-- P2→D: mid≈(177,154) nudge left −12 -->
-        <path d="M 185 62 Q 165 152 168 246" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
-        <!-- P2→G: mid≈(217,111) nudge up −12 -->
-        <path d="M 185 62 Q 229 107 248 160" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
-        <!-- P3→G: mid≈(269,119) nudge left −12 -->
-        <path d="M 290 78 Q 257 113 248 160" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
-        <!-- P3→E: mid≈(296,142) nudge right +12 -->
-        <path d="M 290 78 Q 308 140 302 206" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
-        <!-- P3→F: mid≈(281,163) nudge right +12 -->
-        <path d="M 290 78 Q 293 161 272 248" fill="none" stroke="var(--gray-500)" stroke-width="1"/>
+        <!-- EDGES (gray-500, straight; convergence at a node = shared) -->
+        <line x1="150" y1="70"  x2="340" y2="52"  stroke="var(--gray-500)" stroke-width="1"/>
+        <line x1="150" y1="70"  x2="340" y2="110" stroke="var(--gray-500)" stroke-width="1"/>
+        <line x1="150" y1="150" x2="340" y2="110" stroke="var(--gray-500)" stroke-width="1"/>
+        <line x1="150" y1="150" x2="340" y2="150" stroke="var(--gray-500)" stroke-width="1"/>
+        <line x1="150" y1="150" x2="340" y2="200" stroke="var(--gray-500)" stroke-width="1"/>
+        <line x1="150" y1="230" x2="340" y2="200" stroke="var(--gray-500)" stroke-width="1"/>
+        <line x1="150" y1="230" x2="340" y2="252" stroke="var(--gray-500)" stroke-width="1"/>
 
-        <!-- PLUGIN NODES (r=10, info/blue) -->
-        <circle cx="75"  cy="74"  r="10" fill="var(--info)"/>
-        <circle cx="185" cy="62"  r="10" fill="var(--info)"/>
-        <circle cx="290" cy="78"  r="10" fill="var(--info)"/>
+        <!-- PLUGIN NODES (blue r=8) + labels (right-anchored, ink, mono 9px) -->
+        <circle cx="150" cy="70"  r="8" fill="var(--info)"/>
+        <text x="136" y="73"  text-anchor="end" style="fill: var(--ink); font-family: var(--mono); font-size: 9px;">atomic-brand</text>
+        <circle cx="150" cy="150" r="8" fill="var(--info)"/>
+        <text x="136" y="153" text-anchor="end" style="fill: var(--ink); font-family: var(--mono); font-size: 9px;">component-composer</text>
+        <circle cx="150" cy="230" r="8" fill="var(--info)"/>
+        <text x="136" y="233" text-anchor="end" style="fill: var(--ink); font-family: var(--mono); font-size: 9px;">claude-pip</text>
 
-        <!-- SKILL NODES (r=5.5, gray-700) -->
-        <circle cx="55"  cy="182" r="5.5" fill="var(--gray-700)"/>
-        <circle cx="112" cy="206" r="5.5" fill="var(--gray-700)"/>
-        <circle cx="142" cy="148" r="5.5" fill="var(--gray-700)"/>
-        <circle cx="206" cy="196" r="5.5" fill="var(--gray-700)"/>
-        <circle cx="168" cy="246" r="5.5" fill="var(--gray-700)"/>
-        <circle cx="248" cy="160" r="5.5" fill="var(--gray-700)"/>
-        <circle cx="302" cy="206" r="5.5" fill="var(--gray-700)"/>
-        <circle cx="272" cy="248" r="5.5" fill="var(--gray-700)"/>
+        <!-- SKILL NODES (gray r=5; shared = info ring) + labels (left-anchored, mono 8px) -->
+        <circle cx="340" cy="52"  r="5" fill="var(--gray-700)"/>
+        <text x="353" y="55"  text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">type-scale</text>
 
-        <!-- PLUGIN LABELS — above hubs, ink, mono 9px, anchor middle -->
-        <text x="75"  y="58" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 9px;">atomic-brand</text>
-        <text x="185" y="46" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 9px;">component-composer</text>
-        <text x="290" y="62" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 9px;">claude-pip</text>
+        <circle cx="340" cy="110" r="5"   fill="var(--gray-700)"/>
+        <circle cx="340" cy="110" r="8.5" fill="none" stroke="var(--info)" stroke-width="1.5"/>
+        <text x="353" y="113" text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 8px;">html-sketch</text>
 
-        <!-- SHARED SKILL LABELS — H and G, above nodes, ink-soft, mono 8px -->
-        <text x="142" y="136" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">html-sketch</text>
-        <text x="248" y="148" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">generator-critic</text>
+        <circle cx="340" cy="150" r="5" fill="var(--gray-700)"/>
+        <text x="353" y="153" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">layout-grid</text>
 
+        <circle cx="340" cy="200" r="5"   fill="var(--gray-700)"/>
+        <circle cx="340" cy="200" r="8.5" fill="none" stroke="var(--info)" stroke-width="1.5"/>
+        <text x="353" y="203" text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 8px;">generator-critic</text>
+
+        <circle cx="340" cy="252" r="5" fill="var(--gray-700)"/>
+        <text x="353" y="255" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">rule-lint</text>
+
+        <!-- KEY (bottom row) -->
+        <circle cx="128" cy="287" r="5" fill="var(--info)"/>
+        <text x="138" y="290" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">plugin</text>
+        <circle cx="208" cy="287" r="4.5" fill="var(--gray-700)"/>
+        <text x="217" y="290" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">skill</text>
+        <circle cx="276" cy="287" r="4.5" fill="var(--gray-700)"/>
+        <circle cx="276" cy="287" r="7.5" fill="none" stroke="var(--info)" stroke-width="1.5"/>
+        <text x="288" y="290" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">shared by two</text>
       </svg>
       <p class="fg-use">Use when: relationships and topology, not magnitudes.</p>
     </figure>
