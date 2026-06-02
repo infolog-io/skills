@@ -8,6 +8,10 @@ This repo is a public Claude Code plugin marketplace for skills authored by Info
 
 **Match the Anthropic skill directory convention** for any new skill in this repo: `skills/<name>/SKILL.md` flat at repo root; `.claude-plugin/plugin.json` lives inside the skill folder; `.claude-plugin/marketplace.json` registers `./skills/<name>` as source. NEVER nest in a `plugins/<name>/skills/<name>/` wrapper. Reference: https://github.com/anthropics/skills.
 
+## Local preview
+
+**Preview self-contained HTML from disk** — `open file://<path>`, not a localhost dev server. `preview_start` / `python http.server` drop between turns and waste restart cycles. Spin up a server only when the page needs server-dependent resources (same-origin `fetch`, local module/asset imports). For screenshots, point agent-browser at the `file://` URL.
+
 ## Quick reference
 
 - Spec: https://agentskills.io/specification
