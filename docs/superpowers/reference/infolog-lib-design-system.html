@@ -849,14 +849,14 @@
         <text x="129" y="172" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 10px;">0</text>
         <rect rx="2" x="156" y="98"  width="22" height="82"  fill="var(--gray-700)"/>
         <rect rx="2" x="194" y="98"  width="22" height="82"  fill="var(--gray-700)"/>
-        <rect rx="2" x="232" y="82"  width="22" height="98"  fill="var(--success)"/>
+        <rect rx="2" x="232" y="82"  width="22" height="98"  fill="var(--ink)"/>
         <rect rx="2" x="270" y="132" width="22" height="48"  fill="var(--gray-700)"/>
         <!-- values above bars -->
         <text x="53"  y="143" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">2</text>
         <text x="91"  y="143" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">2</text>
         <text x="167" y="93"  text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">5</text>
         <text x="205" y="93"  text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">5</text>
-        <text x="243" y="77"  text-anchor="middle" style="fill: var(--success); font-family: var(--mono); font-size: 11px; font-weight: 600;">6</text>
+        <text x="243" y="77"  text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 11px; font-weight: 600;">6</text>
         <text x="281" y="127" text-anchor="middle" style="fill: var(--ink); font-family: var(--mono); font-size: 10px;">3</text>
         <!-- month labels -->
         <text x="53"  y="200" text-anchor="middle" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 9px;">NOV</text>
@@ -888,8 +888,8 @@
         <g style="font-family: var(--sans); font-size: 11px; fill: var(--ink);">
           <text x="112" y="33" text-anchor="end">TypeScript</text>
           <line x1="120" y1="30" x2="400" y2="30" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
-          <circle cx="400" cy="30" r="5" fill="var(--info)"/>
-          <text x="412" y="34" style="fill: var(--info); font-family: var(--mono); font-size: 11px; font-weight: 600;">6</text>
+          <circle cx="400" cy="30" r="5" fill="var(--ink)"/>
+          <text x="412" y="34" style="fill: var(--ink); font-family: var(--mono); font-size: 11px; font-weight: 600;">6</text>
 
           <text x="112" y="58" text-anchor="end">HTML</text>
           <line x1="120" y1="55" x2="400" y2="55" stroke="var(--gray-300)" stroke-dasharray="1 4"/>
@@ -1421,7 +1421,7 @@
 
         <!-- Forecast confidence band (drawn first so lines sit on top) -->
         <!-- Upper edge i=20..29; lower edge i=29..20 (reversed) -->
-        <path d="M 288.3 92.9 L 300.7 83.1 L 313.1 85.4 L 325.5 70.0 L 337.9 71.7 L 350.3 56.9 L 362.8 58.6 L 375.2 43.1 L 387.6 45.4 L 400.0 30.0 L 400.0 121.4 L 387.6 128.9 L 375.2 119.7 L 362.8 127.1 L 350.3 117.4 L 337.9 125.4 L 325.5 115.7 L 313.1 123.1 L 300.7 114.0 L 288.3 115.7 Z" fill="color-mix(in srgb, var(--info), white 82%)" stroke="none"/>
+        <path d="M 288.3 92.9 L 300.7 83.1 L 313.1 85.4 L 325.5 70.0 L 337.9 71.7 L 350.3 56.9 L 362.8 58.6 L 375.2 43.1 L 387.6 45.4 L 400.0 30.0 L 400.0 121.4 L 387.6 128.9 L 375.2 119.7 L 362.8 127.1 L 350.3 117.4 L 337.9 125.4 L 325.5 115.7 L 313.1 123.1 L 300.7 114.0 L 288.3 115.7 Z" fill="color-mix(in srgb, var(--gray-700), white 82%)" stroke="none"/>
 
         <!-- Vertical divider at actual/forecast boundary (x=282.1) -->
         <line x1="282.1" y1="28" x2="282.1" y2="190" stroke="var(--gray-300)" stroke-width="1"/>
@@ -1815,11 +1815,11 @@
         <line x1="150" y1="230" x2="340" y2="252" stroke="var(--gray-500)" stroke-width="1"/>
 
         <!-- PLUGIN NODES (blue r=8) + labels (right-anchored, ink, mono 9px) -->
-        <circle cx="150" cy="70"  r="8" fill="var(--info)"/>
+        <circle cx="150" cy="70"  r="8" fill="var(--ink)"/>
         <text x="136" y="73"  text-anchor="end" style="fill: var(--ink); font-family: var(--mono); font-size: 9px;">atomic-brand</text>
-        <circle cx="150" cy="150" r="8" fill="var(--info)"/>
+        <circle cx="150" cy="150" r="8" fill="var(--ink)"/>
         <text x="136" y="153" text-anchor="end" style="fill: var(--ink); font-family: var(--mono); font-size: 9px;">component-composer</text>
-        <circle cx="150" cy="230" r="8" fill="var(--info)"/>
+        <circle cx="150" cy="230" r="8" fill="var(--ink)"/>
         <text x="136" y="233" text-anchor="end" style="fill: var(--ink); font-family: var(--mono); font-size: 9px;">claude-pip</text>
 
         <!-- SKILL NODES (gray r=5; shared = info ring) + labels (left-anchored, mono 8px) -->
@@ -1827,26 +1827,26 @@
         <text x="353" y="55"  text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">type-scale</text>
 
         <circle cx="340" cy="110" r="5"   fill="var(--gray-700)"/>
-        <circle cx="340" cy="110" r="8.5" fill="none" stroke="var(--info)" stroke-width="1.5"/>
+        <circle cx="340" cy="110" r="8.5" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
         <text x="353" y="113" text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 8px;">html-sketch</text>
 
         <circle cx="340" cy="150" r="5" fill="var(--gray-700)"/>
         <text x="353" y="153" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">layout-grid</text>
 
         <circle cx="340" cy="200" r="5"   fill="var(--gray-700)"/>
-        <circle cx="340" cy="200" r="8.5" fill="none" stroke="var(--info)" stroke-width="1.5"/>
+        <circle cx="340" cy="200" r="8.5" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
         <text x="353" y="203" text-anchor="start" style="fill: var(--ink); font-family: var(--mono); font-size: 8px;">generator-critic</text>
 
         <circle cx="340" cy="252" r="5" fill="var(--gray-700)"/>
         <text x="353" y="255" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">rule-lint</text>
 
         <!-- KEY (bottom row) -->
-        <circle cx="128" cy="287" r="5" fill="var(--info)"/>
+        <circle cx="128" cy="287" r="5" fill="var(--ink)"/>
         <text x="138" y="290" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">plugin</text>
         <circle cx="208" cy="287" r="4.5" fill="var(--gray-700)"/>
         <text x="217" y="290" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">skill</text>
         <circle cx="276" cy="287" r="4.5" fill="var(--gray-700)"/>
-        <circle cx="276" cy="287" r="7.5" fill="none" stroke="var(--info)" stroke-width="1.5"/>
+        <circle cx="276" cy="287" r="7.5" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
         <text x="288" y="290" text-anchor="start" style="fill: var(--ink-soft); font-family: var(--mono); font-size: 8px;">shared by two</text>
       </svg>
       <p class="fg-use">Use when: relationships and topology, not magnitudes.</p>
