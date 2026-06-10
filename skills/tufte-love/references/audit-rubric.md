@@ -166,24 +166,30 @@ Score:
 
 See `references/chart-rules-extras.md`.
 
+## Failure-Code Taxonomy
+
+The diagnosis codes used in SKILL.md step 3, each defined in one line with
+the rubric dimension it primarily maps to:
+
+| Code | Definition | Primary dimension |
+|---|---|---|
+| `data_truth_failure` | The graphic distorts, hides, or misstates the evidence | 1. Data Truth |
+| `scale_failure` | Truncated, inconsistent, or otherwise dishonest axes or scale domains | 1. Data Truth |
+| `comparison_failure` | The comparison the reader needs is slow, indirect, or impossible | 2. Comparison Quality |
+| `density_failure` | Space wasted on one or two numbers, or unstructured overload | 3. Data Density |
+| `labeling_failure` | Missing units or axis labels; a legend where direct labels would work | 4. Labeling |
+| `narrative_failure` | Missing annotation or context needed to interpret the evidence | 4. Labeling |
+| `decoration_failure` | Non-data ink competes with the data | 5. Visual Noise |
+| `chart_type_failure` | The chart form does not fit the analytical question | 6. Chart-Type Fit |
+| `interaction_failure` | The default view fails without interaction, or interaction hides essentials | 7. Interaction |
+| `accessibility_failure` | Color-only encoding, CB-unsafe palette, or no text alternative | 8. Color |
+| `implementation_failure` | Code-level defects: coupled transform/render, implicit scale domains, untested edge cases | 9. Formatting and Detail |
+
 ## Final Audit Summary
 
-Use this format:
-
-```text
-Tufte Love Audit
-- Data truth: [1-5] — [reason]
-- Comparison quality: [1-5] — [reason]
-- Data density: [1-5] — [reason]
-- Labeling: [1-5] — [reason]
-- Visual noise: [1-5] — [reason]
-- Chart-type fit: [1-5] — [reason]
-- Interaction: [1-5] — [reason]
-- Color: [1-5] — [reason]
-- Formatting: [1-5] — [reason]
-- Recommended next change: [single highest-leverage fix]
-- Confidence: [High / Medium / Low]
-```
+Emit the block defined in SKILL.md step 6 (nine scored dimensions, then
+`Recommended next change` and `Confidence`). SKILL.md is the canonical
+source for that block; do not redefine it here.
 
 ## Priority Rule
 

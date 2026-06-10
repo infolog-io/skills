@@ -12,7 +12,7 @@ See `.claude/CLAUDE-PIP.md` for the locked-in conventions.
 
 - Spec: https://agentskills.io/specification
 - Anthropic's reference repo: https://github.com/anthropics/skills
-- Local protocol audit skill: `skills/semantic-organization` (when restructured)
+- Local protocol audit skill: `skills/semantic-organization`
 
 ## What this repo provides
 

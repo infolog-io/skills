@@ -1,38 +1,23 @@
 ---
 name: jtbd-prd
-description: >
-  Validate customer need before any build. Use when about to design, code, ship,
-  or scope a feature, product, page, or skill. Gathers evidence from interviews,
-  tickets, sales calls, surveys, and artifacts; clusters jobs; scores confidence;
-  emits a Job Article that frames the upcoming build as a Jobs-to-be-Done PRD.
-  Activates on "JTBD", "jobs to be done", "validate this", "should I build this",
-  "is there a real need", "what job does this serve", or "/jtbd-prd". Also
-  auto-suggests when the user pastes a build proposal, feature brief, or
-  hypothesis without supporting evidence.
+description: 'Use when the user is about to build, scope, or write a PRD or spec for a feature, product, page, or skill and customer need is unproven. Activates on "JTBD", "jobs to be done", "/jtbd-prd", "validate this", "should I build this", "is there a real need", "what job does this serve", "reverse JTBD", "analyze these interviews", or "turn these transcripts/tickets into requirements". Also use when the user pastes a build proposal, feature brief, or hypothesis without supporting customer evidence.'
 ---
 
 # jtbd-prd
 
 ## Purpose
 
-Sit upstream of every build. Block work that lacks customer evidence. Produce a
-single canonical artifact — the **Job Article** — that any subsequent PRD,
-spec, or implementation must reference.
-
-Inspired by Christensen's "hire/fire" framing and Tony Ulwick's outcome-driven
-phrasing. Defaults to Ulwick form because it is measurable and easier to
-extract from raw text.
+Sit upstream of every build. Block work that lacks customer evidence. Produce
+a single canonical artifact — the **Job Article** — that any subsequent PRD,
+spec, or implementation must reference. Framework background lives in
+`references/jtbd-framework.md`.
 
 ## When to activate
 
-Activate when the user is about to:
-
-- Build a new feature, product, page, or skill
-- Write a PRD or spec
-- Pivot or expand an existing build
-- Ask "should we build this?" or "is there demand for X?"
-- Validate a hypothesis with customer evidence
-- Reverse-derive jobs from existing copy, docs, or competitor artifacts
+Activate when the user is about to build a new feature, product, page, or
+skill; write a PRD or spec; pivot or expand an existing build; validate a
+hypothesis against customer evidence; or reverse-derive jobs from existing
+copy, docs, or competitor artifacts.
 
 Do not activate for:
 
@@ -42,52 +27,38 @@ Do not activate for:
 
 ## Inputs accepted
 
-| Input type | Format | Example |
-|---|---|---|
-| Customer interview | Markdown transcript | `interview-2026-04-03-acme-corp.md` |
-| Support tickets | Markdown or JSON dump | exported Intercom / Zendesk thread |
-| Sales call notes | Markdown | win/loss debrief |
-| Survey free-text | CSV column or markdown list | NPS response open-ends |
-| Existing artifact (reverse mode) | URL, markdown, or pasted text | published page, competitor PRD |
-| Build hypothesis | One-sentence statement | "We want to build X for Y users" |
+Interview transcripts, support-ticket dumps (markdown or JSON), sales call
+notes, survey free-text, existing artifacts (URL or pasted text — reverse
+mode), or a one-sentence build hypothesis.
 
 ## Output: the Job Article
 
-A single markdown file conforming to `templates/job-article.md` and
-`schemas/job-article.json`. Functions as PRD framing — the build that follows
-must reference this article.
-
-Sections in fixed order:
-
-1. **Primary Job Statement** — When… I want to… so I can…
-2. **Evidence** — table of quotes with source, role, date, confidence
-3. **Job Dimensions** — functional, emotional, social
-4. **Outcome Statements** — Ulwick form: minimize/increase/reduce X
-5. **Underserved vs. Overserved** — where current solutions fail or overreach
-6. **Build Implication** — what the next build must do and avoid
-7. **Verdict** — validated / under-evidenced / unvalidated
+A single markdown file with seven fixed sections, from Primary Job Statement
+through Verdict — see `templates/job-article.md` and
+`schemas/job-article.json`. Job statements follow the canonical grammar in
+`references/job-statement-grammar.md`.
 
 ## Flow
 
 ```
-1. Identify mode:
-   - discovery (raw inputs → jobs)
-   - validation (build hypothesis → check against evidence)
-   - reverse (existing artifact → inferred jobs)
+1. Identify mode from the trigger table below.
 
-2. Run the appropriate extractor:
+Discovery / reverse:
+2. Run the matching extractor:
    - prompts/extract-from-interview.md
    - prompts/extract-from-tickets.md
    - prompts/reverse-from-artifact.md
+3. Cluster + score confidence: prompts/cluster-and-score.md
+4. Render Job Article: templates/job-article.md
+5. Issue verdict: prompts/verdict.md
 
-3. Cluster + score:
-   - prompts/cluster-and-score.md
-
-4. Render Job Article:
-   - templates/job-article.md
-
-5. Issue verdict:
-   - prompts/verdict.md
+Validation (build hypothesis present):
+2. Ask the user for evidence inputs: interviews, tickets, surveys, analytics.
+3. Evidence exists → run discovery steps 2–5 on it, scoped to the hypothesis;
+   the verdict step compares the hypothesis to the evidenced job.
+4. No evidence → run prompts/reverse-from-artifact.md on the brief, then issue
+   verdict = unvalidated via prompts/verdict.md with concrete next_actions
+   (whom to interview, which tickets to pull).
 ```
 
 ## Trigger phrases
@@ -97,8 +68,15 @@ Sections in fixed order:
 | "JTBD", "jobs to be done", "/jtbd-prd" | Discovery (default) |
 | "validate this", "should I build this", "is there a real need" | Validation |
 | "what job does this serve", "reverse JTBD" | Reverse |
-| "extract jobs from these interviews" | Discovery |
+| "extract jobs from these interviews", "analyze these interviews" | Discovery |
+| "turn these transcripts/tickets into requirements" | Discovery |
 | user pastes build proposal without evidence | Auto-suggest validation |
+
+## Scoring and verdict
+
+Confidence is computed only from the canonical threshold table (including the
+dimension-downgrade rule) in `prompts/cluster-and-score.md`. Verdict mapping
+lives only in `prompts/verdict.md`. Do not restate either table elsewhere.
 
 ## References
 
@@ -107,24 +85,9 @@ Sections in fixed order:
 - `references/dimension-tagger.md` — functional / emotional / social rules
 - `references/prd-framing.md` — how the Job Article seeds a PRD
 
-## Verdict thresholds
-
-| Confidence | Rule |
-|---|---|
-| high | ≥5 sources, ≥2 distinct roles, ≥1 measurable outcome |
-| medium | ≥3 sources, ≥3 quotes |
-| low | <3 sources or single role only |
-
-| Verdict | Rule |
-|---|---|
-| validated | confidence ≥ medium AND outcome statements measurable |
-| under-evidenced | confidence = low OR outcomes ambiguous |
-| unvalidated | no customer evidence OR build hypothesis contradicts evidence |
-
 ## Output destination
 
-By default, write the Job Article to the working directory the user is in,
-named `job-article-<short-slug>.md`. If the working directory is a repo, place
-in `docs/jtbd/` if that directory exists; otherwise repo root.
-
-Never write to the infolog-skills repo itself unless explicitly asked.
+Write the Job Article to the user's working directory as
+`job-article-<short-slug>.md`. If the directory is a repo and `docs/jtbd/`
+exists, place it there; otherwise repo root. Never write to the
+infolog-skills repo itself unless explicitly asked.

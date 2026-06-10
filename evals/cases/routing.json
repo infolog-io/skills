@@ -1,0 +1,20 @@
+[
+  {"id": 1,  "message": "how long will it take to build this feature?",                        "expect": "estimatrix",            "note": "explicit 'how long' trigger"},
+  {"id": 2,  "message": "can you check if my components match our design system?",             "expect": "atomic-brand",          "note": "component/design-system audit"},
+  {"id": 3,  "message": "make this dashboard less cluttered",                                  "expect": "tufte-love",            "note": "layperson phrasing must route"},
+  {"id": 4,  "message": "set up a type scale for my site",                                     "expect": "learn2kern",            "note": "verbatim trigger"},
+  {"id": 5,  "message": "should I even build this feature?",                                   "expect": "jtbd-prd",              "note": "verbatim trigger"},
+  {"id": 6,  "message": "CLAUDE PIP always run tests before committing",                       "expect": "claude-pip",            "note": "all-caps command token"},
+  {"id": 7,  "message": "set up a board so multiple agents can work issues in parallel",       "expect": "github-issues-kanban",  "note": "board + parallel agents"},
+  {"id": 8,  "message": "add a new skill to this repo",                                        "expect": "semantic-organization", "note": "plain-English scaffold ask"},
+  {"id": 9,  "message": "review this PR for bugs",                                             "expect": "none",                  "note": "negative: generic code review"},
+  {"id": 10, "message": "my chart looks ugly, can you fix it",                                 "expect": "tufte-love",            "note": "layperson phrasing must route"},
+  {"id": 11, "message": "scope this roughly for me — no dates needed",                         "expect": "estimatrix",            "note": "'scope' trigger, undated"},
+  {"id": 12, "message": "refactor this function to be cleaner",                                "expect": "none",                  "note": "negative: generic refactor"},
+  {"id": 13, "message": "we keep arguing about which font sizes to use",                       "expect": "learn2kern",            "note": "font sizes trigger"},
+  {"id": 14, "message": "turn this customer-interview transcript into something actionable",   "expect": "jtbd-prd",              "note": "interview/transcript trigger"},
+  {"id": 15, "message": "prune the PIP before we compact",                                     "expect": "claude-pip",            "note": "phrase trigger, lowercase ask"},
+  {"id": 16, "message": "my claim on issue #42 went stale, what now",                          "expect": "github-issues-kanban",  "note": "stale-claim recovery"},
+  {"id": 17, "message": "is this landing page on-brand?",                                      "expect": "atomic-brand",          "note": "verbatim trigger"},
+  {"id": 18, "message": "write a blog post about our launch",                                  "expect": "none",                  "note": "negative: content writing"}
+]

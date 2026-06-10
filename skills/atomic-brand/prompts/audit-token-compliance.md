@@ -69,6 +69,13 @@ For each file:
 | Computed / derived | `100% - var(--space-2)`, calculated grid columns, etc. | counted as compliant |
 | Listed in exceptions | The value matches an entry in `tokens-exceptions.md` | skipped |
 
+**Tailwind counting rule:** utility classes that map to theme tokens
+(`bg-primary`, `p-2`, `text-lg`) count as token references — they
+resolve through `tailwind.config`. Arbitrary-value utilities
+(`p-[13px]`, `bg-[#FF8800]`, `text-[17px]`) bypass the theme and count
+as hardcoded: `token_violation` if a token equivalent exists, exception
+candidate otherwise.
+
 ### 4. Score per the rubric
 
 | Compliance % | Score |
@@ -205,6 +212,7 @@ A file where every value is a token reference already:
 | Pattern | Handling |
 |---|---|
 | Tailwind class names that imply tokens (`bg-primary`, `p-2`) | Resolve to the underlying token; treat as token reference |
+| Tailwind arbitrary values (`p-[13px]`, `bg-[#FF8800]`) | Hardcoded — violation if a token equivalent exists |
 | CSS-in-JS template literal: `` `${tokens.color.primary}` `` | Token reference |
 | Style prop with object literal: `style={{ color: theme.colors.primary }}` | Token reference |
 | `border: 1px solid rgba(0,0,0,0.1)` with no equivalent token | Hardcoded without equivalent — possible exception |

@@ -1,16 +1,13 @@
 ---
 name: semantic-organization
 description: >
-  Governs how every skill in this marketplace is structured. Codifies the
-  Anthropic Agent Skills directory convention (skills/<name>/SKILL.md at
-  the repo root — no plugin wrapper), folder roles, naming rules, and
-  migration triggers. Scaffolds new skills against the canonical layout,
-  audits existing skills, and recommends when a folder should become its
-  own sibling skill. Applies Unix philosophy: one skill = one purpose,
-  compose via plain text, prefer small over large. Activates on "scaffold
-  a new skill", "/new-skill", "audit this skill", "/semantic-audit",
-  "should this be a folder or its own skill", or any time a skill
-  structure is being designed or evaluated.
+  Use when designing, scaffolding, auditing, renaming, or restructuring
+  a skill in this marketplace. Triggers: "scaffold a new skill", "add a
+  skill", "create a skill", "/new-skill", "audit this skill",
+  "/semantic-audit", "should this be a folder or its own skill",
+  "rename this folder", "is this folder name semantic", or any question
+  about skill directory layout, folder roles, naming, or promoting a
+  sub-folder to a sibling skill.
 ---
 
 # semantic-organization
@@ -19,9 +16,12 @@ description: >
 
 Every skill in this marketplace must match the Anthropic Agent Skills
 directory convention at https://github.com/anthropics/skills. This skill
-encodes that convention and audits against it.
+encodes that convention, scaffolds new skills against it, and audits
+existing ones.
 
 ## Canonical layout
+
+This tree is the single canonical copy; all other files point here.
 
 ```
 <marketplace-repo>/
@@ -55,118 +55,50 @@ These are NOT canonical. Audit returns `broken` if found:
 | `plugins/<name>/SKILL.md` | Wrong directory name; should be `skills/` |
 | `<repo-root>/SKILL.md` (skill at repo root) | Multi-skill repos must use `skills/<name>/` |
 
-## The two layers — same directory
+## The two layers
 
-A skill carries both layers in the same folder:
-
-| Layer | Files | Source |
-|---|---|---|
-| **Spec layer** (Anthropic) | `SKILL.md`, optional `scripts/`, `references/`, `assets/` | https://agentskills.io/specification |
-| **Marketplace layer** (Claude Code) | `.claude-plugin/plugin.json`, `README.md`, `TESTS.md` | This skill's conventions |
-
-There is no separate plugin-wrapper directory. The plugin manifest lives
-INSIDE the skill folder, so the skill is simultaneously
-spec-compliant AND installable via `claude plugin install`.
+Spec files (`SKILL.md`, optional `scripts/`, `references/`, `assets/`)
+and marketplace files (`.claude-plugin/plugin.json`, `README.md`,
+`TESTS.md`) live in the SAME skill folder — no wrapper directory. See
+`references/spec-vs-conventions.md`.
 
 ## Skill profiles
 
-Not every skill needs every folder. Two profiles:
+Not every skill needs every folder.
 
-### Single-rule skill
+- **Single-rule** — one durable rule; SKILL.md under 200 lines, no
+  sub-folders. Required: `SKILL.md`, `.claude-plugin/plugin.json`,
+  `README.md`, `TESTS.md`.
+- **Full-shape** — multiple modes or references. Same required files,
+  and SHOULD have at least one supporting folder (`references/`,
+  `scripts/`, `assets/`, or an accepted convention folder).
 
-One durable rule or principle. SKILL.md body carries everything.
+A 200–500-line SKILL.md with no sub-folders is a drifting full-shape
+skill: the audit emits migration trigger "extract references/"; verdict
+at best `spec-drift`.
 
-Required: `SKILL.md`, `.claude-plugin/plugin.json`, `README.md`, `TESTS.md`.
-No required sub-folders.
+## Audit dimensions and verdicts
 
-A skill is single-rule when SKILL.md is under 200 lines and there are no
-sub-folders.
-
-### Full-shape skill
-
-Multiple modes, references, optional scripts and assets. SKILL.md is the
-entry point; detail lives in `references/` and `assets/`.
-
-Required: same as single-rule, plus at least one of `references/`,
-`scripts/`, `assets/` per actual need.
-
-A skill is full-shape when it has multiple operating modes, references
-broken out from SKILL.md, and (usually) prompts or assets.
-
-## The eight audit dimensions
-
-See `references/audit-rubric.md`.
-
-| Layer | Dimension |
-|---|---|
-| Spec | S1. SKILL.md presence and validity |
-| Spec | S2. Naming conformance (parent dir, plugin.json, frontmatter agree) |
-| Spec | S3. Body discipline (<500 lines; shallow references) |
-| Spec | S4. Folder discipline (only spec or convention folders; no forbidden) |
-| Marketplace | P1. Plugin manifest valid (inside skill folder) |
-| Marketplace | P2. README discipline (≤200 words, what/when/install) |
-| Marketplace | P3. TESTS.md presence and quality |
-| Marketplace | P4. Migration health (no overgrown folders; no wrapper layers) |
-
-## Verdicts
-
-| Verdict | Rule | Allowed downstream |
-|---|---|---|
-| `spec-compliant + marketplace-ready` | All 8 dims ≥4 | Ship |
-| `spec-compliant, marketplace-drift` | Spec ≥4, marketplace has 2-3 | Fix conventions before ship |
-| `spec-drift` | One or more spec dims at 2-3 | Fix spec violations first |
-| `broken` | Any dim at 1, OR a forbidden layout is present | Halt; restore canonical shape |
+The audit scores 8 dimensions (four spec-layer S1–S4, four
+marketplace-layer P1–P4) and returns one of four verdicts, from
+`spec-compliant + marketplace-ready` down to `broken`. The scored
+rubric and verdict-threshold table live in `references/audit-rubric.md`
+(canonical copy).
 
 ## Operating modes
 
-### Scaffold mode
-
-Trigger: "scaffold a new skill", "/new-skill", "create a skill"
-
-Behavior:
-1. Ask for skill name (kebab-case, matches spec rules)
-2. Ask for one-sentence description (what + when)
-3. Ask for profile: single-rule or full-shape
-4. Emit canonical folder tree at `skills/<name>/` with placeholder content
-5. Run immediate self-audit — confirm scaffold scores ≥4 on all dimensions
-
-See `prompts/scaffold-new-skill.md`.
-
-### Audit mode
-
-Trigger: "audit this skill", "/semantic-audit"
-
-Behavior:
-1. Walk the skill's file tree at `skills/<name>/`
-2. Detect profile (single-rule vs. full-shape)
-3. Check for forbidden layouts (`plugins/` wrapper, double nesting)
-4. Score each of the 8 dimensions per `references/audit-rubric.md`
-5. Emit Semantic Organization Audit with findings
-6. Verdict per the table above
-
-See `prompts/audit-existing-skill.md`.
-
-### Migration mode
-
-Trigger: "should this be a folder or its own skill?"
-
-Behavior:
-1. Check folder against migration triggers
-2. Return: `stay-as-folder` / `promote-to-sibling-skill` / `already-its-own-skill`
-3. If promote, emit migration plan
-
-See `references/migration-triggers.md` and `prompts/evaluate-migration.md`.
-
-### Rename mode
-
-Trigger: "rename this folder", "is this folder name semantic?"
-
-Behavior:
-1. Compare folder name against the role taxonomy
-2. Propose a spec-canonical name or flag for deletion
-3. Refuse to rename spec-canonical folders (`scripts/`, `references/`, `assets/`) to non-spec names
-
-See `prompts/rename-for-semantics.md`.
+- **Scaffold** — emit a profile-gated canonical skeleton at
+  `skills/<name>/`, self-audit it, register it in the root
+  `.claude-plugin/marketplace.json`. See `prompts/scaffold-new-skill.md`.
+- **Audit** — walk the tree, check forbidden layouts, score the 8
+  dimensions, emit an audit with verdict. See
+  `prompts/audit-existing-skill.md`.
+- **Migration** — return `stay-as-folder` / `promote-to-sibling-skill` /
+  `already-its-own-skill`, plus a plan when promoting. See
+  `references/migration-triggers.md` and `prompts/evaluate-migration.md`.
+- **Rename** — propose spec-canonical folder names; never rename spec
+  folders (`scripts/`, `references/`, `assets/`) to non-spec names. See
+  `prompts/rename-for-semantics.md`.
 
 ## References
 
@@ -174,14 +106,14 @@ See `prompts/rename-for-semantics.md`.
 - `references/folder-roles.md` — what each canonical folder holds; forbidden names
 - `references/naming-rules.md` — spec-mandated and convention-mandated naming
 - `references/migration-triggers.md` — when a folder becomes its own skill
-- `references/audit-rubric.md` — the 8-dimension scored rubric
+- `references/audit-rubric.md` — the 8-dimension scored rubric and verdict thresholds
 - `references/unix-philosophy.md` — Unix tenets applied to skills
 
 ## Triggers
 
 | Phrase | Mode |
 |---|---|
-| `scaffold a new skill`, `/new-skill`, `create a skill` | Scaffold |
+| `scaffold a new skill`, `add a skill`, `create a skill`, `/new-skill` | Scaffold |
 | `audit this skill`, `/semantic-audit` | Audit |
 | `should this be a folder or its own skill?` | Migration |
 | `rename this folder`, `is this folder name semantic?` | Rename |

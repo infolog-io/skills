@@ -13,8 +13,10 @@ the work. The protocol below is agent-agnostic.
 5. Read the issue's acceptance criteria
 6. Do the work
 7. (Optional) Post <!-- event: progress --> comments during long work
-8. (On success) Post <!-- event: result --> comment with the deliverable
-9. Move issue to status:ready-for-review (or done if auto-mergeable)
+8. (On success) Re-verify the lock (see below), then post <!-- event: result --> comment with the deliverable
+9. Move issue to status:ready-for-review (or done if auto-mergeable).
+   This transition belongs to the WORKER — the conductor never repeats
+   it; the conductor only reconciles stale or orphaned states.
 10. (On block) Post <!-- event: blocked --> comment, release lock
 11. (On voluntary release) Post <!-- event: released --> comment, release lock
 ```
@@ -24,8 +26,9 @@ the work. The protocol below is agent-agnostic.
 1. **Verify before work**: re-read the issue after claim to confirm sole lock-holder (see lock-protocol.md)
 2. **Honor acceptance criteria**: do not declare done until all criteria are verifiably satisfied
 3. **Post events with correct markers**: bad markers are silently dropped by readers
-4. **Respect the TTL**: if work will exceed the claim-expires timestamp, post a `progress` event extending the deadline (or surrender)
-5. **Surrender gracefully**: if blocked, post the block event and release the lock — do NOT hold a lock you can't progress
+4. **Heartbeat long tasks**: heartbeat (extending `claim-expires`) is REQUIRED for tasks expected to exceed half the TTL; otherwise it is optional. (Identical rule in lock-protocol.md.) If you can't extend, surrender.
+5. **Re-verify the lock before reporting**: re-read the lock immediately before posting `result` and editing labels. If your claim is gone (stale-released or reclaimed), post a plain `lost-claim` note instead of mutating state — you no longer hold the lock.
+6. **Surrender gracefully**: if blocked, post the block event and release the lock — do NOT hold a lock you can't progress
 
 ## What the worker MUST NOT do
 
@@ -68,8 +71,9 @@ If no `agent-output:*` label is set, default to `comment`.
 
 ## Progress events (long work)
 
-For tasks running close to the TTL, post `progress` events with the
-intermediate state:
+Heartbeat is REQUIRED for tasks expected to exceed half the TTL;
+otherwise optional. For tasks running close to the TTL, post `progress`
+events with the intermediate state:
 
 ```
 <!-- event: progress | agent: <id> | ts: <iso> -->
@@ -80,12 +84,14 @@ Multiple `progress` events are fine. The latest non-`result` event is
 the current state.
 
 To extend the claim TTL: post a `progress` event AND update
-`claim-expires:<new-ts>` label:
+`claim-expires:<new-ts>` label (provisioning the new label first):
 
 ```bash
+gh label create "claim-expires:<new>" -f
 gh issue edit <id> \
   --remove-label "claim-expires:<old>" \
   --add-label "claim-expires:<new>"
+gh label delete "claim-expires:<old>" --yes || true  # best-effort cleanup
 ```
 
 ## Block protocol
@@ -104,17 +110,19 @@ re-labels to `status:claimable`.
 
 ## Conflict resolution
 
-If the post-claim re-read shows another agent also claimed:
+If the post-claim re-read shows more than one `claimed-by:*` label,
+apply the deterministic tie-break defined in lock-protocol.md (the
+single source of truth): the earliest-sorting `claimed-by:*` wins. If
+you win, proceed to work. If you lose:
 
 ```
 1. Remove your own claimed-by:<self> label
-2. Remove your claim-expires:* label
-3. Restore status:claimable (if no other claim remains)
+2. Remove your claim-expires:* label (UNLESS it is the only one on the
+   issue — same-second claims share one label; see lock-protocol.md)
+3. Restore status:claimable ONLY if no other claim remains
 4. Post <!-- event: released --> with "conflict, releasing for redispatch"
 5. Report back to conductor / pick another issue
 ```
-
-See lock-protocol.md for details.
 
 ## Failure modes
 

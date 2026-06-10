@@ -101,5 +101,7 @@ Emotional: [outcome statement | not-yet-evidenced]
 Social: [outcome statement | not-yet-evidenced]
 ```
 
-If two of three dimensions are `not-yet-evidenced`, downgrade confidence by
-one level. If all three are evidenced from quotes, the job is fully formed.
+If two of three dimensions are `not-yet-evidenced`, the canonical confidence
+table in `prompts/cluster-and-score.md` downgrades the job one level (its
+dimension-downgrade rule). If all three are evidenced from quotes, the job is
+fully formed.

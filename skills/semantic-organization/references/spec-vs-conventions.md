@@ -49,26 +49,11 @@ Conventions can evolve. The spec is fixed (until Anthropic revises it).
 
 ## The canonical layout (both layers in one folder)
 
-```
-<marketplace-repo>/
-├── .claude-plugin/
-│   └── marketplace.json                ← marketplace manifest
-├── skills/
-│   └── <skill-name>/                   ← spec + marketplace in one folder
-│       ├── .claude-plugin/
-│       │   └── plugin.json             ← marketplace
-│       ├── SKILL.md                    ← spec (required)
-│       ├── README.md                   ← marketplace
-│       ├── TESTS.md                    ← marketplace
-│       ├── scripts/                    ← spec (optional)
-│       ├── references/                 ← spec (optional)
-│       ├── assets/                     ← spec (optional)
-│       ├── prompts/                    ← convention (optional)
-│       ├── templates/                  ← convention (optional)
-│       ├── schemas/                    ← convention (optional)
-│       └── fixtures/                   ← convention (optional)
-└── ...
-```
+The canonical tree lives in SKILL.md ("Canonical layout") — the single
+authoritative copy. In it, `SKILL.md` plus `scripts/`, `references/`,
+and `assets/` are the spec layer; `.claude-plugin/plugin.json`,
+`README.md`, `TESTS.md`, and the convention folders are the marketplace
+layer — all in one `skills/<skill-name>/` folder.
 
 This mirrors Anthropic's reference repo at
 https://github.com/anthropics/skills, with `.claude-plugin/plugin.json`

@@ -22,8 +22,10 @@ Every task-bearing issue carries labels in five namespaces:
 ### `claimed-by:*` — owning agent (zero or one at a time)
 
 `claimed-by:<agent-id>` — the agent that currently holds the lock.
-Removed on release or completion (retained on done for audit). See
-`lock-protocol.md`.
+ALWAYS removed on release (success, block, voluntary, or stale) — a
+lingering `claimed-by:*` would make the issue unpickable. The
+`claimed`/`result` events in the comment log preserve the audit trail.
+See `lock-protocol.md`.
 
 ### `claim-expires:*` — TTL on the lock (one or zero)
 
@@ -120,7 +122,7 @@ The conductor's dispatch algorithm checks each.
 | Pattern | Why it fails |
 |---|---|
 | Issue with no acceptance criteria | Agent has no signal for "done"; conductor refuses |
-| Issue with `status:claimable` AND `claimed-by:*` | Inconsistent state — possibly a stale claim |
+| Issue with `status:claimable` AND `claimed-by:*` | Broken state — release always removes `claimed-by:*`; reconcile via stale-claim recovery |
 | Multiple `status:*` labels | Lifecycle ambiguity; conductor errors out |
 | `depends-on:#self` | Self-cycle; rejected |
 | `claim-ttl:` over 24 hours | Suggest decomposition; long claims indicate task is too large |

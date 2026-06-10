@@ -1,6 +1,6 @@
 {
   "name": "jtbd-prd",
   "version": "0.1.0",
-  "description": "Validate customer need before you build. Produces a Job Article that functions as PRD framing, grounded in Jobs-to-be-Done evidence.",
+  "description": "Use when the user is about to build, scope, or write a PRD or spec for a feature, product, page, or skill and customer need is unproven. Activates on \"JTBD\", \"jobs to be done\", \"/jtbd-prd\", \"validate this\", \"should I build this\", \"is there a real need\", \"what job does this serve\", \"reverse JTBD\", \"analyze these interviews\", or \"turn these transcripts/tickets into requirements\". Also use when the user pastes a build proposal, feature brief, or hypothesis without supporting customer evidence.",
   "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
 }

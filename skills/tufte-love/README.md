@@ -14,6 +14,7 @@ prescribes the simpler stronger form.
 ## When to use
 
 - Designing or reviewing a chart, dashboard, or analytical UI
+- A chart or dashboard feels cluttered, busy, ugly, or hard to read
 - Auditing a report before publication
 - Reviewing code that produces visualizations
 - Before shipping any surface that displays numbers
@@ -38,4 +39,4 @@ claude plugin install tufte-love@infolog-io
 
 ## Triggers
 
-`tufte audit` · `redesign this chart` · `data viz review` · `/tufte-love`
+`tufte audit` · `redesign this chart` · `data viz review` · `dashboard review` · `/tufte-love`

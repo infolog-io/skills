@@ -1,0 +1,146 @@
+{
+  "repo": "skills",
+  "git": "e1b3545",
+  "tiers": {
+    "static": {
+      "pass": true,
+      "score": "0 FAIL / 16 WARN",
+      "skills": {
+        "atomic-brand": {
+          "pass": true,
+          "fails": 0,
+          "warns": 1,
+          "findings": [
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`fixtures/expected-audit.md` exists but nothing references it"
+            }
+          ]
+        },
+        "claude-pip": {
+          "pass": true,
+          "fails": 0,
+          "warns": 0,
+          "findings": []
+        },
+        "estimatrix": {
+          "pass": true,
+          "fails": 0,
+          "warns": 0,
+          "findings": []
+        },
+        "github-issues-kanban": {
+          "pass": true,
+          "fails": 0,
+          "warns": 12,
+          "findings": [
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`prompts/triage-inbox.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`prompts/generate-board.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`prompts/report-result.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`prompts/dispatch-next.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`prompts/list-boards.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`prompts/audit-board.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`fixtures/input-dependency-chain.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`fixtures/expected-event-log.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`fixtures/expected-audit-output.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`assets/template-sprint-planning.json` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`assets/template-oss-triage.json` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`assets/template-writing-pipeline.json` exists but nothing references it"
+            }
+          ]
+        },
+        "jtbd-prd": {
+          "pass": true,
+          "fails": 0,
+          "warns": 1,
+          "findings": [
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`fixtures/input-tickets-sample.md` exists but nothing references it"
+            }
+          ]
+        },
+        "learn2kern": {
+          "pass": true,
+          "fails": 0,
+          "warns": 0,
+          "findings": []
+        },
+        "semantic-organization": {
+          "pass": true,
+          "fails": 0,
+          "warns": 2,
+          "findings": [
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`templates/skill-scaffold.md` exists but nothing references it"
+            },
+            {
+              "severity": "WARN",
+              "code": "ORPHAN",
+              "msg": "`fixtures/expected-audit.md` exists but nothing references it"
+            }
+          ]
+        },
+        "tufte-love": {
+          "pass": true,
+          "fails": 0,
+          "warns": 0,
+          "findings": []
+        }
+      },
+      "repo_findings": []
+    }
+  },
+  "pass": true
+}

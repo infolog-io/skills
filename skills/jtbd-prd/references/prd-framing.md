@@ -47,21 +47,19 @@ If any answer is "I don't know," return to the Job Article and close the gap.
 | Verdict | PRD allowed? | What to do next |
 |---|---|---|
 | validated | Yes | Write the PRD, reference this article |
-| under-evidenced | No | Run `next-research.md` items until verdict reaches medium |
+| under-evidenced | No | Work the article's `## Next research` items and the verdict's `next_actions` until confidence reaches medium |
 | unvalidated | No | Pivot or kill — do not write a PRD against this hypothesis |
 
 ## Where Job Articles live
 
-Default: in the repo where the build will happen, under `docs/jtbd/`.
+Follow the output destination convention in SKILL.md:
+`job-article-<short-slug>.md` in the user's working directory; if the
+directory is a repo and `docs/jtbd/` exists, place it there; otherwise repo
+root.
 
-| Repo type | Path |
-|---|---|
-| Has `docs/` directory | `docs/jtbd/job-<slug>.md` |
-| Has `notes/` directory | `notes/jtbd/job-<slug>.md` |
-| No conventional location | repo root: `job-<slug>.md` |
-
-Filename slug should be 3–5 words describing the customer's job, not the
-proposed solution. Good: `triage-stale-prs.md`. Bad: `review-dashboard.md`.
+The slug should be 3–5 words describing the customer's job, not the proposed
+solution. Good: `job-article-triage-stale-prs.md`. Bad:
+`job-article-review-dashboard.md`.
 
 ## Versioning Job Articles
 

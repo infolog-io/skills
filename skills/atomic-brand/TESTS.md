@@ -10,7 +10,7 @@ marketplace conventions `prompts/` and `fixtures/`.
 1. Plugin installs cleanly via `claude plugin install atomic-brand@infolog-io`
 2. Skill activates on every trigger phrase listed in SKILL.md
 3. All referenced files exist at the paths declared in SKILL.md
-4. The 8-dimension audit rubric is defined in `references/audit-rubric.md` and the SKILL.md audit format matches
+4. The 8-dimension audit rubric and verdict thresholds are defined in `references/audit-rubric.md` (single authority); SKILL.md lists the dimensions and points to it
 5. The failover chain (explicit tokens → image parse → URL scrape) is documented and each path has a prompt
 6. The three verdicts (system-healthy, drifting, broken) emit different artifacts
 7. JSON schema in `assets/` validates the canonical audit example
@@ -44,12 +44,12 @@ marketplace conventions `prompts/` and `fixtures/`.
 ### T6 — Failover: no explicit tokens, image provided
 - Input: no `tokens.css`; a brand asset image (logo or screenshot) provided
 - Expected: skill activates image-parse path (failover step 2); extracts dominant colors and type pairings
-- Audit: confidence is marked `low` (inferred from image, not explicit)
+- Audit: confidence is marked `medium` (inferred from image, not explicit); verdict capped at `drifting` until tokens are formalized
 
 ### T7 — Failover: scrape live URL
 - Input: no tokens, no image; only a live URL
 - Expected: skill scrapes computed styles from the URL; extracts color, type, and spacing patterns
-- Audit: confidence marked `low`
+- Audit: confidence marked `low`; verdict capped at `drifting` until tokens are formalized
 
 ### T8 — Verdict: broken with build-out
 - Input: a project with no `tokens.css`, no consistent color usage, no atomic hierarchy

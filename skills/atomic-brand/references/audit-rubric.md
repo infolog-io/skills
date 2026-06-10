@@ -42,6 +42,12 @@ Score:
 - 3: Some structure; mixed classifications.
 - 5: Clear five-level hierarchy; every component classifies cleanly.
 
+Calibration: absence of `atoms/` / `molecules/` / `organisms/` folders
+is not an automatic score of 1. Classify components by content — a flat
+directory whose components still compose in one direction with honest
+granularity can score 3+. Score 1 is for genuinely unstructured trees,
+not unconventional folder layouts.
+
 Tags emitted: `atomic_violation` for misclassifications.
 
 ## 3. Naming Integrity
@@ -175,6 +181,10 @@ Confidence:                High | Medium | Low
 | `system-healthy` | All dims ≥4 | Ship |
 | `drifting` | One or more dims at 2-3; none at 1 | Emit refactor-plan.md |
 | `broken` | Any dim at 1, OR ≥3 dims at 2 | Emit build-out-plan.md |
+
+Cap: when the brand source is image-parsed or URL-scraped, the verdict
+cannot exceed `drifting` until tokens are formalized — see
+`references/failover-chain.md`.
 
 ## Priority rule
 

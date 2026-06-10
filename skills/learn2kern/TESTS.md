@@ -9,13 +9,13 @@ runs in the SKILL body.
 ## End conditions (skill ships when all are true)
 
 1. Plugin installs cleanly via `claude plugin install learn2kern@infolog-io`
-2. Skill activates on every trigger phrase listed in SKILL.md
+2. Skill activates on every trigger phrase listed in the SKILL.md frontmatter description
 3. SKILL.md states the eight named ratios with exact values
 4. SKILL.md states the math formula for computing scale steps
 5. SKILL.md emits both BODY and HEADINGS as separate token families
 6. SKILL.md emits CSS custom properties AND Tailwind theme.fontSize
-7. Conversational intake (jtbd-style) runs when inputs are missing
-8. Single-turn happy path skips intake when inputs are stated
+7. Conversational intake runs when base size or ratio is missing — one combined question, never a silent default
+8. Single-turn happy path skips intake when base AND ratio are stated; items 3-8 defaults applied silently and listed in the emission header
 9. Color slots emit as `var(--color-text, fallback)` references to external color tokens
 10. README ≤200 words
 11. Stub status is removed from SKILL.md and plugin.json description
@@ -44,7 +44,7 @@ runs in the SKILL body.
   - step  0: 1.000rem
   - step  1: 1.250rem
   - step  3: 1.953rem
-- Expected PT (1pt = 0.75px from CSS spec):
+- Expected PT (1px = 0.75pt from CSS spec):
   - step  0: 12.00pt
   - step  1: 15.00pt
   - step  3: 23.44pt
@@ -60,7 +60,7 @@ runs in the SKILL body.
 ### T4 — CSS custom-properties emission
 
 - Output contains, at minimum:
-  - `--font-size-2xs` through `--font-size-6xl` for the 9 steps
+  - `--font-size-2xs` through `--font-size-5xl` for the 9 steps
   - `--line-height-normal`, `--line-height-tight`, `--line-height-display`
   - `--font-body-family`, `--font-body-weight`, `--font-body-line-height`, `--font-body-letter-spacing`, `--font-body-color`
   - `--font-heading-family`, `--font-heading-weight`, `--font-heading-line-height`, `--font-heading-letter-spacing`, `--font-heading-color`
@@ -81,6 +81,7 @@ fontSize: {
 ```
 
 - Verify: object parses as valid JavaScript; line-heights attach per band
+- Shape reference: `fixtures/expected-tailwind.js` (consistent with the CSS fixture)
 
 ### T6 — Body + Headings split
 
@@ -108,16 +109,17 @@ fontSize: {
 ### T9 — Conversational intake when inputs missing
 
 - Input: "generate a type scale" (no base, no ratio specified)
-- Expected: skill asks ONE focused question first — typically "What base size and ratio?"
+- Expected: skill asks ONE combined question covering BOTH required inputs — "What base size and ratio?"
   with concrete options ("16px base is the web default; for the ratio, Major Third = 1.250 is a common starting point")
-- Loops until inputs are gathered, then emits
-- Negative: skill does NOT guess base=16 silently
+- One intake turn covers all remaining blanks; once base + ratio are gathered, skill emits with items 3-8 defaults listed in the emission header
+- Negative: skill does NOT guess base=16 (or any ratio) silently
+- Negative: skill does NOT spread intake across multiple one-item turns
 
 ### T10 — Single-turn happy path
 
 - Input: "generate a type scale with base=16, Major Third, 6 up 2 down, Inter for body and headings"
-- Expected: skill skips intake; emits the full scale + CSS + Tailwind in one response
-- Verify: no clarifying questions appear when scope is fully stated
+- Expected: skill skips intake (base AND ratio are stated); emits the full scale + CSS + Tailwind in one response
+- Verify: no clarifying questions appear; applied defaults are listed in the emission header
 
 ### T11 — Schema validation
 
@@ -128,16 +130,18 @@ fontSize: {
 
 - Run skill against fixed inputs from T1
 - Expected output matches `fixtures/expected-scale-major-third.css` byte-for-byte (modulo trailing newlines)
+- The fixture is the single canonical CSS emission and includes element bindings (`body`, `h1`-`h6`, `small`)
 
 ## Acceptance rubric per artifact
 
 | Artifact | Must |
 |---|---|
-| SKILL.md | All 8 ratios with exact values; math formula; intake flow; emission templates for CSS and Tailwind; BODY + HEADINGS split; worked examples |
+| SKILL.md | All 8 ratios with exact values (one-line; full table in references); math formula; intake flow (required base+ratio, silent 3-8 defaults); CSS skeleton pointing to canonical fixture; Tailwind shape pointing to `fixtures/expected-tailwind.js`; BODY + HEADINGS split |
 | `references/named-ratios.md` | Each ratio: exact decimal, alias (musical-interval name), use case, derivation |
 | `references/font-pairing.md` | Body + heading family pairing principles; common safe pairings; anti-patterns |
 | `assets/scale-tokens-schema.json` | JSON Schema for the emitted token bundle |
-| `fixtures/expected-scale-major-third.css` | Reference output for T12 |
+| `fixtures/expected-scale-major-third.css` | Canonical CSS emission; reference output for T12 |
+| `fixtures/expected-tailwind.js` | Tailwind shape reference for T5 |
 | README.md | ≤200 words; no "stub" language |
 
 ## Out of scope for v0.1.0
@@ -146,7 +150,7 @@ fontSize: {
 - Swift `Font.system(size:)` emission — v0.2
 - Compose `TextStyle` emission — v0.2
 - W3C Design Tokens JSON emission — v0.2
-- Pair recommender as active mode (reference only in v0.1.0) — v0.2
+- Standalone pair-recommender mode with scoring — v0.2 (font-pairing Q&A IS in scope in v0.1.0, answered from `references/font-pairing.md`)
 - Kerning audit — v0.3
 - Tracking rules by size band beyond default letter-spacing — v0.3
 - Optical alignment audits — v0.3

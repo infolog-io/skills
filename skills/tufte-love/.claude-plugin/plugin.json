@@ -1,6 +1,6 @@
 {
   "name": "tufte-love",
   "version": "0.3.0",
-  "description": "Tufte-style audits, redesigns, and reviews for data visualizations, dashboards, and quantitative UI.",
+  "description": "Use when designing, reviewing, or refactoring data visualizations, dashboards, charts, tables, maps, reports, product metrics views, or quantitative UI — including when a user calls one cluttered, busy, ugly, confusing, or hard to read, asks to simplify or clean it up, or wants chart component code reviewed. Not for decorative illustration, branding, or non-quantitative UI polish.",
   "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
 }

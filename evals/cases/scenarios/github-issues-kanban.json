@@ -1,0 +1,17 @@
+[
+  {
+    "name": "claim-race",
+    "scenario": "Two agents, claimed-by:agent-alpha and claimed-by:agent-zulu, attempt to claim issue #17 at the same moment, and after both re-read the issue each sees BOTH claimed-by labels present. Execute the conflict-resolution rule from the lock protocol exactly: who wins, who releases, what does the loser do to the status labels, and what events are posted? Then state what each agent must do about labels that do not exist in the repo yet on a first-ever claim.",
+    "must_cover": ["alphabetical", "label", "release"]
+  },
+  {
+    "name": "worker-finish-race",
+    "scenario": "A worker holding issue #9 finishes its task, but its claim TTL expired 3 minutes ago and the conductor's stale sweep may have already released the claim. Execute the worker's completion procedure exactly as written: what must the worker verify immediately before posting its result and editing labels, what does it do if its claim is gone, and who owns the claimed -> ready-for-review transition?",
+    "must_cover": ["re-read", "lost-claim", "worker"]
+  },
+  {
+    "name": "yolo-precedence",
+    "scenario": "Session-level YOLO is enabled. A board's designated config issue carries yolo:enabled. The conductor is about to dispatch issue #3, which has the label priority:p0. The dispatch command itself was given with no YOLO flag. Per the YOLO precedence rules, does this dispatch auto-proceed or require confirmation, and why? State the full precedence order.",
+    "must_cover": ["p0", "confirm", "per-dispatch"]
+  }
+]

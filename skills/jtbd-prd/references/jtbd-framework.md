@@ -82,7 +82,8 @@ validated.
 ## When to escalate to research
 
 If the model cannot find ≥3 quotes across ≥2 sources for any proposed job, do
-not invent jobs. Emit a `next-research.md` listing what to ask and whom to ask.
+not invent jobs. Populate the Job Article's `## Next research` section and the
+verdict's `next_actions` field with what to ask and whom to ask.
 
 ## Reading list (not read by the skill — for the author)
 

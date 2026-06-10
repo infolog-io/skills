@@ -1,6 +1,6 @@
 {
   "name": "learn2kern",
   "version": "0.1.0",
-  "description": "Typography skill. Generates modular type scales (eight named ratios from Minor Second to Golden Ratio) with BODY and HEADINGS as separate token families, line-height bands, letter-spacing per band. Emits CSS custom properties and Tailwind theme.fontSize. Color slots reference external color tokens via var() with fallbacks. Runs conversational intake when inputs are missing.",
+  "description": "Use when the user asks for a type scale, typography tokens, font sizes, modular scale, line height, letter-spacing/kerning defaults, or typographic hierarchy for a web project, or invokes \"/learn2kern\". Also use when choosing a scale ratio (Minor Third, Major Third, Golden Ratio) or pairing body and heading fonts. Not for color tokens, font loading, or rendered previews.",
   "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
 }

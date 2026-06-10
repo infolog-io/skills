@@ -1,0 +1,16 @@
+name: skill-evals
+
+on:
+  push:
+    branches: [main]
+    paths: ["skills/**", "evals/**", ".claude-plugin/**", ".github/workflows/**"]
+  pull_request:
+    paths: ["skills/**", "evals/**", ".claude-plugin/**", ".github/workflows/**"]
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run static skill evals
+        run: python3 evals/run.py static

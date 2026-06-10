@@ -117,8 +117,15 @@ Skills with multiple operating modes, multiple references, and optional
 scripts and assets fall in this profile.
 
 Required at minimum (all inside `skills/<name>/`):
-- Spec layer: SKILL.md + references/ (recommended) + assets/ (recommended) when content warrants
+- Spec layer: SKILL.md; SHOULD have at least one supporting folder
+  (`references/`, `scripts/`, `assets/`, or an accepted convention folder)
 - Marketplace layer: `.claude-plugin/plugin.json`, README.md, TESTS.md
+
+A 200–500-line SKILL.md with no sub-folders is neither single-rule
+(over 200 lines) nor a healthy full-shape skill. Classify it as a
+drifting full-shape skill: score S3 at 3, emit the migration trigger
+"extract references/", and cap the verdict at `spec-drift` until the
+body is broken out.
 
 ### Single-rule skill
 

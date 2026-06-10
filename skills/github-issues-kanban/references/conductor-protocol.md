@@ -112,12 +112,17 @@ every 30 seconds (configurable):
 
 `handleEvent` reads the event marker and acts:
 
+Each label transition has exactly one owner. The WORKER moves the
+issue (claimed → ready-for-review / blocked / claimable per
+worker-protocol.md); the conductor never repeats those transitions — it
+only reconciles stale or orphaned states (see stale-claim recovery).
+
 | Event | Conductor action |
 |---|---|
 | `progress` | Log; no state change |
-| `result` | Move issue to status:ready-for-review (or done if auto-merge); record result |
-| `blocked` | Move issue to status:blocked; remove from in-flight; surface to human |
-| `released` | Move issue back to status:claimable; remove from in-flight |
+| `result` | Record result; remove from in-flight (worker already moved the issue to status:ready-for-review or done) |
+| `blocked` | Remove from in-flight; surface to human (worker already set status:blocked) |
+| `released` | Remove from in-flight (worker already restored labels per lock-protocol.md) |
 | `error` | Log error; surface to human; remove from in-flight |
 
 ## Stale claim recovery

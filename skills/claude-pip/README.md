@@ -1,7 +1,7 @@
 # claude-pip
 
-A Performance Improvement Plan for Claude. Three triggers lock, scope,
-and remove deterministic rules in your project's CLAUDE.md.
+A Performance Improvement Plan for Claude. Five triggers cover a rule's
+lifecycle: capture, scope, remove, audit, graduate.
 
 ## Triggers
 
@@ -10,24 +10,24 @@ and remove deterministic rules in your project's CLAUDE.md.
 | `CLAUDE PIP` | Add a master rule to `<project>/.claude/CLAUDE-PIP.md` |
 | `LOCAL PIP` | Add a rule scoped to the current directory's `CLAUDE.md` |
 | `OFF THE PIP` | Remove a rule by ID or keyword |
+| `PRUNE THE PIP` | Audit rules for staleness; default verdict is keep |
+| `PROMOTE THE PIP` | Graduate stable rules to CLAUDE.md / DESIGN.md / user-global — you pick which |
 
-All triggers are case-sensitive, all-caps.
+Triggers are case-sensitive, all-caps. Asking to "audit the PIP" or
+"graduate a PIP rule" also activates the skill.
 
 ## Why
 
-Memory and preferences are not enforced. Rules in `CLAUDE.md` are. This
+Memory and preferences are not enforced; rules in `CLAUDE.md` are. This
 skill turns a one-off correction into a permanent rule that fires every
-time — and lets you remove it cleanly when it no longer applies.
+time — removable, prunable, promotable later.
 
 ## How it works
 
-Every rule the skill adds is wrapped in HTML-comment markers
+Every rule is wrapped in HTML-comment markers
 (`<!-- pip:start id=<id> -->` ... `<!-- pip:end id=<id> -->`) so it can
-be removed mechanically later. The ID is auto-generated.
-
-- `CLAUDE PIP TDD` infers and writes the TDD rule
-- `LOCAL PIP always lint before commit` scopes a rule to the current dir
-- `OFF THE PIP <id>` removes that rule cleanly
+be removed mechanically. Prune never drops without approval; promote
+never proposes — it lists, you pick.
 
 ## Install
 

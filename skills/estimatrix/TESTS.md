@@ -2,7 +2,9 @@
 
 ## Profile
 
-**Single-rule skill.** Two durable rules:
+**Full-shape skill.** Compact SKILL.md body (axes, rules, intake, output
+contract) plus `references/` (worked examples K1-K8, multi-turn intake
+example). Two durable rules:
 1. Effort sized as T-shirt (XS / S / M / L / XL / XXL), never hours
 2. Complexity sized separately (low / medium / high)
 
@@ -20,10 +22,10 @@ Karpathy's four code rules apply before any size emits.
 
 ## Test cases — Karpathy rules
 
-### K1 — Ambiguity refusal (rule 1: Think Before Coding)
+### K1 — Ambiguity intake (rule 1: Think Before Coding)
 
 - Input: "estimate adding a feature flag"
-- Expected: skill refuses to emit a size; asks clarifying questions about which flag system, scope, use case, and rollout target
+- Expected: skill withholds the size and runs active intake (one focused question with 2–4 options) about which flag system, scope, use case, and rollout target
 - Negative: skill does not guess "M" and move on
 
 ### K2 — Multiple interpretations (rule 1)
@@ -41,7 +43,7 @@ Karpathy's four code rules apply before any size emits.
 ### K4 — Missing success criterion (rule 4: Goal-Driven Execution)
 
 - Input: "estimate fixing the bug" with no test, behavior, or expected outcome
-- Expected: skill refuses to size; asks for the failing test, observed behavior, or expected post-fix state
+- Expected: skill withholds the size and runs active intake (one focused question with 2–4 options) for the failing test, observed behavior, or expected post-fix state
 - Negative: skill does not size a vague "fix" task
 
 ### K5 — Surgical scope (rule 3: Surgical Changes)
@@ -148,10 +150,12 @@ Confidence: <high | medium | low>
 
 | Artifact | Must |
 |---|---|
-| SKILL.md | States both axes; lists Karpathy's four rules; shows worked examples for K1-K8 and K11-K12; states anti-rules |
+| SKILL.md | States both axes (tables inline); four Karpathy rules; intake with priority-ordered blank checklist; output contract with adjacent-size-range rule and Confidence rubric; ≈500-word body |
+| references/worked-examples.md | Worked examples K1-K8 plus question style, happy path, calibration |
+| references/intake-example.md | Multi-turn intake example, refusal anti-pattern, stop-asking signal (K11-K15 shapes) |
 | README.md | Mentions both axes; ≤200 words; states triggers |
 
-## Out of scope for v0.2.0
+## Out of scope for v0.3.0
 
 - Hour-to-size conversion lookup
 - 4-tier complexity scale (low/medium/high is sufficient; finer granularity adds noise)

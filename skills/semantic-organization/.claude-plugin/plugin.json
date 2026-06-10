@@ -1,7 +1,7 @@
 {
   "name": "semantic-organization",
   "version": "0.3.0",
-  "description": "Meta-skill that governs how every skill is structured. Codifies the Anthropic Agent Skills directory convention (skills/<name>/SKILL.md flat \u2014 no plugin wrapper), folder roles, naming rules, migration triggers. Scaffolds, audits, recommends migrations.",
+  "description": "Use when designing, scaffolding, auditing, renaming, or restructuring a skill in this marketplace. Triggers: \"scaffold a new skill\", \"add a skill\", \"create a skill\", \"/new-skill\", \"audit this skill\", \"/semantic-audit\", \"should this be a folder or its own skill\", \"rename this folder\", \"is this folder name semantic\", or any question about skill directory layout, folder roles, naming, or promoting a sub-folder to a sibling skill.",
   "author": {
     "name": "Information Logistics",
     "url": "https://github.com/infolog-io"

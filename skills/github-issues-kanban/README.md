@@ -1,33 +1,39 @@
 # github-issues-kanban
 
-Agent orchestration substrate on GitHub Issues + Projects V2. Multiple
-agents claim and work tasks in parallel without conflict.
+Agent orchestration substrate on GitHub Issues + Projects V2. Agents
+claim and work tasks in parallel without conflict. Labels hold current
+state; comment events hold the log.
 
-## Three concurrency primitives
+## Concurrency primitives
 
 | Primitive | What it is |
 |---|---|
-| **Access lock** | Optimistic claim with TTL via labels |
+| **Access lock** | Optimistic label claim with TTL; alphabetical tie-break on conflict |
 | **Dependency chain** | DAG via `depends-on:#N` labels; cycle detection |
-| **Event bus** | Structured issue comments as the event log |
+| **Event bus** | Structured issue comments as event log |
 
 ## Modes
 
-- **Audit** — score a board's health (6 dimensions)
-- **Triage** — conversational intake for new issues
-- **Generate** — create a board from one of four archetypes
-- **List** — multi-board summary
-- **Dispatch** — pick the next claimable issue
-- **Claim** / **Report** — worker primitives
+Audit · Triage · Generate (archetypes: `personal-todo`,
+`writing-pipeline`, `oss-triage`, `sprint-planning`) · List ·
+Dispatch · Claim/Report worker primitives.
 
-## Four archetypes
+Confirm-first by default. YOLO bypass precedence: per-dispatch >
+board > session; `priority:p0` always confirms; every YOLO dispatch
+posts a reasoned audit event.
 
-`personal-todo` · `writing-pipeline` · `oss-triage` · `sprint-planning`
+## Scope (v0.1.0)
 
-## Modes of operation
+All four archetypes; parallel dispatch up to host max concurrency;
+optimistic concurrency with deterministic conflict resolution;
+TTL-based stale-claim recovery; polling comment-based event bus;
+YOLO mode with audit trail and auto-disable.
 
-Confirm-first by default. YOLO bypass available (per-dispatch,
-board-level, or session-level) with required audit-trail events.
+## Deferred to v0.2+
+
+External atomic lock service; webhook-driven event bus; cross-org
+boards; team analytics; direct GraphQL fallback (`gh` CLI only); bulk
+operations; custom field types beyond labels and status.
 
 ## Install
 
@@ -36,12 +42,4 @@ claude plugin marketplace add infolog-io/skills
 claude plugin install github-issues-kanban@infolog-io
 ```
 
-## Triggers
-
-`kanban` · `board` · `dispatch next` · `audit board` · `triage` ·
-`claim` · `/github-issues-kanban`
-
-## Protocol portability
-
-Agent-agnostic. Dispatch is host-specific; the skill defines what to
-do, not how to spawn workers.
+Protocol is agent-agnostic; dispatch is host-specific.

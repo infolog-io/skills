@@ -7,6 +7,13 @@ marketplace conventions `prompts/` and `fixtures/`. The protocol is
 agent-agnostic; Claude Code's `Task` tool is the host implementation in
 one section only.
 
+## Self-application
+
+This skill must pass the canonical skill-structure audit at ≥4 on every
+dimension. The protocol's correctness is the load-bearing part — if the
+lock/dep/event-bus references aren't internally consistent, the audit
+penalizes accordingly.
+
 ## End conditions (skill ships when all are true)
 
 1. Plugin installs cleanly via `claude plugin install github-issues-kanban@infolog-io`
@@ -23,6 +30,9 @@ one section only.
 
 ### T1 — Issue with `status:claimable` label and no `claimed-by:*`
 
+- Worker provisions the per-value labels first (`gh label create -f`
+  for `claimed-by:*` and `claim-expires:*`), so the claim works on a
+  repo where those labels don't exist yet
 - Worker can claim atomically
 - After claim: `status:claimed` + `claimed-by:<self>` + `claim-expires:<ts>` labels present
 - Pre-claim status removed
@@ -34,9 +44,13 @@ one section only.
 
 ### T3 — Worker completes; comment posted; status `ready-for-review`
 
+- Worker re-reads the lock immediately before posting; claim still held
 - Comment posted with `<!-- event: result -->` marker
-- `status:claimed` removed; `status:ready-for-review` added
-- `claimed-by:*` retained for audit trail
+- `status:claimed` removed; `status:ready-for-review` added — by the
+  WORKER (the conductor never repeats this transition)
+- `claimed-by:*` and `claim-expires:*` removed; the claimed/result
+  events preserve the audit trail; expired `claim-expires:*` repo label
+  deleted best-effort
 
 ### T4 — Worker blocked mid-work
 
@@ -89,9 +103,12 @@ one section only.
 ### T13 — Optimistic concurrency conflict resolution
 
 - Two workers attempt claim within 1s of each other
-- Both add `claimed-by:<self>` labels
-- After re-read: GitHub serializes the writes; the worker who finds NOT the sole claimant releases their label and asks for another issue
-- No work is duplicated
+- Both add `claimed-by:<self>` labels; both re-read and see two claims
+- Deterministic tie-break (per lock-protocol.md): the claim whose
+  `claimed-by:*` label sorts EARLIEST alphabetically wins; the
+  later-sorting worker releases its labels and asks for another issue
+- The loser does NOT restore `status:claimable` (the winner's claim remains)
+- Exactly one winner; no livelock; no work duplicated
 
 ### T14 — Dependency chain blocks dispatch
 
@@ -141,12 +158,12 @@ one section only.
 |---|---|
 | SKILL.md | Names all 7 modes; declares the 3 primitives; trigger phrases; YOLO mode |
 | `references/issue-as-task-contract.md` | Label scheme, status lifecycle, agent-output convention |
-| `references/lock-protocol.md` | Claim sequence, optimistic concurrency, conflict detection, TTL, release |
+| `references/lock-protocol.md` | Single source of truth for the claim sequence: label provisioning, optimistic concurrency, alphabetical tie-break, TTL, heartbeat rule, release |
 | `references/dependency-chain.md` | depends-on labels, transitive resolution, cycle rejection |
-| `references/event-bus.md` | Comment marker format, event types (claimed/released/progress/blocked/result/error/yolo-dispatch/stale-release), payload schema |
+| `references/event-bus.md` | Comment marker format, event types (claimed/released/progress/blocked/result/error/yolo-dispatch/yolo-triage/yolo-disabled/stale-release), payload schema |
 | `references/conductor-protocol.md` | Dispatch algorithm, dep check, agent-agnostic with one Claude Code section |
 | `references/worker-protocol.md` | Claim/work/report/release, agent-agnostic |
-| `references/yolo-mode.md` | When/how/audit-trail requirements |
+| `references/yolo-mode.md` | When/how/audit-trail requirements; precedence per-dispatch > board > session; p0 always confirms |
 | `references/audit-rubric.md` | 5+ scored dimensions for board health |
 | Each prompt | Input/output contract + ≥1 worked example + ≥1 negative case |
 | `assets/label-scheme.json` | Canonical labels enumerated |

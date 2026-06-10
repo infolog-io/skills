@@ -25,9 +25,16 @@ Implements the claim sequence per `references/lock-protocol.md`.
 
 ## Procedure
 
+Execute the claim sequence in `references/lock-protocol.md` exactly —
+it is the single source of truth (per-value label provisioning via
+`gh label create -f`, atomic write, re-read, alphabetical tie-break on
+conflict: the earliest-sorting `claimed-by:*` wins; losers restore
+`status:claimable` only if no other claim remains). This prompt adds
+only the I/O mapping:
+
 ```
 1. Read issue state via `gh issue view <id> --json labels,body`
-2. Verify claimable:
+2. Verify claimable per references/issue-as-task-contract.md:
    - status:claimable label present
    - claimed-by:* label absent
    - All depends-on:#N resolve to status:done
@@ -35,21 +42,10 @@ Implements the claim sequence per `references/lock-protocol.md`.
    - No agent-skip label
 3. If verify fails → return {claimed: false, reason}
 4. Compute expires_at = now + TTL (from claim-ttl:* label or default 30m)
-5. Atomically write labels:
-   gh issue edit <id> \
-     --remove-label status:claimable \
-     --add-label status:claimed \
-     --add-label claimed-by:<agent_id> \
-     --add-label claim-expires:<expires_at>
-6. Re-read issue state
-7. Verify exactly one claimed-by:* label present, equal to claimed-by:<agent_id>
-8. If verify fails (conflict):
-   - Remove our own claimed-by:<agent_id> label
-   - Remove claim-expires:<expires_at> label
-   - Restore status:claimable
-   - Post <!-- event: released --> comment with reason "conflict"
-   - Return {claimed: false, reason: "conflict"}
-9. If verify passes:
+5. Run the lock-protocol claim sequence (provision labels, write, re-read, verify)
+6. If you lose the conflict tie-break (lock-protocol.md defines the
+   release behavior) → return {claimed: false, reason: "conflict"}
+7. If the lock is held:
    - Post <!-- event: claimed --> comment with marker + payload
    - Return {claimed: true, lock: {...}}
 ```

@@ -82,7 +82,9 @@ When mode is `yolo`:
 ```
 1. Check auto-disable conditions (e.g., recent blocked events)
 2. If auto-disable triggered: fall back to confirm mode
-3. Otherwise:
+3. If the candidate is priority:p0: confirm anyway (p0 always confirms,
+   regardless of YOLO — see references/yolo-mode.md)
+4. Otherwise:
    - Post <!-- event: yolo-dispatch --> comment on the issue with reasoning
    - Proceed without prompting
 ```
@@ -157,7 +159,9 @@ priority_filter: null
 
 ### Input
 
-Board has 5 issues, all `status:claimed` or `status:done`.
+Board has 5 issues: 2 `status:done`, 3 `status:claimed` — 2 of those
+claims were dispatched by this conductor and are still in flight; the
+third is held by another agent.
 
 ### Output
 
@@ -165,10 +169,14 @@ Board has 5 issues, all `status:claimed` or `status:done`.
 {
   "dispatched": [],
   "skipped": [],
-  "in_flight_after": 5,
+  "in_flight_after": 2,
   "queue_remaining": 0
 }
 ```
+
+`in_flight_after` counts only THIS conductor's outstanding dispatches.
+Done issues are never in flight, and another agent's claim is not this
+conductor's in-flight work.
 
 Conductor returns; will be re-invoked when an event arrives (e.g., a
 worker reports `result`, freeing a slot AND potentially unblocking deps).

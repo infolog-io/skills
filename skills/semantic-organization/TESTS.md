@@ -28,9 +28,9 @@
 ### T3 — Audit classification
 | Fixture | Expected scores | Verdict |
 |---|---|---|
-| `fixtures/input-good-skill/` (canonical flat shape) | 5/5 across most dims | `semantically-healthy` |
-| `fixtures/input-drifted-skill/` (mixed naming, missing TESTS.md) | 3 across half the dims | `drifting` |
-| `fixtures/input-broken-skill/` (no SKILL.md, code in src/) | 1-2 across most dims | `broken` |
+| `fixtures/input-good-skill.md` (canonical flat shape) | 5/5 across most dims | `spec-compliant + marketplace-ready` |
+| `fixtures/input-drifted-skill.md` (mixed naming, thin TESTS.md) | 2-3 across several dims | `spec-compliant, marketplace-drift` |
+| `fixtures/input-broken-skill.md` (no SKILL.md, code in src/) | 1-2 across most dims | `broken` |
 
 ### T4 — Migration trigger evaluation
 6 fixed scenarios:
@@ -50,7 +50,7 @@
 - Negative case: do not rename `references/` to `docs/` — references/ is canonical
 
 ### T6 — Schema validation
-- Canonical skill structure validates against `assets/skill-structure.json`
+- Canonical skill structure validates against `schemas/skill-structure.json`
 - Skill missing required files fails validation with specific paths cited
 - Negative test: a skill nested under `plugins/<name>/skills/<name>/` fails validation (the wrapper is forbidden)
 
@@ -66,7 +66,7 @@
 ### T8 — Anthropic-convention enforcement (new in v0.3.0)
 - Input: a skill at `plugins/my-skill/skills/my-skill/SKILL.md` (the old wrapped form)
 - Expected: audit returns `broken` with the recommended fix "flatten to skills/my-skill/SKILL.md"
-- Negative: a skill at `skills/my-skill/SKILL.md` (flat) returns `semantically-healthy` (other dims permitting)
+- Negative: a skill at `skills/my-skill/SKILL.md` (flat) returns `spec-compliant + marketplace-ready` (other dims permitting)
 
 ## Acceptance rubric per artifact
 
