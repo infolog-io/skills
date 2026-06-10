@@ -1,7 +1,7 @@
 {
   "name": "claude-pip",
   "version": "0.3.0",
-  "description": "Performance Improvement Plan for Claude. Five triggers covering a rule's full lifecycle. CLAUDE PIP / LOCAL PIP capture rules (master or directory-scoped). OFF THE PIP removes by id or keyword. PRUNE THE PIP audits the rules; default verdict is keep (carry-forward is the point). PROMOTE THE PIP graduates stable rules to canonical homes (CLAUDE.md, DESIGN.md, user-global) — the user picks which. Every rule wrapped in HTML-comment markers so it can be removed mechanically.",
+  "description": "Use when a message contains any of the all-caps triggers CLAUDE PIP, LOCAL PIP, OFF THE PIP, PRUNE THE PIP, or PROMOTE THE PIP (lowercase does not activate), or when the user asks to audit, prune, graduate, or remove PIP rules — e.g. \"audit the PIP\", \"prune PIP before compact\", \"graduate a PIP rule\". Covers capturing, scoping, removing, auditing, and promoting deterministic behavioral rules in CLAUDE-PIP.md / CLAUDE.md.",
   "author": {
     "name": "Information Logistics",
     "url": "https://github.com/infolog-io"

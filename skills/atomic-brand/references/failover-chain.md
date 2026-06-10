@@ -63,8 +63,10 @@ Extract:
 - Typeface families (from rendered text if visible)
 - Approximate spacing rhythm (if a layout is visible)
 
-Tag every extracted value as `inferred:image`. Audit confidence drops to
-`low` automatically because the inference may misrepresent intent.
+Tag every extracted value as `inferred:image`. Audit confidence is
+`medium` — the inference may misrepresent intent, so the verdict is
+capped at `drifting` until the user formalizes explicit tokens (see
+"Confidence implications" below).
 
 Emit a `proposed-tokens.css` containing the inferred tokens with
 comments explaining their derivation. Recommend the user review and

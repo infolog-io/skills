@@ -36,6 +36,8 @@ Acceptance criteria:
 | `result` | Worker | Work complete; payload is the deliverable or PR link |
 | `error` | Worker or Conductor | Something went wrong; payload names the error and recovery |
 | `yolo-dispatch` | Conductor | YOLO-mode dispatch without confirm; logged for audit trail |
+| `yolo-triage` | Conductor | YOLO-mode triage action (labels/board assignment applied without confirm); logged for audit trail |
+| `yolo-disabled` | Conductor | YOLO auto-disabled (or user-disabled); payload names the trigger |
 | `stale-release` | Conductor / audit | TTL expired; lock auto-released |
 
 Other event types may be added in v0.2; consumers MUST ignore unknown

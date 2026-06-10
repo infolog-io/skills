@@ -24,11 +24,15 @@
 - Output: `frequency: 3 quotes across N sources`
 
 ### T3 — Confidence scoring
+Per the canonical threshold table in `prompts/cluster-and-score.md`:
+
 | Evidence pattern | Expected confidence |
 |---|---|
 | 1 source, 1 quote | low |
-| 3 sources, 3+ quotes, same role | medium |
-| 5+ sources, 5+ quotes, ≥2 distinct roles | high |
+| 3 sources, 3+ quotes, same role | low (single role) |
+| 3 sources, 3+ quotes, ≥2 distinct roles | medium |
+| 5+ sources, 5+ quotes, ≥2 distinct roles, ≥1 measurable outcome quote | high |
+| medium base, but 2 of 3 dimensions not-yet-evidenced | low (dimension downgrade) |
 
 ### T4 — Verdict classification
 6 fixed scenarios with known correct verdicts:
@@ -64,7 +68,13 @@
   - Verdict checked
 
 ### T8 — Trigger phrase activation
-For each trigger in SKILL.md, the skill description must contain language a model would match on. Verified by reading SKILL.md frontmatter and confirming each trigger phrase appears or maps clearly.
+For each trigger in SKILL.md (including "analyze these interviews" and "turn these transcripts/tickets into requirements"), the skill description must contain language a model would match on. Verified by reading SKILL.md frontmatter and confirming each trigger phrase appears or maps clearly.
+
+### T9 — Validation mode
+- Input: build hypothesis only, no evidence supplied
+- Expected: skill asks for evidence inputs (interviews, tickets, surveys, analytics); when the user confirms none exist, it runs reverse mode on the brief and issues verdict = unvalidated with concrete `next_actions`
+- Input: build hypothesis plus interview transcripts
+- Expected: discovery pipeline runs on the transcripts scoped to the hypothesis; verdict step compares the hypothesis to the evidenced job
 
 ## Acceptance rubric per prompt file
 

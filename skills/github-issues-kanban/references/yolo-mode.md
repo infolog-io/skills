@@ -22,18 +22,25 @@ damage.
 
 ## How to enable
 
-The skill exposes YOLO mode in three layers (most specific wins):
+The skill exposes YOLO mode in three layers. **Precedence is explicit:
+per-dispatch > board > session.** A layer that says nothing falls
+through to the next; the most specific explicit setting wins.
 
-1. **Per-dispatch flag**: a single dispatch can be YOLO'd via prompt
-2. **Board-level flag**: a board carries `yolo:enabled` label → all dispatches against it are YOLO
+1. **Per-dispatch flag**: a single dispatch can be YOLO'd (or forced confirm) via prompt
+2. **Board-level flag**: the board's designated **board-config issue**
+   (one pinned issue per board holding board settings) carries the repo
+   label `yolo:enabled` → dispatches against that board are YOLO
 3. **Session-level flag**: the conductor session is in YOLO mode → applies to all boards
+
+**Hard exception: `priority:p0` issues ALWAYS require confirm,
+regardless of any YOLO layer.** No flag at any level bypasses this.
 
 Examples:
 
 ```
-"Dispatch the next 5 issues from board X in YOLO mode"        ← per-dispatch
-"Add yolo:enabled label to board X"                            ← board-level
-"Enable YOLO mode for this session and run until done"        ← session-level
+"Dispatch the next 5 issues from board X in YOLO mode"            ← per-dispatch
+"Add yolo:enabled to board X's board-config issue"                ← board-level
+"Enable YOLO mode for this session and run until done"            ← session-level
 ```
 
 ## What YOLO bypasses
@@ -49,6 +56,7 @@ What YOLO does NOT bypass:
 - Acceptance-criteria verification before result (worker still must satisfy)
 - Schema validation on events
 - Output-type checks (PR vs. comment as labeled)
+- The `priority:p0` confirm requirement (p0 always confirms)
 
 YOLO removes the human's pre-dispatch sign-off. It does not remove the
 machine's safety rails.
@@ -75,10 +83,12 @@ The audit trail enables forensic review. If a YOLO dispatch caused
 problems:
 
 ```bash
-# Find all YOLO dispatches in a board
-gh issue list --label "yolo:enabled" \
-  --json number,title,comments \
-  --jq '.[] | .comments[] | select(.body | contains("yolo-dispatch"))'
+# Confirm board-level YOLO was on: find the board-config issue
+gh issue list --label "yolo:enabled" --json number,title
+
+# Find all YOLO dispatches (events live on the dispatched issues)
+gh issue list --state all --json number,comments \
+  --jq '.[] | .comments[] | select(.body | contains("<!-- event: yolo-dispatch"))'
 ```
 
 For each, you can:
@@ -143,9 +153,11 @@ Board: production-issues
 Issue: #200 "Fix billing bug causing double charges"
        Labels: size:s priority:p0 agent-output:pr
 
-YOLO mode is OFF for this board. Even if the session is in YOLO mode,
-the board doesn't carry yolo:enabled and the issue is priority:p0 →
-conductor requires confirm.
+The session is in YOLO mode. The board-config issue carries no
+yolo:enabled label, so the board layer says nothing and the session
+flag would apply (precedence: per-dispatch > board > session) — BUT
+the issue is priority:p0, and p0 ALWAYS requires confirm regardless of
+any YOLO layer.
 
 Confirm-gate fires with extra warning: "This issue affects production
 billing. Are you sure?"
@@ -157,6 +169,6 @@ billing. Are you sure?"
 |---|---|
 | Enabling YOLO and walking away on critical-path work | Loss of human-in-the-loop; recovery may be costly |
 | Using YOLO to skip confirms because confirms are annoying | Confirms exist for a reason; YOLO is a tool, not a UX patch |
-| Forgetting to add `yolo:enabled` to a low-stakes board | Loses parallelism benefit; confirm-fatigue sets in |
+| Forgetting to add `yolo:enabled` to a low-stakes board's board-config issue | Loses parallelism benefit; confirm-fatigue sets in |
 | Suppressing yolo-dispatch audit comments | Defeats the recovery path |
 | Skipping the reason field | Audit trail is useless without it |

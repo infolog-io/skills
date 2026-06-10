@@ -5,9 +5,10 @@ Used by the scaffold prompt to generate a new skill skeleton.
 
 ## Tree
 
-Flat structure at `skills/<name>/` — matches the Anthropic Agent Skills
-convention. All marketplace files (plugin.json, README, TESTS) live in
-the same folder as SKILL.md. No wrapper.
+Flat structure at `skills/<name>/` — matches the canonical layout in
+this skill's SKILL.md (the single canonical copy of the tree). All
+marketplace files (plugin.json, README, TESTS) live in the same folder
+as SKILL.md. No wrapper.
 
 ```
 skills/{{skill_name}}/
@@ -15,18 +16,16 @@ skills/{{skill_name}}/
 │   └── plugin.json
 ├── SKILL.md
 ├── README.md
-├── TESTS.md
-├── references/
-│   └── .gitkeep
-├── prompts/
-│   └── .gitkeep
-├── templates/
-│   └── .gitkeep
-├── schemas/
-│   └── .gitkeep
-└── fixtures/
-    └── .gitkeep
+└── TESTS.md
 ```
+
+Sub-folders are gated by `{{profile}}`:
+
+- `single-rule` — no sub-folders.
+- `full-shape` — emit only the folders the skill's content actually
+  needs (at least one of `references/`, `scripts/`, `assets/`, or an
+  accepted convention folder: `prompts/`, `templates/`, `schemas/`,
+  `fixtures/`). Never emit empty `.gitkeep` placeholder folders.
 
 ## File: `.claude-plugin/plugin.json`
 
@@ -111,8 +110,8 @@ Word budget: ≤ 200.
 ---
 name: {{skill_name}}
 description: >
-  {{description}}
-  Activates on {{trigger_1}}, {{trigger_2}}, or "/{{skill_name}}".
+  Use when {{triggering_condition}}. Triggers: "{{trigger_1}}",
+  "{{trigger_2}}", "/{{skill_name}}", or {{catch_all_condition}}.
 ---
 
 # {{skill_name}}
@@ -144,9 +143,14 @@ See `prompts/{{mode_1_prompt_file}}.md`.
 | `{{trigger_2}}` | {{mode_2_name}} |
 ```
 
+The description must be triggers-only — "Use when..." style, third
+person, <500 chars, with quoted activation phrases and NO workflow or
+output summary. See the description rule in
+`prompts/scaffold-new-skill.md`.
+
 ## File placeholders for each canonical folder
 
-| Folder | First file (created later, not by scaffold) |
+| Folder | First file (added when the folder is emitted) |
 |---|---|
 | `references/` | A foundational reference (theory or rule set) |
 | `prompts/` | A verb-led action file |

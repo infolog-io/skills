@@ -11,27 +11,9 @@ Skills live at `skills/<skill-name>/` at the marketplace repo root. Each
 skill folder carries both its spec-required files AND its marketplace
 manifest. There is no wrapper directory.
 
-```
-<marketplace-repo>/
-├── .claude-plugin/
-│   └── marketplace.json                ← marketplace manifest (lists skills)
-├── skills/                             ← all skills live here
-│   └── <skill-name>/
-│       ├── .claude-plugin/
-│       │   └── plugin.json             ← plugin manifest (INSIDE the skill)
-│       ├── SKILL.md                    ← required by spec
-│       ├── README.md                   ← marketplace listing (≤200 words)
-│       ├── TESTS.md                    ← end conditions + test cases
-│       ├── scripts/                    ← spec-canonical, optional
-│       ├── references/                 ← spec-canonical, optional
-│       ├── assets/                     ← spec-canonical, optional
-│       ├── prompts/                    ← convention, optional
-│       ├── templates/                  ← convention, optional
-│       ├── schemas/                    ← convention, optional
-│       └── fixtures/                   ← convention, optional
-├── README.md
-└── LICENSE
-```
+The canonical tree lives in SKILL.md ("Canonical layout") — that is the
+single authoritative copy. This reference describes the role of each
+entry in that tree.
 
 This mirrors Anthropic's reference repo. The only addition is
 `.claude-plugin/plugin.json` inside each skill folder for Claude Code
@@ -161,17 +143,6 @@ skills/docx/
 
 ### Full-shape skill in this marketplace
 
-```
-skills/<skill-name>/
-├── .claude-plugin/
-│   └── plugin.json
-├── SKILL.md
-├── README.md          ← ≤200 words
-├── TESTS.md
-├── references/        ← spec-canonical
-├── assets/            ← spec-canonical (templates, schemas, fixtures all live here in revised standard)
-├── prompts/           ← convention
-├── templates/         ← convention
-├── schemas/           ← convention
-└── fixtures/          ← convention
-```
+See the canonical tree in SKILL.md ("Canonical layout"). A full-shape
+skill carries the four required files plus whichever supporting folders
+its content needs (at least one).

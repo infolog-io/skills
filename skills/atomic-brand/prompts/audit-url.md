@@ -70,11 +70,11 @@ Collect all findings; deduplicate where the same root cause produces multiple ta
 
 Apply the rubric in `references/audit-rubric.md`:
 
-- Score each of 8 dimensions
-- Apply verdict thresholds:
-  - `system-healthy` — all ≥4
-  - `drifting` — any 2-3, none at 1
-  - `broken` — any 1 OR ≥3 dims at 2
+- Score each of 8 dimensions against its score anchors
+- Apply the verdict thresholds from the rubric's "Verdict thresholds"
+  table (single authority — do not restate them here)
+- If the brand source is image or URL, cap the verdict at `drifting`
+  per `references/failover-chain.md`
 
 ### Phase 5 — Emit downstream artifact
 

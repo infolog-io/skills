@@ -35,8 +35,9 @@ A verdict object:
 
 ## Procedure
 
-1. Compute confidence from `evidence_summary` per the threshold table in
-   `cluster-and-score.md`.
+1. Compute confidence from `evidence_summary` per the canonical threshold
+   table in `cluster-and-score.md` — including its dimension-downgrade rule.
+   Do not restate or re-derive thresholds here.
 2. Count dimensions populated (functional always; emotional + social
    evidenced or not-yet-evidenced).
 3. Count outcome statements that have a measurable unit.

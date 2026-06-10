@@ -1,17 +1,14 @@
 ---
 name: atomic-brand
 description: >
-  Audits web projects against atomic design discipline and brand-token
-  coherence. Detects token violations, atomic hierarchy drift, naming by
-  appearance, scattered components, brand drift, and scale violations.
-  Three verdicts: system-healthy (ship), drifting (refactor against
-  plan), broken (stop; build missing tokens and patterns first).
-  Includes failover chain for brand detection: explicit tokens → parse
-  image → scrape live URL. Activates on "atomic audit", "brand audit",
-  "design system audit", "audit my components", "is this on-brand",
-  "find duplicate components", "consolidate components", or
-  "/atomic-brand". Auto-suggests when the user pastes a URL with a
-  visible `tokens.css` or `tailwind.config` nearby.
+  Use when auditing a web project's design system — token compliance,
+  atomic hierarchy, naming, duplication, brand drift — before a redesign
+  ships, when reviewing a component library PR, or on inherited frontend
+  code. Activates on "atomic audit", "brand audit", "design system
+  audit", "audit my components", "is this on-brand", "find duplicate
+  components", "consolidate components", "what tokens am I missing", or
+  "/atomic-brand". Also use when tokens exist but components look
+  inconsistent.
 ---
 
 # atomic-brand
@@ -20,89 +17,53 @@ description: >
 
 Sit at the design-system layer. Block scattered components, hardcoded
 values, brand drift, and naming-by-appearance before they ship. Emit a
-scored audit, a refactor plan (when drifting), or a build-out plan (when
-broken).
+scored audit, plus a refactor plan (drifting) or a build-out plan
+(broken). Web medium first (CSS, HTML, React/Vue/Svelte); native, TUI,
+print, and email spin out as sibling skills when migration triggers
+fire — see TESTS.md.
 
-Web medium first. Native (Swift, Compose), TUI, print, and email are
-candidates to become sibling skills when migration triggers fire — see
-TESTS.md.
+## When NOT to use
+
+- Greenfield projects with no components yet — nothing to audit
+- Non-web design systems (native, print, email) — out of scope v0.1.0
+- Pure backend repos with no UI surface
 
 ## Modes
 
-### Audit mode (default)
+### Audit (default)
 
-Trigger: "atomic audit", "brand audit", "/atomic-brand"
+Run the Operating flow below. "Is this on-brand" / "brand drift"
+requests run Audit mode with brand-coherence emphasis
+(`prompts/audit-brand-coherence.md`).
 
-Behavior:
-1. Detect brand-token source via the failover chain
-2. Walk the component library (CSS, HTML, React/Vue/Svelte files)
-3. Apply the 8-dimension rubric per `references/audit-rubric.md`
-4. Emit the Atomic Brand Audit with findings
-5. Issue verdict; emit downstream artifact (refactor plan or build-out plan)
+### Refactor
 
-### Refactor mode
+Run the audit, then focus `refactor-plan.md` on the highest-leverage
+consolidations and renames. If the audit verdict is `broken`, the
+build-out plan takes precedence.
 
-Trigger: "find duplicate components", "consolidate components"
+### Build-out
 
-Behavior:
-1. Run audit
-2. Focus the refactor plan on the highest-leverage consolidations and renames
-3. Emit `refactor-plan.md` ordered by leverage
+Automatic when verdict is `broken`. Emit `build-out-plan.md` listing
+required tokens, atoms, molecules, organisms, sequenced by T-shirt size.
 
-### Build-out mode
+## Brand detection (failover chain)
 
-Trigger: automatic when verdict is `broken`
-
-Behavior:
-1. Identify which tokens and patterns are missing
-2. Emit `build-out-plan.md` listing required tokens, atoms, molecules, organisms
-3. Sequence the build by T-shirt size (XS → XL) where applicable
-
-## The failover chain (brand detection)
-
-Three sources of truth, tried in order:
-
-| Step | Source | Confidence |
-|---|---|---|
-| 1 | Explicit token file (`tokens.css`, `tailwind.config.{js,ts}`, `tokens.json`, `theme.ts`) | high |
-| 2 | Brand asset image (logo, screenshot, style guide PDF) | medium |
-| 3 | Scrape live URL — extract computed styles from rendered pages | low |
-
-If step 1 finds a token file, use it. Skip 2 and 3.
-If step 1 fails, try step 2.
-If step 2 fails, try step 3.
-If all three fail, verdict = `broken`; build-out plan starts with "no
-brand tokens defined."
-
-See `references/failover-chain.md`.
+Sources of truth, tried in order: explicit token file (confidence high)
+→ brand asset image (medium) → live URL scrape (low). If all three
+fail, verdict = `broken`; the build-out plan starts with "no brand
+tokens defined." See `references/failover-chain.md`.
 
 ## The 8 audit dimensions
 
-| # | Dimension | What it scores |
-|---|---|---|
-| 1 | Token compliance | % of color/spacing/type values using tokens vs. hardcoded |
-| 2 | Atomic discipline | Honest hierarchy: atoms compose into molecules compose into organisms |
-| 3 | Naming integrity | Components named by role, not appearance |
-| 4 | Brand coherence | Visual identity consistent across the surface |
-| 5 | Scale discipline | Values come from defined scales (spacing, type, color) |
-| 6 | Composition health | No cross-tree reaches; clean dependency graph |
-| 7 | Duplication | Minimum number of components per job |
-| 8 | Variant clarity | Variants are declared and named, not implicit |
-
-Each scored 1-5. Verdicts: `system-healthy` (all ≥4), `drifting` (any 2-3),
-`broken` (any 1 OR ≥3 dims at 2).
-
-See `references/audit-rubric.md`.
+Token compliance · atomic discipline · naming integrity · brand
+coherence · scale discipline · composition health · duplication ·
+variant clarity — each scored 1-5. `references/audit-rubric.md` is the
+single authority for score anchors and verdict thresholds.
 
 ## Failure-mode taxonomy
 
-Every finding gets one tag from this set:
-
-`atomic_violation` · `token_violation` · `naming_violation` ·
-`brand_drift` · `inconsistency` · `composition_violation` ·
-`scale_violation` · `duplication_violation`
-
-See `references/failure-modes.md`.
+Every finding gets one tag; see `references/failure-modes.md`.
 
 ## Verdict gates
 
@@ -111,6 +72,10 @@ See `references/failure-modes.md`.
 | `system-healthy` | Ship |
 | `drifting` | Apply refactor plan, re-audit |
 | `broken` | Stop; apply build-out plan; re-audit when minimum tokens exist |
+
+Image- or URL-sourced audits cap at `drifting` until tokens are
+formalized. Token compliance is the floor: polished but hardcoded is
+`drifting`, not `system-healthy`.
 
 ## Operating flow
 
@@ -129,23 +94,23 @@ See `references/failure-modes.md`.
 
 ## References
 
-- `references/atomic-design.md` — Brad Frost's atomic design distillation
+- `references/atomic-design.md` — atomic design distillation
 - `references/brand-tokens.md` — token taxonomy by category
-- `references/composition-rules.md` — dependency-graph rules; what imports what
-- `references/audit-rubric.md` — 8-dimension scored rubric
-- `references/failover-chain.md` — brand detection ordering
-- `references/failure-modes.md` — tagged violation taxonomy
+- `references/composition-rules.md` — dependency-graph rules
+- `references/audit-rubric.md` — scored rubric; verdict thresholds
+- `references/failover-chain.md` — brand detection and confidence
+- `references/failure-modes.md` — violation tag taxonomy
 
 ## Prompts
 
-- `prompts/audit-url.md` — orchestrator; runs the full flow
-- `prompts/audit-component-library.md` — codebase walk and classify
-- `prompts/audit-token-compliance.md` — token vs. hardcoded scoring
-- `prompts/audit-brand-coherence.md` — visual identity audit
+- `prompts/audit-url.md` — orchestrator (full flow)
+- `prompts/audit-component-library.md` — walk and classify
+- `prompts/audit-token-compliance.md` — token vs. hardcoded
+- `prompts/audit-brand-coherence.md` — visual identity
 - `prompts/parse-image-for-brand.md` — failover step 2
 - `prompts/scrape-for-brand.md` — failover step 3
-- `prompts/refactor-plan.md` — drifting verdict downstream
-- `prompts/build-out-plan.md` — broken verdict downstream
+- `prompts/refactor-plan.md` — drifting downstream
+- `prompts/build-out-plan.md` — broken downstream
 
 ## Triggers
 
@@ -153,7 +118,7 @@ See `references/failure-modes.md`.
 |---|---|
 | `atomic audit`, `brand audit`, `/atomic-brand` | Audit |
 | `design system audit`, `audit my components` | Audit |
-| `is this on-brand`, `brand drift` | Brand coherence focus |
+| `is this on-brand`, `brand drift` | Audit (brand-coherence emphasis) |
 | `find duplicate components`, `consolidate components` | Refactor |
 | `what tokens am I missing`, `build out my design system` | Build-out |
 
@@ -161,18 +126,11 @@ See `references/failure-modes.md`.
 
 | Layer | Convention |
 |---|---|
-| Color tokens | Reads from `--color-*` CSS custom properties via project token files |
-| Type tokens | Reads from `--font-*` CSS custom properties; defers chart-specific or type-scale-specific audits to dedicated skills if present |
-| Output formats | Markdown audit + JSON conforming to `assets/audit-report-schema.json` + optional `refactor-plan.md` or `build-out-plan.md` |
-| Sizing | All emitted tasks use T-shirt sizes; consumers can re-size against their own rubric |
-
-## Scope (v0.1.0)
-
-Web only. CSS, HTML, React, Vue, Svelte component libraries. Native and
-other mediums spin out as sibling skills when migration triggers fire.
-See TESTS.md for the trigger table.
+| Tokens | Reads `--color-*` / `--font-*` custom properties from project token files; defers chart/type-scale audits to dedicated skills |
+| Output | Markdown audit + JSON per `assets/audit-report-schema.json` + optional plan artifact |
+| Sizing | Emitted tasks use T-shirt sizes |
 
 ## Self-application
 
-This skill must pass the canonical skill-structure audit at ≥4 on every
-dimension (spec-compliant + marketplace-ready).
+Must pass the canonical skill-structure audit at ≥4 on every dimension
+(spec-compliant + marketplace-ready).

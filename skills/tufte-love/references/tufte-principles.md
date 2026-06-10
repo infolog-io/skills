@@ -190,3 +190,32 @@ Common lies:
 - Visual emphasis that does not match the data.
 
 Truth is not only about accurate numbers. It is also about honest context.
+
+## 11. Hard standards
+
+Pass/fail constraints, not preferences. Several enforce the common lies
+above as explicit rules.
+
+The graphic must not:
+
+- Hide the denominator.
+- Confuse correlation with causation.
+- Use area or volume to encode linear values unless mathematically correct.
+- Make decorative elements more prominent than data.
+- Require a legend when direct labeling is feasible.
+- Use color as the only channel for meaning.
+- Remove context needed to interpret the trend.
+- Aggregate away the important variation.
+- Use a map when the geography is irrelevant.
+- Use animation where a static comparison would be clearer.
+
+The graphic should:
+
+- Expose comparisons quickly.
+- Put labels near the evidence.
+- Use consistent scales across comparable panels.
+- Preserve outliers unless there is a stated analytical reason.
+- Show uncertainty when uncertainty matters.
+- Support both overview and detail.
+- Treat white space as structure, not filler.
+- Make the important thing visually inevitable.

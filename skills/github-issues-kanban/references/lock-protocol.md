@@ -16,37 +16,66 @@ acting agent, and the timestamp is in the future.
 
 ## Claim sequence (optimistic concurrency)
 
+This file is the **single source of truth** for the claim sequence.
+`prompts/claim-issue.md` and `fixtures/expected-claim-sequence.md`
+follow it; they do not redefine it.
+
 ```
 1. Read issue state (labels)
 2. Verify: status:claimable present, claimed-by:* absent, no unresolved deps
 3. If verify fails → not claimable; report to conductor; pick another issue
-4. Write three labels in one operation:
+4. Provision the per-value labels (idempotent; `gh issue edit --add-label`
+   errors if a label doesn't exist in the repo):
+     gh label create "claimed-by:<self>" -f
+     gh label create "claim-expires:<now + ttl>" -f
+5. Write three labels in one operation:
      gh issue edit <id> \
        --remove-label status:claimable \
        --add-label status:claimed \
        --add-label claimed-by:<self> \
        --add-label claim-expires:<now + ttl>
-5. Re-read issue state
-6. Verify: exactly one claimed-by:* label present, and it is `claimed-by:<self>`
-7. If verify fails (someone else also added their claim before our re-read):
-   - Remove our own claimed-by:<self> label
-   - Remove our claim-expires:<ts>
-   - Restore status:claimable
-   - Post <!-- event: released --> comment ("conflict")
-   - Report to conductor; pick another issue
-8. If verify passes: the lock is held. Proceed to work.
+6. Re-read issue state
+7. Verify: exactly one claimed-by:* label present, and it is `claimed-by:<self>`
+8. If verify fails (>1 claimed-by:* — concurrent claim), apply the
+   deterministic tie-break: the claim whose claimed-by:* label sorts
+   EARLIEST alphabetically wins; every later-sorting claimant releases.
+   - If claimed-by:<self> sorts earliest: you win. Proceed as step 9
+     (the losers will remove their own labels).
+   - Otherwise you lose:
+     - Remove your own claimed-by:<self> label
+     - Remove your claim-expires:<ts> label
+     - Restore status:claimable ONLY if no other claimed-by:* remains
+       (normally the winner's claim is still present, so do NOT restore it)
+     - Post <!-- event: released --> comment ("conflict")
+     - Report to conductor; pick another issue
+9. If verify passes: the lock is held. Proceed to work.
 ```
 
-This is **optimistic concurrency** with **release-and-retry on conflict**.
-GitHub Issues is eventually consistent; we accept that two writes can
-happen near-simultaneously and resolve via post-write verification.
+This is **optimistic concurrency** with a **deterministic tie-break on
+conflict**. GitHub Issues is eventually consistent; we accept that two
+writes can happen near-simultaneously and resolve via post-write
+verification. Because the tie-break is deterministic, exactly one
+claimant wins — there is no livelock where both release.
 
 ## Release sequence (after work, or on block)
 
+Release ALWAYS removes `claimed-by:*` and `claim-expires:*`. The
+`claimed` and `result` events in the comment log preserve the audit
+trail; labels never retain claim history (a lingering `claimed-by:*`
+makes the issue unpickable under the task contract).
+
 ```
-1. (If work succeeded) Add status:ready-for-review or status:done; remove status:claimed; KEEP claimed-by:* for audit
-2. (If blocked) Add status:blocked; remove status:claimed; REMOVE claimed-by:* + claim-expires
-3. (If voluntary release) Remove status:claimed + claimed-by:* + claim-expires; restore status:claimable; post <!-- event: released --> comment
+1. (If work succeeded) Remove status:claimed + claimed-by:* + claim-expires:*;
+   add status:ready-for-review (or status:done if auto-mergeable).
+   This claimed → ready-for-review transition belongs to the WORKER;
+   the conductor only reconciles stale/orphaned states.
+2. (If blocked) Remove status:claimed + claimed-by:* + claim-expires:*; add status:blocked
+3. (If voluntary release) Remove status:claimed + claimed-by:* + claim-expires:*;
+   restore status:claimable; post <!-- event: released --> comment
+4. Cleanup (best-effort): delete your now-expired per-value claim-expires
+   labels from the repo to avoid label-list rot:
+     gh label delete "claim-expires:<ts>" --yes || true
+   (claimed-by:<agent-id> is stable across claims; keep it.)
 ```
 
 The lock is released the moment `status:claimed` is removed.
@@ -73,11 +102,15 @@ The conductor (and audit mode) checks `claim-expires:<ts>` on every
 
 The issue is now claimable by any agent.
 
-## Heartbeat (optional, v0.2)
+## Heartbeat (extending the claim)
 
-For long-running tasks, a worker can extend its claim by updating
-`claim-expires:<new-ts>`. v0.1.0 does not require this; v0.2 may
-mandate periodic heartbeats for tasks over 30 min.
+A worker extends its claim by replacing `claim-expires:<old-ts>` with
+`claim-expires:<new-ts>` (provisioning the new label first via
+`gh label create -f`), alongside a `progress` event.
+
+Heartbeat is **REQUIRED for tasks expected to exceed half the TTL**;
+otherwise it is optional. (Identical rule in `worker-protocol.md`.)
+A worker that cannot extend must surrender via a `released` event.
 
 ## Conflict examples
 
@@ -91,23 +124,27 @@ T3: Agent A works.
 T4: Agent A posts result; releases lock.
 ```
 
-### Example 2 — conflict, A wins
+### Example 2 — conflict, deterministic tie-break
 
 ```
-T0: Agent A reads #42. status:claimable.
-T0: Agent B reads #42. status:claimable.
+T0: Agent A (claimed-by:agent-a) reads #42. status:claimable.
+T0: Agent B (claimed-by:agent-b) reads #42. status:claimable.
 T1: Agent A writes claim labels.
 T2: Agent B writes claim labels.
-T3: Agent A re-reads. Sees claimed-by:A AND claimed-by:B.
-    Agent A's re-read happens BEFORE B's write completes — A sees only its own claim. A wins.
-T3: Agent B re-reads. Sees claimed-by:A AND claimed-by:B.
-    B detects conflict (more than one claimed-by:*). B releases B's claim.
-T4: Agent A holds lock; B picks another issue.
+T3: Both re-read. Both see claimed-by:agent-a AND claimed-by:agent-b.
+T4: Tie-break: "claimed-by:agent-a" sorts earlier alphabetically → A wins.
+    A proceeds to work without touching labels.
+T4: B releases: removes claimed-by:agent-b and B's claim-expires label;
+    does NOT restore status:claimable (A's claim remains);
+    posts <!-- event: released --> ("conflict").
+T5: Agent A holds lock; B picks another issue.
 ```
 
 Conflict resolution requires checking the count of `claimed-by:*` labels
-after the write. If >1, the losing agent (deterministically chosen —
-e.g., the one whose claim sorts later alphabetically) releases.
+after the write. If >1, every claimant applies the same tie-break: the
+earliest-sorting `claimed-by:*` wins; all later-sorting claimants
+release. Both sides compute the same winner from the same label set, so
+exactly one claim survives.
 
 ## When the lock fails
 

@@ -34,37 +34,27 @@ the verdict is `broken` regardless of other dimensions:
 - **Single-rule skill**: SKILL.md is under 200 lines AND has no
   sub-folders (no `references/`, `scripts/`, `assets/`, or convention
   folders).
-- **Full-shape skill**: anything else.
+- **Full-shape skill**: anything else. A full-shape skill SHOULD have
+  at least one supporting folder. A 200–500-line SKILL.md with no
+  sub-folders is a drifting full-shape skill: score S3 at 3, emit the
+  migration trigger "extract references/", verdict at best `spec-drift`.
 
 The profile changes which dimensions are scored strictly. Single-rule
 skills are not penalized for absent sub-folders.
 
 ### 3. Score skill-layer dimensions (spec)
 
-| Dimension | Check |
-|---|---|
-| S1. SKILL.md presence/validity | File exists; YAML frontmatter; `name` and `description` valid per spec |
-| S2. Naming conformance | `name` matches parent dir; agrees with `plugin.json`; kebab-case; 1-64 chars; no leading/trailing/consecutive hyphens |
-| S3. Body discipline | Under 500 lines; references one level deep |
-| S4. Folder discipline | Only spec folders, OR non-spec folders documented and accepted per `references/spec-vs-conventions.md` |
+Score S1–S4 per `references/audit-rubric.md` (the canonical copy of the
+dimension definitions and per-dimension scoring anchors).
 
 ### 4. Score plugin-layer dimensions (marketplace)
 
-| Dimension | Check |
-|---|---|
-| P1. Plugin manifest | `.claude-plugin/plugin.json` present; `name`/`version`/`description` valid |
-| P2. README discipline | `README.md` present; ≤200 words; what/when/install |
-| P3. TESTS.md presence/quality | `TESTS.md` present; end conditions; ≥3 test cases; out-of-scope listed |
-| P4. Migration health | No folders meeting migration triggers without action |
+Score P1–P4 per `references/audit-rubric.md`.
 
 ### 5. Apply verdict thresholds
 
-| Verdict | Rule |
-|---|---|
-| `spec-compliant + marketplace-ready` | All 4 skill-layer dims ≥4 AND all 4 plugin-layer dims ≥4 |
-| `spec-compliant, marketplace-drift` | Skill-layer all ≥4, plugin-layer has ≥1 at 2-3 |
-| `spec-drift` | ≥1 skill-layer dim at 2-3, none at 1 |
-| `broken` | Any dim at 1 |
+Apply the four-verdict threshold table in `references/audit-rubric.md`
+exactly.
 
 ### 6. Emit findings
 

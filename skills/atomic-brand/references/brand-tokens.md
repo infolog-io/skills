@@ -140,8 +140,11 @@ falls back to:
    brand asset
 2. URL-scrape path: extract computed styles from rendered pages
 
-In both fallback paths, the audit's confidence is `low` and the verdict
-favors `broken` with a build-out plan that starts: "define `tokens.css`."
+Fallback confidence: image-parse = `medium`, URL-scrape = `low` (see
+`references/failover-chain.md`). In both paths the verdict is capped at
+`drifting` until tokens are formalized; only when no source exists at
+all is the verdict `broken`, with a build-out plan that starts: "define
+`tokens.css`."
 
 ## Exceptions
 

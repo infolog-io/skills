@@ -12,7 +12,7 @@
   "plugins": [
     {
       "name": "claude-pip",
-      "description": "Performance Improvement Plan for Claude. Five triggers covering a rule's full lifecycle: CLAUDE PIP / LOCAL PIP capture, OFF THE PIP removes, PRUNE THE PIP audits (default verdict keep), PROMOTE THE PIP graduates stable rules to canonical homes (user picks which). Every rule wrapped in HTML-comment markers.",
+      "description": "Use when a message contains any of the all-caps triggers CLAUDE PIP, LOCAL PIP, OFF THE PIP, PRUNE THE PIP, or PROMOTE THE PIP (lowercase does not activate), or when the user asks to audit, prune, graduate, or remove PIP rules — e.g. \"audit the PIP\", \"prune PIP before compact\", \"graduate a PIP rule\". Covers capturing, scoping, removing, auditing, and promoting deterministic behavioral rules in CLAUDE-PIP.md / CLAUDE.md.",
       "source": "./skills/claude-pip",
       "version": "0.3.0",
       "category": "engineering",
@@ -22,7 +22,7 @@
     },
     {
       "name": "tufte-love",
-      "description": "Tufte-style audits, redesigns, and reviews for data visualizations, dashboards, and quantitative UI.",
+      "description": "Use when designing, reviewing, or refactoring data visualizations, dashboards, charts, tables, maps, reports, product metrics views, or quantitative UI — including when a user calls one cluttered, busy, ugly, confusing, or hard to read, asks to simplify or clean it up, or wants chart component code reviewed. Not for decorative illustration, branding, or non-quantitative UI polish.",
       "source": "./skills/tufte-love",
       "version": "0.3.0",
       "category": "design",
@@ -32,7 +32,7 @@
     },
     {
       "name": "jtbd-prd",
-      "description": "Validate customer need before you build. Produces a Job Article that functions as PRD framing, grounded in Jobs-to-be-Done evidence.",
+      "description": "Use when the user is about to build, scope, or write a PRD or spec for a feature, product, page, or skill and customer need is unproven. Activates on \"JTBD\", \"jobs to be done\", \"/jtbd-prd\", \"validate this\", \"should I build this\", \"is there a real need\", \"what job does this serve\", \"reverse JTBD\", \"analyze these interviews\", or \"turn these transcripts/tickets into requirements\". Also use when the user pastes a build proposal, feature brief, or hypothesis without supporting customer evidence.",
       "source": "./skills/jtbd-prd",
       "version": "0.1.0",
       "category": "engineering",
@@ -42,7 +42,7 @@
     },
     {
       "name": "estimatrix",
-      "description": "Two-axis sizing rubric for effort AND complexity. Effort as T-shirt (XS / S / M / L / XL / XXL); complexity as low / medium / high. Runs active conversational intake (jtbd-style) to fill missing scope and success criteria before sizing. Applies Karpathy's four code rules: state assumptions, ask if ambiguous, prefer simpler scope, require a success criterion.",
+      "description": "Use when the user asks for an estimate, sizing, or scoping call — \"estimate\", \"how long\", \"how much effort\", \"size this\", \"scope this\", \"/estimatrix\" — when a time-based or effort estimate is about to be stated, or when a proposal, plan, or task table contains an effort, time, duration, hours, or complexity column. Not for wall-clock scheduling (\"meet at 3pm\") or runtime/SLO measurements.",
       "source": "./skills/estimatrix",
       "version": "0.3.0",
       "category": "engineering",
@@ -52,7 +52,7 @@
     },
     {
       "name": "learn2kern",
-      "description": "Typography skill. Generates modular type scales (eight named ratios from Minor Second to Golden Ratio) with BODY and HEADINGS as separate token families, line-height bands, letter-spacing per band. Emits CSS custom properties and Tailwind theme.fontSize. Color slots reference atomic-brand tokens. Runs conversational intake when inputs are missing.",
+      "description": "Use when the user asks for a type scale, typography tokens, font sizes, modular scale, line height, letter-spacing/kerning defaults, or typographic hierarchy for a web project, or invokes \"/learn2kern\". Also use when choosing a scale ratio (Minor Third, Major Third, Golden Ratio) or pairing body and heading fonts. Runs conversational intake first if base size or ratio is not stated. Not for color tokens, font loading, or rendered previews.",
       "source": "./skills/learn2kern",
       "version": "0.1.0",
       "category": "design",
@@ -62,7 +62,7 @@
     },
     {
       "name": "semantic-organization",
-      "description": "Meta-skill that governs how every skill is structured. Codifies the Anthropic Agent Skills directory convention (skills/<name>/SKILL.md flat \u2014 no plugin wrapper), folder roles, naming rules, migration triggers. Scaffolds, audits, recommends migrations.",
+      "description": "Use when designing, scaffolding, auditing, renaming, or restructuring a skill in this marketplace. Triggers: \"scaffold a new skill\", \"add a skill\", \"create a skill\", \"/new-skill\", \"audit this skill\", \"/semantic-audit\", \"should this be a folder or its own skill\", \"rename this folder\", \"is this folder name semantic\", or any question about skill directory layout, folder roles, naming, or promoting a sub-folder to a sibling skill.",
       "source": "./skills/semantic-organization",
       "version": "0.3.0",
       "category": "engineering",
@@ -72,7 +72,7 @@
     },
     {
       "name": "atomic-brand",
-      "description": "Audits web projects against atomic design discipline and brand-token coherence. Detects token violations, atomic hierarchy drift, naming by appearance, scattered components, brand drift, and scale violations. Emits a scored audit plus a refactor plan or build-out plan. Failover chain: explicit tokens \u2192 image parse \u2192 URL scrape. Web medium first; native and other mediums spin out as sibling skills.",
+      "description": "Use when auditing a web project's design system — token compliance, atomic hierarchy, naming, duplication, brand drift — before a redesign ships, when reviewing a component library PR, or on inherited frontend code. Also use when tokens exist but components look inconsistent.",
       "source": "./skills/atomic-brand",
       "version": "0.1.0",
       "category": "design",
@@ -82,7 +82,7 @@
     },
     {
       "name": "github-issues-kanban",
-      "description": "Agent orchestration substrate built on GitHub Issues + Projects V2. Defines three concurrency primitives (access lock with TTL, dependency chain DAG, comment-based event bus) so multiple agents can claim and work tasks in parallel without conflict. Includes audit, triage, generate, list, and dispatch modes. Confirm-first by default; YOLO bypass available. Four archetype templates: personal-todo, writing-pipeline, oss-triage, sprint-planning. Protocol is agent-agnostic.",
+      "description": "Use when the user wants agent-driven task orchestration on GitHub Issues/Projects V2 — says \"kanban\", \"board\", \"dispatch next\", \"claim issue\", \"triage my inbox\", \"audit my board\", \"list boards\", \"set up a sprint board\", \"what should I work on\", \"/github-issues-kanban\", mentions GitHub Projects, or asks for multiple agents working issues in parallel. Also when claims go stale, dispatches conflict, or a board needs a health check before unattended runs.",
       "source": "./skills/github-issues-kanban",
       "version": "0.1.0",
       "category": "engineering",

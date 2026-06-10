@@ -150,26 +150,9 @@ Annotation should explain evidence, not decorate it.
 | Gauge chart | Bullet chart or target line |
 | Donut chart | Labeled bar or compact table |
 
-## Implementation standards
-
-When coding charts:
-
-- Keep data transformation separate from rendering.
-- Name variables by analytical meaning, not visual appearance.
-- Make scale domains explicit when comparison depends on them.
-- Use consistent scale domains across small multiples.
-- Add accessible text summaries.
-- Ensure tooltips are not the only place where values appear.
-- Avoid animation that changes interpretation.
-- Test with edge cases:
-  - zero values
-  - null values
-  - outliers
-  - long labels
-  - narrow screens
-  - many categories
-  - single-category data
-  - negative values
+For implementation standards when coding charts (transform/render
+separation, explicit scale domains, edge-case testing), see the
+Implementation table in `references/chart-rules-extras.md`.
 
 ## Worked example: dashboard pie chart → sorted dot plot
 
@@ -211,6 +194,8 @@ Tufte Love Audit
 - Visual noise: 5 — single fill, no gradients, no borders
 - Chart-type fit: 5 — dot plot fits ranking-with-magnitude better than pie
 - Interaction: 3 — static; tooltip could surface plan-level breakdown
+- Color: 5 — single neutral fill; meaning survives monochrome
+- Formatting: 4 — consistent `$24K` abbreviation; reference line subtle but not labeled inline
 - Recommended next change: split into small multiples by cohort
 - Confidence: High
 ```

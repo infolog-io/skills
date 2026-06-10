@@ -33,6 +33,7 @@ releases the lock.
    - claimed-by:<agent_id> present
    - claim-expires:* in the future
 3. If verify fails (lock lost):
+   - Post a plain `lost-claim` note (NOT a protocol event; mutate no labels)
    - Return {reported: false, reason: "lock-lost"}
    - Conductor must redispatch
 4. Verify acceptance criteria are met:
@@ -44,17 +45,22 @@ releases the lock.
    - Worker should post a progress event explaining and continue, or post blocked
 6. If output type is `pr` or `both`:
    - Confirm PR exists and is linked to issue (or open one)
-7. Post the result event comment:
+7. Re-read the lock immediately before posting (steps 4-6 take time);
+   if the claim is gone, go to step 3 (lost-claim note; no mutation).
+   Then post the result event comment:
    <!-- event: result | agent: <agent_id> | ts: <iso-now> -->
    <payload markdown>
    ```json
    { "outcome": "success", "pr_url": "...", "disposition": "ready-for-review" }
    ```
-8. Update labels:
+8. Update labels (this claimed → ready-for-review transition is the
+   WORKER's; the conductor never repeats it):
    - Remove status:claimed
    - Add status:ready-for-review (or status:done per disposition)
-   - KEEP claimed-by:<agent_id> for audit trail
-   - Remove claim-expires:* (no longer holding lock)
+   - Remove claimed-by:<agent_id> — ALWAYS; the claimed/result events
+     preserve the audit trail (lock-protocol.md release sequence)
+   - Remove claim-expires:* (no longer holding lock); best-effort
+     `gh label delete "claim-expires:<ts>" --yes` to clean up the repo label
 9. Return {reported: true, result_event_url, pr_url, new_status}
 ```
 
@@ -101,9 +107,10 @@ disposition: ready-for-review
 }
 ```
 
-Issue #42 now has labels: `status:ready-for-review`,
-`claimed-by:claude-code-bdl-001` (retained). A `<!-- event: result -->`
-comment was posted with the PR link in the payload.
+Issue #42 now has labels: `status:ready-for-review` (claim labels
+removed; the claimed/result events carry the audit trail). A
+`<!-- event: result -->` comment was posted with the PR link in the
+payload.
 
 ## Negative case — lock lost
 
@@ -136,5 +143,5 @@ No labels changed. Worker is told to abort.
 
 - The event comment is posted
 - The status label is updated
-- The claim-expires label is removed
+- The claimed-by and claim-expires labels are removed
 - The output (PR or comment payload) is verifiable

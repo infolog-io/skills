@@ -1,7 +1,9 @@
 # Fixture — expected claim sequence
 
-Walks through the protocol from the worker's perspective, against
-`input-issue-claimable.md` (issue #42).
+Expected transcript of the claim sequence defined in
+`references/lock-protocol.md` (the single source of truth — this
+fixture does not redefine the protocol), from the worker's perspective,
+against `input-issue-claimable.md` (issue #42).
 
 ## T0 — pre-claim state
 
@@ -37,9 +39,13 @@ expires_at = now + 30m
              = 2026-05-12T19:12:09Z
 ```
 
-## T3 — worker writes claim labels
+## T3 — worker provisions per-value labels, then writes claim labels
 
 ```bash
+# Provision (idempotent; gh issue edit errors on labels that don't exist)
+gh label create "claimed-by:claude-code-bdl-001" -f
+gh label create "claim-expires:2026-05-12T19:12:09Z" -f
+
 gh issue edit 42 \
   --remove-label "status:claimable" \
   --add-label "status:claimed" \
@@ -65,7 +71,10 @@ Verification:
 - Exactly one `claimed-by:*` label present ✓
 - It is `claimed-by:claude-code-bdl-001` (our agent) ✓
 
-Lock acquired.
+Lock acquired. (Had the re-read shown more than one `claimed-by:*`
+label, the tie-break in `lock-protocol.md` applies: the
+earliest-sorting claim wins; losers release without restoring
+`status:claimable` while another claim remains.)
 
 ## T5 — worker posts claimed event
 
@@ -92,7 +101,13 @@ Acceptance criteria:
 
 (implementation; not part of protocol — the worker writes code, runs tests, opens PR)
 
-## T7 — worker reports result
+## T7 — worker re-verifies the lock, then reports result
+
+Worker re-reads issue #42's labels immediately before posting:
+`claimed-by:claude-code-bdl-001` is still present and `claim-expires`
+is in the future → safe to post the result and edit labels. (If the
+claim were gone, the worker would post a plain `lost-claim` note and
+mutate nothing — per `worker-protocol.md`.)
 
 After successful work, opens PR `https://github.com/owner/repo/pull/100`
 and posts a result event:
@@ -125,17 +140,24 @@ All 5 acceptance criteria verified:
 ```bash
 gh issue edit 42 \
   --remove-label "status:claimed" \
-  --add-label "status:ready-for-review" \
-  --remove-label "claim-expires:2026-05-12T19:12:09Z"
-# Note: claimed-by:claude-code-bdl-001 is RETAINED for audit trail
+  --remove-label "claimed-by:claude-code-bdl-001" \
+  --remove-label "claim-expires:2026-05-12T19:12:09Z" \
+  --add-label "status:ready-for-review"
+# claimed-by is ALWAYS removed on release; the claimed/result events
+# preserve the audit trail.
+
+# Best-effort cleanup of the now-expired per-value label:
+gh label delete "claim-expires:2026-05-12T19:12:09Z" --yes || true
 ```
+
+This `claimed → ready-for-review` transition is the worker's; the
+conductor does not repeat it.
 
 ## T9 — post-completion state
 
 ```
 Issue #42 labels:
   status:ready-for-review
-  claimed-by:claude-code-bdl-001   ← retained
   size:m
   complexity:medium
   priority:p2

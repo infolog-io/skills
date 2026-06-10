@@ -80,11 +80,19 @@ medium.
 
 ## Confidence thresholds (apply after merging)
 
-| Evidence pattern | Confidence |
+This is the **single canonical confidence table**. SKILL.md,
+`prompts/verdict.md`, and `references/dimension-tagger.md` point here — do
+not restate it elsewhere. Apply the first row that matches, top to bottom:
+
+| Evidence pattern | Base confidence |
 |---|---|
 | ≥5 sources AND ≥2 distinct roles AND ≥1 measurable outcome quote | high |
-| ≥3 sources AND ≥3 quotes | medium |
-| <3 sources OR single role only | low |
+| ≥3 sources AND ≥3 quotes AND ≥2 distinct roles | medium |
+| anything else (including <3 sources or a single role) | low |
+
+**Dimension downgrade:** after computing the base level, if 2 of 3 job
+dimensions (functional / emotional / social) are `not-yet-evidenced`,
+downgrade one level: high → medium, medium → low, low stays low.
 
 Reverse-mode evidence does **not** count toward confidence calculation. It
 appears in the evidence table but is filtered before threshold evaluation.

@@ -1,6 +1,6 @@
 {
   "name": "estimatrix",
   "version": "0.3.0",
-  "description": "Two-axis sizing rubric for effort AND complexity. Effort as T-shirt (XS / S / M / L / XL / XXL); complexity as low / medium / high. Runs active conversational intake (jtbd-style) to fill missing scope and success criteria before sizing. Applies Karpathy's four code rules: state assumptions, ask if ambiguous, prefer simpler scope, require a success criterion.",
+  "description": "Use when the user asks for an estimate, sizing, or scoping call — \"estimate\", \"how long\", \"how much effort\", \"size this\", \"scope this\", \"/estimatrix\" — when a time-based or effort estimate is about to be stated, or when a proposal, plan, or task table contains an effort, time, duration, hours, or complexity column. Not for wall-clock scheduling (\"meet at 3pm\") or runtime/SLO measurements.",
   "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
 }
