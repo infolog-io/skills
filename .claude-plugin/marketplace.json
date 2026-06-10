@@ -52,7 +52,7 @@
     },
     {
       "name": "learn2kern",
-      "description": "Use when the user asks for a type scale, typography tokens, font sizes, modular scale, line height, letter-spacing/kerning defaults, or typographic hierarchy for a web project, or invokes \"/learn2kern\". Also use when choosing a scale ratio (Minor Third, Major Third, Golden Ratio) or pairing body and heading fonts. Runs conversational intake first if base size or ratio is not stated. Not for color tokens, font loading, or rendered previews.",
+      "description": "Use when the user asks for a type scale, typography tokens, font sizes, modular scale, line height, letter-spacing/kerning defaults, or typographic hierarchy for a web project, or invokes \"/learn2kern\". Also use when choosing a scale ratio (Minor Third, Major Third, Golden Ratio) or pairing body and heading fonts. Not for color tokens, font loading, or rendered previews.",
       "source": "./skills/learn2kern",
       "version": "0.1.0",
       "category": "design",

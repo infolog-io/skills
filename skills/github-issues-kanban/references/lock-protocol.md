@@ -43,9 +43,16 @@ follow it; they do not redefine it.
      (the losers will remove their own labels).
    - Otherwise you lose:
      - Remove your own claimed-by:<self> label
-     - Remove your claim-expires:<ts> label
+     - Remove your claim-expires:<ts> label — UNLESS only one
+       claim-expires:* label exists on the issue (same-second claims
+       compute the same timestamp and share ONE label; removing it would
+       strip the winner's lock). On collision, leave it: it now belongs
+       to the winner.
      - Restore status:claimable ONLY if no other claimed-by:* remains
        (normally the winner's claim is still present, so do NOT restore it)
+   - Tie-break comparison is byte-wise (ASCII, case-sensitive) — both
+     racers must sort the same way; normalize agent ids to lowercase
+     when claiming.
      - Post <!-- event: released --> comment ("conflict")
      - Report to conductor; pick another issue
 9. If verify passes: the lock is held. Proceed to work.

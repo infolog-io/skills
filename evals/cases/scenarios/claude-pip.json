@@ -1,0 +1,12 @@
+[
+  {
+    "name": "capture-rule",
+    "scenario": "The project is a git repo at /work/myapp with no CLAUDE-PIP.md and no .claude/ directory. The user's message is: `CLAUDE PIP never use --no-verify when committing`. Execute the full procedure: where is the file created, how is the rule id generated, what marker format wraps the rule, which section does it land in, and what confirmation does the user see? Show the exact marker block and confirmation you would emit.",
+    "must_cover": ["pip:start", "openssl", "Hardcoded behaviors"]
+  },
+  {
+    "name": "prune-audit",
+    "scenario": "The user's message is: `PRUNE THE PIP`. The project's CLAUDE-PIP.md contains three rules: one references a file path that no longer exists, one contains the phrase 'should probably try to', and one is clean. Execute the PRUNE procedure: what is loaded, what verdict does each rule receive and why, and what must happen before any file is edited?",
+    "must_cover": ["drop", "refine", "keep", "approval"]
+  }
+]

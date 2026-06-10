@@ -5,8 +5,7 @@ description: >-
   modular scale, line height, letter-spacing/kerning defaults, or typographic
   hierarchy for a web project, or invokes "/learn2kern". Also use when
   choosing a scale ratio (Minor Third, Major Third, Golden Ratio) or pairing
-  body and heading fonts. Run conversational intake first if base size or
-  ratio is not stated. Not for color tokens, font loading, or rendered
+  body and heading fonts. Not for color tokens, font loading, or rendered
   previews.
 ---
 

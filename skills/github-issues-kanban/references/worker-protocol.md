@@ -117,7 +117,8 @@ you win, proceed to work. If you lose:
 
 ```
 1. Remove your own claimed-by:<self> label
-2. Remove your claim-expires:* label
+2. Remove your claim-expires:* label (UNLESS it is the only one on the
+   issue — same-second claims share one label; see lock-protocol.md)
 3. Restore status:claimable ONLY if no other claim remains
 4. Post <!-- event: released --> with "conflict, releasing for redispatch"
 5. Report back to conductor / pick another issue
