@@ -10,6 +10,7 @@
 6. The verdict prompt classifies all 6 verdict test cases correctly
 7. `marketplace.json` lists `jtbd-prd` and `claude plugin marketplace list` resolves it
 8. README in the plugin root explains in under 200 words what the skill does and when to use it
+9. workflow-automation mode produces an Automation Map that validates against `schemas/automation-map.json`
 
 ## Test cases
 
@@ -65,6 +66,33 @@
 
 ### T8 — Trigger phrase activation
 For each trigger in SKILL.md, the skill description must contain language a model would match on. Verified by reading SKILL.md frontmatter and confirming each trigger phrase appears or maps clearly.
+
+### T9 — Workflow discovery
+- Input: `fixtures/input-workflow-sample.md`
+- Expected: a Workflow Inventory with both workflows, each scored on pain
+  and feasibility, ranked by leverage. Onboarding ranks above QBR prep.
+
+### T10 — Jidoka step classification
+- Input: the onboarding steps from the fixture
+- Expected: "prep account config" is repetitive with High stakes →
+  Supervised rung; "run kickoff call" is judgment → Assisted rung.
+
+### T11 — Automation Map end-to-end
+- Input: `fixtures/input-workflow-sample.md`
+- Expected output: `fixtures/expected-automation-map.md` — all six
+  sections, every step carries three scores and a rung, verdict is
+  `pilot-with-oversight`.
+
+### T12 — Automation Map schema validation
+- Hand-craft one Automation Map; it must pass `schemas/automation-map.json`.
+- Negative test: a map missing `verdict` must fail validation.
+
+### T13 — Verdict classification (workflow-automation)
+| Scenario | Expected verdict |
+|---|---|
+| ≥1 step High potential, High feasibility, signal defined, stakes Low | ready-to-automate |
+| automatable steps but high stakes / weak signal | pilot-with-oversight |
+| judgment-dominant, high stakes, no signal | human-led |
 
 ## Acceptance rubric per prompt file
 
