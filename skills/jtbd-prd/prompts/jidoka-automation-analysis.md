@@ -17,7 +17,7 @@ into ordered steps. Uses `references/jidoka-framework.md` and
 ## The seven questions, per step
 
 1. Separation: is this step repetitive/rule-based, or judgment/relational?
-2. Automation level: how much of the step can AI do with today's tools — none, partial, most, or fully?
+2. Automation level: how much of the step can AI do with today's tools — none, partial, most, or full?
 3. Detection: how would you know the AI got it wrong?
 4. Stop condition: when must the AI halt and hand to a human?
 5. Human role: when a human steps in, do they approve, edit,
