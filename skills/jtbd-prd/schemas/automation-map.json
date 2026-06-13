@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infolog.io/schemas/automation-map.json",
+  "title": "Automation Map",
+  "description": "Workflow-automation artifact produced by jtbd-prd. Workflow inventory, per-step Jidoka analysis, shortlist, human-in-the-loop design, verdict.",
+  "type": "object",
+  "required": [
+    "label",
+    "verdict",
+    "last_updated",
+    "workflow_inventory",
+    "selected_workflows",
+    "step_analysis",
+    "shortlist",
+    "human_in_the_loop_design"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "label": { "type": "string", "minLength": 3, "maxLength": 80 },
+    "verdict": { "enum": ["ready-to-automate", "pilot-with-oversight", "human-led"] },
+    "last_updated": { "type": "string", "format": "date" },
+    "workflow_inventory": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "frequency", "time_per_run", "pain", "feasibility", "leverage_rank"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "frequency": { "type": "string" },
+          "time_per_run": { "type": "string" },
+          "pain": { "enum": ["High", "Medium", "Low"] },
+          "feasibility": { "enum": ["High", "Medium", "Low"] },
+          "leverage_rank": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "selected_workflows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "rationale": { "type": "string" }
+        }
+      }
+    },
+    "step_analysis": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "workflow", "step", "nature", "automation_level", "detection_signal",
+          "stop_condition", "human_role", "hitl_rung", "countermeasure",
+          "automation_potential", "feasibility", "stakes"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "workflow": { "type": "string" },
+          "step": { "type": "string" },
+          "nature": { "enum": ["repetitive", "judgment"] },
+          "automation_level": { "enum": ["assist", "supervise", "monitor", "full"] },
+          "detection_signal": { "type": "string" },
+          "stop_condition": { "type": "string" },
+          "human_role": { "enum": ["approve", "edit", "exception-handle", "audit"] },
+          "hitl_rung": { "enum": ["Manual", "Assisted", "Supervised", "Monitored", "Autonomous"] },
+          "countermeasure": { "type": "string" },
+          "automation_potential": { "enum": ["High", "Medium", "Low"] },
+          "feasibility": { "enum": ["High", "Medium", "Low"] },
+          "stakes": { "enum": ["High", "Medium", "Low"] }
+        }
+      }
+    },
+    "shortlist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "priority"],
+        "additionalProperties": false,
+        "properties": {
+          "step": { "type": "string" },
+          "priority": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "human_in_the_loop_design": { "type": "string", "minLength": 20 }
+  }
+}
