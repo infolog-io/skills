@@ -43,6 +43,10 @@ new accounts and prepping quarterly business reviews."
 
 Output (excerpt):
 
+Leverage scores (frequency normalized to per-month):
+- Account onboarding: 8 × 6 × 3 × 2 = 288
+- QBR prep: (20 ÷ 3) × 3 × 2 × 3 = 120
+
 | Workflow | Frequency | Time/run | Pain | Feasibility | Leverage rank |
 |---|---|---|---|---|---|
 | Account onboarding | 8/month | 6 hrs | High | Medium | 1 |

@@ -117,6 +117,7 @@ workflow-automation mode (separate path):
 | user pastes build proposal without evidence | Auto-suggest validation |
 | "workflow review", "where can AI automate", "automation map" | workflow-automation |
 | "human in the loop", "Jidoka", "automate this workflow" | workflow-automation |
+| "how should AI fit my workflow" | workflow-automation |
 
 ## References
 

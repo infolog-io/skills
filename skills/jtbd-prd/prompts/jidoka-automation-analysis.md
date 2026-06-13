@@ -47,6 +47,8 @@ sections, ending in a verdict:
 | pilot-with-oversight | automatable steps exist but require Supervised or Monitored oversight; high stakes or a weak detection signal |
 | human-led | judgment-dominant, high stakes with no reliable signal, or infeasible with current tools |
 
+Apply the rule to each workflow as a whole, not step by step. A workflow with a mix of automatable and judgment steps is `pilot-with-oversight` when its automatable steps need supervised or monitored oversight, even if an individual judgment step would be `human-led` in isolation.
+
 Evaluate the verdict rule per selected workflow. The map-level verdict is the most conservative across all selected workflows, where `human-led` is more conservative than `pilot-with-oversight`, which is more conservative than `ready-to-automate`.
 
 ## Worked example
@@ -65,5 +67,4 @@ This step qualifies the QBR-prep workflow as `ready-to-automate` on its own. The
 ## Negative case
 
 A step like "decide whether to escalate a churn risk to the exec team" is
-judgment, high stakes, with no reliable detection signal. Mark it Manual.
-Do not assign a HITL rung above Assisted.
+judgment, high stakes, with no reliable detection signal. Mark it Manual. A judgment-dominant, high-stakes, no-signal step contributes nothing AI should act on.

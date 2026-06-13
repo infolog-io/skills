@@ -32,7 +32,8 @@ Last updated: {{YYYY-MM-DD}}
 
 ## 4. Automation Shortlist
 
-Steps ranked by priority (automation potential × feasibility).
+Steps ranked by priority (automation potential × feasibility). If no steps
+qualify for automation, write: No steps qualify for automation.
 
 1. {{step}} — priority {{1}}
 
