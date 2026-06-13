@@ -36,6 +36,7 @@ encodes that convention and audits against it.
 │       ├── TESTS.md                    ← end conditions + test cases
 │       ├── scripts/                    ← spec-canonical optional folder
 │       ├── references/                 ← spec-canonical optional folder
+│       │   └── index.md                ← convention (folder map; recommended >5 files)
 │       ├── assets/                     ← spec-canonical optional folder
 │       ├── prompts/                    ← convention (mode-specific operations)
 │       ├── templates/                  ← convention (output shapes)
@@ -115,7 +116,7 @@ See `references/audit-rubric.md`.
 | `spec-compliant + marketplace-ready` | All 8 dims ≥4 | Ship |
 | `spec-compliant, marketplace-drift` | Spec ≥4, marketplace has 2-3 | Fix conventions before ship |
 | `spec-drift` | One or more spec dims at 2-3 | Fix spec violations first |
-| `broken` | Any dim at 1, OR a forbidden layout is present | Halt; restore canonical shape |
+| `broken` | Any dim at 1, OR a forbidden layout is present, OR the reference-integrity gate fails | Halt; restore canonical shape |
 
 ## Operating modes
 
@@ -128,7 +129,10 @@ See `references/audit-rubric.md`.
 
 ## References
 
-See `references/`: `spec-vs-conventions.md`, `folder-roles.md`, `naming-rules.md`, `migration-triggers.md`, `audit-rubric.md`, `unix-philosophy.md`.
+See `references/index.md` for the folder map. References:
+`spec-vs-conventions.md`, `folder-roles.md`, `naming-rules.md`,
+`migration-triggers.md`, `audit-rubric.md`, `unix-philosophy.md`,
+`okf-alignment.md` (Open Knowledge Format alignment; pinned OKF version).
 
 ## Triggers
 
@@ -151,8 +155,9 @@ Every mode must produce complete, untruncated output.
 
 1. **Profile detection** — state single-rule or full-shape
 2. **Forbidden layout check** — pass/fail with evidence
-3. **8-dimension table** — all 8 rows, each with dimension ID, score (1-5), and one-line rationale
-4. **Verdict line** — one of the four verdicts from the Verdicts table, verbatim
+3. **Reference-integrity gate** — pass/fail; on fail, list each dead reference (`file → token`). See `references/audit-rubric.md`.
+4. **8-dimension table** — all 8 rows, each with dimension ID, score (1-5), and one-line rationale
+5. **Verdict line** — one of the four verdicts from the Verdicts table, verbatim
 
 Do not stop mid-table. If context limits approach, summarize rather than truncate.
 

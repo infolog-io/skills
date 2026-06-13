@@ -1,3 +1,7 @@
+---
+type: prompt
+---
+
 # Prompt — Evaluate whether a folder should become a sibling skill
 
 **Purpose:** Apply the decision tree in `references/migration-triggers.md`

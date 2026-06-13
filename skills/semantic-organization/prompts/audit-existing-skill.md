@@ -1,3 +1,7 @@
+---
+type: prompt
+---
+
 # Prompt — Audit an existing skill
 
 **Purpose:** Walk a skill's file tree, classify the skill profile,
@@ -29,6 +33,12 @@ the verdict is `broken` regardless of other dimensions:
 - `.claude-plugin/plugin.json` outside any skill folder
 - SKILL.md at the marketplace repo root (skills must live in `skills/<name>/`)
 
+Then run the reference-integrity gate per `references/audit-rubric.md`.
+Resolve every reference in SKILL.md and in each `references/` and
+`prompts/` file. A dead reference forces `broken`. Exempt placeholders
+(`<...>`), globs (`*`), and illustrative example paths. Resolve cross-skill
+tokens (`<skill-name>/references/<file>`) against the `skills/` root.
+
 ### 2. Detect profile
 
 - **Single-rule skill**: SKILL.md is under 200 lines AND has no
@@ -48,7 +58,7 @@ skills are not penalized for absent sub-folders.
 | S3. Body discipline | Under 500 lines; references one level deep |
 | S4. Folder discipline | Only spec folders, OR non-spec folders documented and accepted per `references/spec-vs-conventions.md` |
 
-### 4. Score plugin-layer dimensions (marketplace)
+### 4. Score marketplace-layer dimensions
 
 | Dimension | Check |
 |---|---|
@@ -61,10 +71,10 @@ skills are not penalized for absent sub-folders.
 
 | Verdict | Rule |
 |---|---|
-| `spec-compliant + marketplace-ready` | All 4 skill-layer dims ≥4 AND all 4 plugin-layer dims ≥4 |
-| `spec-compliant, marketplace-drift` | Skill-layer all ≥4, plugin-layer has ≥1 at 2-3 |
+| `spec-compliant + marketplace-ready` | All 4 skill-layer dims ≥4 AND all 4 marketplace-layer dims ≥4 |
+| `spec-compliant, marketplace-drift` | Skill-layer all ≥4, marketplace-layer has ≥1 at 2-3 |
 | `spec-drift` | ≥1 skill-layer dim at 2-3, none at 1 |
-| `broken` | Any dim at 1 |
+| `broken` | Any dim at 1, OR a forbidden layout, OR the reference-integrity gate fails |
 
 ### 6. Emit findings
 
@@ -94,12 +104,13 @@ Skill-layer (spec):
 - S3. Body discipline:             [1-5] — [reason]
 - S4. Folder discipline:           [1-5] — [reason]
 
-Plugin-layer (marketplace):
+Marketplace-layer:
 - P1. Plugin manifest:             [1-5] — [reason]
 - P2. README discipline:           [1-5] — [reason]
 - P3. TESTS.md presence/quality:   [1-5] — [reason]
 - P4. Migration health:            [1-5] — [reason]
 
+Reference-integrity gate:          pass | FAIL (dead: <file → token>)
 Recommended next change:           [single highest-leverage fix]
 Verdict:                           [one of four]
 Confidence:                        High | Medium | Low
@@ -137,7 +148,7 @@ Skill-layer:
 - S3. Body discipline:             5 — SKILL.md is 280 lines; refs shallow
 - S4. Folder discipline:           5 — Uses spec references/; non-spec prompts/templates/schemas/fixtures all documented and accepted
 
-Plugin-layer:
+Marketplace-layer:
 - P1. Plugin manifest:             5 — Valid
 - P2. README discipline:           5 — 199 words; clear sections
 - P3. TESTS.md presence/quality:   5 — End conditions + 7 test cases + out-of-scope
@@ -164,7 +175,7 @@ Skill-layer:
 - S3. Body discipline:             5 — Under 200 lines
 - S4. Folder discipline:           5 — No sub-folders, appropriate for single-rule
 
-Plugin-layer:
+Marketplace-layer:
 - P1. Plugin manifest:             5 — Valid
 - P2. README discipline:           5 — 195 words
 - P3. TESTS.md presence/quality:   1 — File does not exist
@@ -195,7 +206,7 @@ Skill-layer:
 - S3. Body discipline:             5
 - S4. Folder discipline:           5
 
-[plugin-layer scores omitted for brevity]
+[marketplace-layer scores omitted for brevity]
 
 Verdict:                           broken (S2 at 1)
 Recommended next change:           Rename to comply with spec; update all four name locations

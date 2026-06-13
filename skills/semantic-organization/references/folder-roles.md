@@ -1,3 +1,7 @@
+---
+type: reference
+---
+
 # Folder Roles
 
 The Agent Skills spec at https://agentskills.io/specification is the source
@@ -75,6 +79,21 @@ the content fits; use these when it doesn't.
 | `templates/` | Canonical output templates | `assets/` |
 | `schemas/` | JSON Schema contracts | `assets/` |
 | `fixtures/` | Test inputs and expected outputs | `assets/` or omitted |
+
+## Folder index and file frontmatter (OKF alignment)
+
+Two conventions align a skill with the Open Knowledge Format. The single
+authority for both is [okf-alignment.md](okf-alignment.md).
+
+- `index.md` in a convention folder maps that folder's files for an agent
+  navigating it. Recommended above five files. It is also a reachability
+  root for the reference-integrity gate, alongside SKILL.md and TESTS.md.
+- `type:` frontmatter on a companion file names its role:
+  `reference | prompt | template | schema | fixture`. Recommended, not
+  required. The audit rewards it and never penalizes its absence.
+
+`log.md` from OKF is not adopted. Git history is the source of truth, which
+is also why `legacy/` is forbidden below.
 
 ## Forbidden layouts
 

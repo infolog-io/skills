@@ -1,7 +1,12 @@
-# Fixture — a drifting skill
+---
+type: fixture
+---
+
+# Fixture — a drifted skill
 
 A skill that started canonical but has accumulated drift. The audit prompt
-should classify this as `drifting` with specific actionable findings.
+should report drift with specific actionable findings; see the expected
+verdict below.
 
 ## Tree
 
@@ -19,8 +24,6 @@ skills/example-drifted/
 │   ├── extract.md                # too generic — should name the action precisely
 │   ├── classify-and-tag.md
 │   └── render-output.md
-├── utils/                        # FORBIDDEN folder
-│   └── shared-stuff.md
 └── fixtures/
     ├── sample1.md                # generic name
     └── sample2.md                # unpaired with expected-* file
@@ -30,7 +33,6 @@ skills/example-drifted/
 
 | Violation | Fix |
 |---|---|
-| `utils/` folder is forbidden | Split contents by role or delete |
 | `HelperFunctions.md` is PascalCase | Rename to `helper-functions.md`, then question if it belongs in `references/` at all |
 | `extract.md` is too generic | Rename to `extract-from-<source-name>.md` |
 | `sample1.md` and `sample2.md` are unpaired and unnamed | Rename to `input-*.md` and create matching `expected-*.md` |
@@ -56,7 +58,7 @@ Skill-layer (spec):
 - S1. SKILL.md presence/validity:  4 — frontmatter valid; references stale
 - S2. Naming conformance:          4 — names agree across the three locations
 - S3. Body discipline:             4 — under 500 lines but lists missing refs
-- S4. Folder discipline:           2 — utils/ is forbidden; missing templates/ and schemas/
+- S4. Folder discipline:           4 — only spec/convention folders; missing optional templates/ and schemas/
 
 Marketplace-layer:
 - P1. Plugin manifest:             5 — valid, inside skill folder
@@ -64,7 +66,7 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   3 — exists but thin on specifics
 - P4. Migration health:            5 — no overgrown folders
 
-Recommended next change:           Delete utils/ and rename files to follow naming rules
+Recommended next change:           Add templates/ and schemas/, rename files per naming-rules.md
 Verdict:                           spec-compliant, marketplace-drift
 Confidence:                        High
 ```

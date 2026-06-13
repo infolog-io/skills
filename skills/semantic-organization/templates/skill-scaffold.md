@@ -1,3 +1,7 @@
+---
+type: template
+---
+
 # Skill Scaffold Template
 
 This template is the canonical shape every new skill must conform to.
@@ -146,13 +150,17 @@ See `prompts/{{mode_1_prompt_file}}.md`.
 
 ## File placeholders for each canonical folder
 
-| Folder | First file (created later, not by scaffold) |
-|---|---|
-| `references/` | A foundational reference (theory or rule set) |
-| `prompts/` | A verb-led action file |
-| `templates/` | A canonical output shape |
-| `schemas/` | A JSON Schema for the output |
-| `fixtures/` | A paired `input-*.md` and `expected-*.md` |
+Each real file carries `type:` frontmatter naming its role (OKF alignment;
+see `references/okf-alignment.md`). A folder above five files gains an
+`index.md` (`type: reference`) mapping its contents.
+
+| Folder | First file (created later, not by scaffold) | `type:` |
+|---|---|---|
+| `references/` | A foundational reference (theory or rule set) | `reference` |
+| `prompts/` | A verb-led action file | `prompt` |
+| `templates/` | A canonical output shape | `template` |
+| `schemas/` | A JSON Schema for the output | `schema` |
+| `fixtures/` | A paired `input-*.md` and `expected-*.md` | `fixture` |
 
 ## Post-scaffold audit
 

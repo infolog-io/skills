@@ -1,3 +1,7 @@
+---
+type: fixture
+---
+
 # Fixture — a broken skill
 
 A skill that does not match the canonical shape at all. The audit prompt

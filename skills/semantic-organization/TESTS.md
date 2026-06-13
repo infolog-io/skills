@@ -4,7 +4,7 @@
 
 1. Plugin installs cleanly via `claude plugin install semantic-organization@infolog-io`
 2. Skill activates on every trigger phrase listed in SKILL.md
-3. All referenced files exist at the paths declared in SKILL.md
+3. All referenced files exist at the paths declared in SKILL.md (the reference-integrity gate passes)
 4. JSON schema validates the canonical scaffold structure
 5. **Self-test**: semantic-organization scores 5/5 on its own rubric
 6. Scaffold prompt produces a valid skeleton that passes the audit rubric
@@ -28,9 +28,10 @@
 ### T3 — Audit classification
 | Fixture | Expected scores | Verdict |
 |---|---|---|
-| `fixtures/input-good-skill/` (canonical flat shape) | 5/5 across most dims | `semantically-healthy` |
-| `fixtures/input-drifted-skill/` (mixed naming, missing TESTS.md) | 3 across half the dims | `drifting` |
-| `fixtures/input-broken-skill/` (no SKILL.md, code in src/) | 1-2 across most dims | `broken` |
+| `fixtures/input-good-skill.md` (canonical flat shape) | 5/5 across most dims | `spec-compliant + marketplace-ready` |
+| `fixtures/input-drifted-skill.md` (mixed naming, missing TESTS.md) | 3 across half the dims | `spec-compliant, marketplace-drift` |
+| `fixtures/input-broken-skill.md` (no SKILL.md, code in src/) | 1-2 across most dims | `broken` |
+| `fixtures/input-dead-reference-skill.md` (clean dims, dead refs) | 4-5 across dims | `broken` (gate fails) |
 
 ### T4 — Migration trigger evaluation
 6 fixed scenarios:
@@ -50,7 +51,7 @@
 - Negative case: do not rename `references/` to `docs/` — references/ is canonical
 
 ### T6 — Schema validation
-- Canonical skill structure validates against `assets/skill-structure.json`
+- Canonical skill structure validates against `schemas/skill-structure.json`
 - Skill missing required files fails validation with specific paths cited
 - Negative test: a skill nested under `plugins/<name>/skills/<name>/` fails validation (the wrapper is forbidden)
 
@@ -66,7 +67,22 @@
 ### T8 — Anthropic-convention enforcement (new in v0.3.0)
 - Input: a skill at `plugins/my-skill/skills/my-skill/SKILL.md` (the old wrapped form)
 - Expected: audit returns `broken` with the recommended fix "flatten to skills/my-skill/SKILL.md"
-- Negative: a skill at `skills/my-skill/SKILL.md` (flat) returns `semantically-healthy` (other dims permitting)
+- Negative: a skill at `skills/my-skill/SKILL.md` (flat) returns `spec-compliant + marketplace-ready` (other dims permitting)
+
+### T9 — Reference-integrity gate
+- Input: `fixtures/input-dead-reference-skill.md` — all eight dimensions
+  score 4-5, but SKILL.md cites `references/missing-rubric.md` (code-span)
+  and `[the workflow](references/workflow.md)` (markdown link), neither of
+  which exists.
+- Expected: gate reports FAIL listing both dead references; verdict is
+  `broken` despite healthy dimension scores.
+- Exempt cases (must NOT trigger the gate): a `<theme>/references/tokens.md`
+  placeholder, an `assets/template-*.json` glob, and a sibling reference
+  `generator-critic/references/loop-protocol.md` that resolves under
+  `skills/`.
+- Orphan case (advisory, NOT broken): a `references/extra.md` file that no
+  root (SKILL.md, TESTS.md, or `index.md`) links is flagged as a finding,
+  not a `broken` verdict.
 
 ## Acceptance rubric per artifact
 
@@ -77,7 +93,7 @@
 | Each prompt | Input contract + output contract + ≥1 worked example + ≥1 negative case |
 | Template | Round-trips: scaffold → audit returns 5/5 |
 | Schema | Validates canonical example + rejects ≥3 known-bad shapes including the wrapped form |
-| Fixtures | At least 3 (good / drifted / broken); each with expected audit output |
+| Fixtures | At least 4 (good / drifted / broken / dead-reference); each with expected audit output |
 
 ## Out of scope for v1
 

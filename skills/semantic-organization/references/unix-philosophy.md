@@ -1,3 +1,7 @@
+---
+type: reference
+---
+
 # Unix Philosophy for Skills
 
 The Agent Skills spec is loosely modeled on Unix conventions: small,

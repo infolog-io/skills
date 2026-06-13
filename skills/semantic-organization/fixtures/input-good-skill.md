@@ -1,4 +1,8 @@
-# Fixture — a semantically-healthy skill
+---
+type: fixture
+---
+
+# Fixture — a spec-compliant, marketplace-ready skill
 
 This is a textual representation of a well-organized skill. The audit
 prompt should score this at 5/5 on every dimension.

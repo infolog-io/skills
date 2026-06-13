@@ -1,3 +1,7 @@
+---
+type: reference
+---
+
 # Spec vs. Conventions
 
 Two distinct sources of authority govern a skill in this marketplace.

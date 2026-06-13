@@ -1,3 +1,7 @@
+---
+type: reference
+---
+
 # Migration Triggers
 
 Folders grow. Sometimes a folder becomes a full skill in disguise. This

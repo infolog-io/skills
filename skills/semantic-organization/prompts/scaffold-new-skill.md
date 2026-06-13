@@ -1,3 +1,7 @@
+---
+type: prompt
+---
+
 # Prompt — Scaffold a new skill
 
 **Purpose:** Generate the canonical folder tree and placeholder files for a
@@ -73,6 +77,7 @@ description: >
 
 ## References
 
+See references/index.md for the folder map.
 - references/<file>.md — [purpose]
 
 ## Triggers
@@ -157,7 +162,8 @@ references, prompts, templates, schemas, and fixtures.
 
 Run a self-audit on the scaffold:
 
-- All 7 audit dimensions score ≥4
+- All 8 audit dimensions score ≥4
+- Reference-integrity gate passes (every reference in SKILL.md resolves)
 - No forbidden folders present
 - Naming consistent (kebab-case throughout)
 - Plugin name matches across `plugin.json`, directory, and `SKILL.md`

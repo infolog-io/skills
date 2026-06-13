@@ -1,3 +1,7 @@
+---
+type: prompt
+---
+
 # Prompt — Propose semantic renames
 
 **Purpose:** Given a file or folder name, evaluate it against

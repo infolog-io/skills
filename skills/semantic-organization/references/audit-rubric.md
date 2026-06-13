@@ -1,3 +1,7 @@
+---
+type: reference
+---
+
 # Semantic Organization Audit Rubric
 
 Two layers, two rubrics. Score each dimension from 1 to 5.
@@ -56,6 +60,10 @@ Score:
 - 3: Non-canonical folders present without clear justification.
 - 5: Only spec-named folders, or non-canonical folders are documented in SKILL.md with rationale.
 
+Bonus signal, not scored against: companion files carrying `type:`
+frontmatter per [okf-alignment.md](okf-alignment.md) confirm a 5. Absence
+is never penalized.
+
 ## Marketplace-layer rubric (conventions)
 
 For shipping in this marketplace. Not part of the spec. All marketplace
@@ -105,6 +113,49 @@ Score:
 - 1: Multiple folders should be sibling skills but remain trapped.
 - 3: One overgrown folder identified; migration plan pending.
 - 5: Every folder is correctly sized — none over-promoted, none under-promoted.
+
+## Reference-integrity gate
+
+A non-scored gate, peer to the forbidden-layout check. It does not change
+the eight scored dimensions. It can force `broken`. It encodes the OKF
+principle that cross-links form a resolvable graph. See
+[okf-alignment.md](okf-alignment.md) for the OKF source and grammar.
+
+### What counts as a reference
+
+Resolve, in SKILL.md and in every `references/` and `prompts/` file:
+
+- Code-span path tokens: `references/<file>`, `prompts/<file>`,
+  `templates/<file>`, `schemas/<file>`, `fixtures/<file>`, `scripts/<file>`,
+  `assets/<file>`.
+- Markdown links `[text](path)` to a repo-relative file.
+- Cross-skill tokens `<skill-name>/references/<file>`, resolved against the
+  `skills/` root.
+
+Exempt — not references, never resolved: placeholders containing `<...>`,
+globs containing `*`, illustrative paths inside example trees or code
+blocks, and the grammar's own documentation.
+
+### Two file classes
+
+| Class | Folders | Reachability root |
+|---|---|---|
+| Operational | `references/`, `prompts/` | SKILL.md OR a folder `index.md` |
+| Support | `fixtures/`, `schemas/`, `templates/`, `assets/` | `TESTS.md` OR a folder `index.md` |
+
+Support files are never required to be reachable from SKILL.md. Demanding
+that would contradict progressive disclosure.
+
+### Gate outcomes
+
+| Condition | Outcome |
+|---|---|
+| A path token does not resolve (dead reference) | `broken` — peer to a forbidden layout |
+| An operational file no root reaches (orphan) | Advisory finding, not `broken` |
+| A support file is unlinked | No penalty |
+
+Run the resolver across affected skills before relying on the gate. A
+dry-run over all 12 skills on 2026-06-13 found zero dead references.
 
 ## Skill profiles
 
@@ -161,6 +212,7 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   [1-5] — [reason]
 - P4. Migration health:            [1-5] — [reason]
 
+Reference-integrity gate:          pass | FAIL (dead: <file → token>)
 Recommended next change:           [single highest-leverage fix]
 Verdict:                           spec-compliant + marketplace-ready
                                    | spec-compliant, marketplace-drift
@@ -176,7 +228,7 @@ Confidence:                        High | Medium | Low
 | `spec-compliant + marketplace-ready` | All 4 skill-layer dims ≥4 AND all 4 marketplace-layer dims ≥4 |
 | `spec-compliant, marketplace-drift` | All 4 skill-layer dims ≥4, but ≥1 marketplace-layer dim at 2-3 |
 | `spec-drift` | ≥1 skill-layer dim at 2-3, none at 1 |
-| `broken` | Any dim at 1, OR a forbidden layout is present (`plugins/<name>/` wrapper, nested skills/, etc.) |
+| `broken` | Any dim at 1, OR a forbidden layout is present (`plugins/<name>/` wrapper, nested skills/, etc.), OR the reference-integrity gate fails (a dead reference is present) |
 
 ## Priority rule
 

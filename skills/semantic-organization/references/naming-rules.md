@@ -1,3 +1,7 @@
+---
+type: reference
+---
+
 # Naming Rules
 
 A file name is a contract. The reader infers the file's purpose from its

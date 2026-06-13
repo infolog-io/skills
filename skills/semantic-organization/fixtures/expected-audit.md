@@ -1,3 +1,7 @@
+---
+type: fixture
+---
+
 # Expected Audit Outputs
 
 For each fixture, here is the audit the skill should emit.
@@ -37,7 +41,7 @@ Skill-layer (spec):
 - S1. SKILL.md presence/validity:  4 — frontmatter valid; references stale
 - S2. Naming conformance:          4 — names agree across the three locations
 - S3. Body discipline:             4 — under 500 lines but lists missing refs
-- S4. Folder discipline:           2 — utils/ is forbidden; missing templates/ and schemas/
+- S4. Folder discipline:           4 — only spec/convention folders; missing optional templates/ and schemas/
 
 Marketplace-layer:
 - P1. Plugin manifest:             5 — valid, inside skill folder
@@ -45,7 +49,7 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   3 — exists but thin on specific test cases
 - P4. Migration health:            5 — no overgrown folders
 
-Recommended next change:           Delete utils/, add templates/ and schemas/, rename files per naming-rules.md
+Recommended next change:           Add templates/ and schemas/, rename files per naming-rules.md
 Verdict:                           spec-compliant, marketplace-drift
 Confidence:                        High
 
@@ -56,9 +60,6 @@ Renames:
 - prompts/extract.md → prompts/extract-from-<source-name>.md
 - fixtures/sample1.md → fixtures/input-<descriptive-name>.md (with paired expected-*.md)
 - fixtures/sample2.md → fixtures/input-<descriptive-name>.md (with paired expected-*.md)
-
-Deletions:
-- utils/ folder — split contents into role folders or delete
 
 Additions:
 - templates/<canonical-artifact>.md
@@ -74,6 +75,35 @@ TESTS.md improvements:
 - Add ≥5 concrete test cases with inputs and expected outputs
 - Declare out-of-scope explicitly
 ```
+
+## For `input-dead-reference-skill.md`
+
+```
+Semantic Organization Audit — example-dead-ref
+
+Profile: full-shape
+
+Skill-layer (spec):
+- S1. SKILL.md presence/validity:  5 — frontmatter valid
+- S2. Naming conformance:          5 — all 3 name locations agree
+- S3. Body discipline:             5 — under 500 lines; references shallow
+- S4. Folder discipline:           5 — spec folders only; no forbidden
+
+Marketplace-layer:
+- P1. Plugin manifest:             5 — valid, inside skill folder
+- P2. README discipline:           5 — 170 words; what/when/install
+- P3. TESTS.md presence/quality:   4 — end conditions + 4 test cases
+- P4. Migration health:            5 — folders sized appropriately
+
+Reference-integrity gate:          FAIL (dead: SKILL.md → references/missing-rubric.md; SKILL.md → references/workflow.md)
+Recommended next change:           Create the two missing references or remove the dead tokens
+Verdict:                           broken (reference-integrity gate fails)
+Confidence:                        High
+```
+
+All eight dimensions score high, yet the verdict is `broken`. The gate is
+a peer of the forbidden-layout check, not a scored dimension. Placeholders
+like `<theme>/references/tokens.md` are exempt and do not trigger the gate.
 
 ## For `input-broken-skill.md`
 
