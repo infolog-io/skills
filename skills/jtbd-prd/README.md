@@ -7,24 +7,22 @@ functions as PRD framing, grounded in Jobs-to-be-Done evidence.
 
 Takes customer interviews, support tickets, sales calls, surveys, or existing
 artifacts. Extracts candidate jobs, clusters duplicates, scores confidence,
-and emits a single canonical Job Article that any subsequent PRD must
-reference.
+and emits a Job Article any subsequent PRD must reference.
 
-Three modes: **discovery** (raw inputs → jobs), **validation** (hypothesis +
-evidence → verdict), **reverse** (artifact → inferred jobs, must be confirmed
-by real research).
+Four modes: **discovery** (inputs → jobs), **validation** (hypothesis →
+verdict), **reverse** (artifact → inferred jobs), and **workflow-automation**
+(workflow → where AI can automate, via a Jidoka human-in-the-loop review).
 
 ## When to use
 
-Before writing a PRD, scoping a feature, pivoting an existing build, or
-answering "should we build this?" Auto-suggests when you paste a build
-proposal without evidence.
+Before a PRD, scoping, or a pivot — or when answering "should we build
+this?" Auto-suggests when you paste a build proposal without evidence.
 
 ## Output
 
-Markdown Job Article with seven fixed sections: primary job statement,
-evidence table, dimensions (functional/emotional/social), Ulwick outcome
-statements, underserved vs. overserved, build implication, and verdict.
+Markdown Job Article with seven fixed sections: job statement, evidence,
+dimensions, Ulwick outcomes, underserved vs. overserved, build implication,
+verdict. Workflow-automation mode emits an Automation Map instead.
 
 ## Verdict gates
 
