@@ -8,6 +8,22 @@
 
 **Tech Stack:** Markdown with YAML frontmatter; JSON Schema (draft 2020-12); python3 for verification (json parse, reference resolver, word count). No build system.
 
+> **Post-implementation note (2026-06-13):** Implemented and shipped. Two
+> code-quality review rounds refined the design after this plan was written.
+> The committed skill under `skills/jtbd-prd/` is the source of truth. The
+> vocabulary in this plan is synced; the behavioral refinements below are
+> reflected in the shipped skill and the spec, not re-embedded in the task
+> code blocks here:
+> - `automation_level` vocabulary is `none | partial | most | full` (was
+>   `assist | supervise | monitor | full`) to avoid colliding with the HITL
+>   rung names and to give Manual-rung steps a value.
+> - Map-level verdict = most conservative across selected workflows; the
+>   rule applies to each workflow as a whole, not step by step.
+> - Leverage formula weights are explicit: High=3, Medium=2, Low=1, with
+>   frequency normalized to per-month.
+> - Added trigger phrase "how should AI fit my workflow".
+> - Shortlist has an empty-state line for the `human-led` verdict.
+
 ---
 
 ## File Structure
@@ -64,7 +80,7 @@ and escalate to a human. Each correction should improve the system.
 | Principle | Plain-language analysis question |
 |---|---|
 | Separate human work from machine work | Is this step repetitive/rule-like or judgment/relational? |
-| Run autonomously | What automation level fits — assist, supervise, monitor, or full? |
+| Run autonomously | What automation level fits — none, partial, most, or full? |
 | Detect the abnormality | What signal reveals the AI got it wrong? |
 | Stop the line (andon) | Under what condition must the AI halt and escalate? |
 | Human corrects | What is the human role — approve, edit, exception-handle, audit? |
@@ -239,7 +255,7 @@ git commit -m "feat(jtbd-prd): add human-in-the-loop levels reference"
           "workflow": { "type": "string" },
           "step": { "type": "string" },
           "nature": { "enum": ["repetitive", "judgment"] },
-          "automation_level": { "enum": ["assist", "supervise", "monitor", "full"] },
+          "automation_level": { "enum": ["none", "partial", "most", "full"] },
           "detection_signal": { "type": "string" },
           "stop_condition": { "type": "string" },
           "human_role": { "enum": ["approve", "edit", "exception-handle", "audit"] },
@@ -314,7 +330,7 @@ Last updated: {{YYYY-MM-DD}}
 ### {{workflow}} → {{step}}
 
 - Nature: {{repetitive | judgment}}
-- Automation level: {{assist | supervise | monitor | full}}
+- Automation level: {{none | partial | most | full}}
 - Detection signal: {{how we know the AI erred}}
 - Stop condition: {{when the AI halts and escalates}}
 - Human role: {{approve | edit | exception-handle | audit}}
@@ -457,8 +473,8 @@ into ordered steps. Uses `references/jidoka-framework.md` and
 ## The seven questions, per step
 
 1. Separation: is this step repetitive/rule-based, or judgment/relational?
-2. Automation level: could AI do it with today's tools — assist,
-   supervise, monitor, or fully?
+2. Automation level: how much of the step can AI do with today's tools —
+   none, partial, most, or full?
 3. Detection: how would you know the AI got it wrong?
 4. Stop condition: when must the AI halt and hand to a human?
 5. Human role: when a human steps in, do they approve, edit,
@@ -583,7 +599,7 @@ Expected Automation Map for `input-workflow-sample.md`.
 ### Account onboarding → prep account config
 
 - Nature: repetitive
-- Automation level: supervise
+- Automation level: most
 - Detection signal: config validated against an account-type checklist
 - Stop condition: a required field is missing or conflicts with the plan
 - Human role: approve
@@ -594,7 +610,7 @@ Expected Automation Map for `input-workflow-sample.md`.
 ### Account onboarding → run kickoff call
 
 - Nature: judgment
-- Automation level: assist
+- Automation level: partial
 - Detection signal: none reliable
 - Stop condition: always human-led
 - Human role: edit
@@ -981,6 +997,6 @@ Spec coverage:
 - File plan (8 new, 3 edits) → Tasks 1-10.
 - Reference-integrity gate → Task 8 Step 7, Task 11 Step 1.
 
-Type consistency: `automation_level` enum is `assist|supervise|monitor|full` in the schema (Task 3), the prompt (Task 6), and the template (Task 4). `hitl_rung` and `nature` enums match across schema, template, and fixture. Verdict values `ready-to-automate|pilot-with-oversight|human-led` match across schema, prompt, README, TESTS, and fixture.
+Type consistency: `automation_level` enum is `none|partial|most|full` in the schema (Task 3), the prompt (Task 6), and the template (Task 4). `hitl_rung` and `nature` enums match across schema, template, and fixture. Verdict values `ready-to-automate|pilot-with-oversight|human-led` match across schema, prompt, README, TESTS, and fixture.
 
 No placeholders: every file step shows complete content; verification steps give exact commands and expected output.

@@ -32,7 +32,7 @@ Each workflow step is analyzed against six principles.
 | Jidoka principle | Plain-language analysis question |
 |---|---|
 | Separate human work from machine work | Is this step repetitive/rule-like or judgment/relational? |
-| Run autonomously | What automation level fits — assist, supervise, monitor, or full? |
+| Run autonomously | What automation level fits — none, partial, most, or full? |
 | Detect the abnormality | What signal reveals the AI got it wrong? |
 | Stop the line | Under what condition must the AI halt and escalate? |
 | Human corrects | What is the human role — approve, edit, exception-handle, audit? |
@@ -53,15 +53,16 @@ Asked to the reviewee to surface the few high-leverage workflows.
 8. What is the cost of a mistake at each step?
 
 Prioritization rule: rank workflows by frequency × time × pain ×
-feasibility. The top one to three workflows proceed to Jidoka analysis.
+feasibility, treating High=3, Medium=2, Low=1 and normalizing frequency to
+per-month. The top one to three workflows proceed to Jidoka analysis.
 
 ## Question set B — Jidoka analysis
 
 Run per selected workflow step. The six principles become direct questions.
 
 1. Separation: is this step repetitive/rule-based, or judgment/relational?
-2. Automation level: could AI do it with today's tools — assist,
-   supervise, monitor, or fully?
+2. Automation level: how much of the step can AI do today — none,
+   partial, most, or full?
 3. Detection: how would you know the AI got it wrong?
 4. Stop condition: when must the AI halt and hand to a human?
 5. Human role: when a human steps in, do they approve, edit,
@@ -120,6 +121,10 @@ A markdown file conforming to `templates/automation-map.md` and
 | ready-to-automate | ≥1 step with automation potential High, feasibility High, a defined detection signal, and stakes ≤ Medium |
 | pilot-with-oversight | automatable steps exist but require Supervised or Monitored oversight; high stakes or a weak detection signal |
 | human-led | judgment-dominant, high stakes with no reliable signal, or infeasible with current tools |
+
+Apply the rule to each workflow as a whole, not step by step. The map-level
+verdict is the most conservative across selected workflows, where human-led
+outranks pilot-with-oversight, which outranks ready-to-automate.
 
 ## Files
 
