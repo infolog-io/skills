@@ -50,6 +50,7 @@ Do not activate for:
 | Survey free-text | CSV column or markdown list | NPS response open-ends |
 | Existing artifact (reverse mode) | URL, markdown, or pasted text | published page, competitor PRD |
 | Build hypothesis | One-sentence statement | "We want to build X for Y users" |
+| Workflow description | Markdown or free text | "A CSM onboards 8 accounts/month, then…" |
 
 ## Output: the Job Article
 
@@ -66,6 +67,14 @@ Sections in fixed order:
 5. **Underserved vs. Overserved** — where current solutions fail or overreach
 6. **Build Implication** — what the next build must do and avoid
 7. **Verdict** — validated / under-evidenced / unvalidated
+
+## Output: the Automation Map (workflow-automation mode)
+
+When the mode is workflow-automation, the skill emits an Automation Map
+instead of a Job Article, conforming to `templates/automation-map.md` and
+`schemas/automation-map.json`. Six fixed sections: Workflow Inventory,
+Selected Workflows, Step Analysis, Automation Shortlist, Human-in-the-Loop
+Design, and Verdict.
 
 ## Flow
 
@@ -88,6 +97,13 @@ Sections in fixed order:
 
 5. Issue verdict:
    - prompts/verdict.md
+
+workflow-automation mode (separate path):
+1. Entry: read a Job Article (downstream) or take a workflow description (cold)
+2. Discover workflows: prompts/discover-workflows.md → Workflow Inventory
+3. Jidoka analysis on the top 1-3: prompts/jidoka-automation-analysis.md
+4. Render: templates/automation-map.md
+5. Verdict: ready-to-automate / pilot-with-oversight / human-led
 ```
 
 ## Trigger phrases
@@ -99,6 +115,8 @@ Sections in fixed order:
 | "what job does this serve", "reverse JTBD" | Reverse |
 | "extract jobs from these interviews" | Discovery |
 | user pastes build proposal without evidence | Auto-suggest validation |
+| "workflow review", "where can AI automate", "automation map" | workflow-automation |
+| "human in the loop", "Jidoka", "automate this workflow" | workflow-automation |
 
 ## References
 
@@ -106,6 +124,8 @@ Sections in fixed order:
 - `references/job-statement-grammar.md` — the canonical shape
 - `references/dimension-tagger.md` — functional / emotional / social rules
 - `references/prd-framing.md` — how the Job Article seeds a PRD
+- `references/jidoka-framework.md` — Jidoka distilled + the AI-automation mapping
+- `references/human-in-the-loop-levels.md` — the five-rung oversight ladder
 
 ## Verdict thresholds
 
@@ -126,5 +146,9 @@ Sections in fixed order:
 By default, write the Job Article to the working directory the user is in,
 named `job-article-<short-slug>.md`. If the working directory is a repo, place
 in `docs/jtbd/` if that directory exists; otherwise repo root.
+
+For workflow-automation mode, write the Automation Map as
+`automation-map-<short-slug>.md`, using the same directory rules as the Job
+Article.
 
 Never write to the infolog-skills repo itself unless explicitly asked.
