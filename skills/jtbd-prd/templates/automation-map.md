@@ -22,7 +22,7 @@ Last updated: {{YYYY-MM-DD}}
 ### {{workflow}} → {{step}}
 
 - Nature: {{repetitive | judgment}}
-- Automation level: {{assist | supervise | monitor | full}}
+- Automation level: {{none | partial | most | full}}
 - Detection signal: {{how we know the AI erred}}
 - Stop condition: {{when the AI halts and escalates}}
 - Human role: {{approve | edit | exception-handle | audit}}

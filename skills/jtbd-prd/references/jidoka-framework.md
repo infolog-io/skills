@@ -23,7 +23,7 @@ and escalate to a human. Each correction should improve the system.
 | Principle | Plain-language analysis question |
 |---|---|
 | Separate human work from machine work | Is this step repetitive/rule-like or judgment/relational? |
-| Run autonomously | What automation level fits — assist, supervise, monitor, or full? |
+| Run autonomously | What automation level fits — none, partial, most, or full? |
 | Detect the abnormality | What signal reveals the AI got it wrong? |
 | Stop the line (andon) | Under what condition must the AI halt and escalate? |
 | Human corrects | What is the human role — approve, edit, exception-handle, audit? |
@@ -49,3 +49,7 @@ Step: categorize an inbound support ticket.
 - Stop condition: confidence below threshold, or a new product area.
 - Human role: approve low-confidence cases; audit a sample of the rest.
 - Countermeasure: misclassifications become new labeled examples.
+
+## Automation level vs human-in-the-loop rung
+
+Two fields describe each step. Automation level is how much of the step AI can technically do today: none, partial, most, or full. The human-in-the-loop rung is the oversight model you deploy under (see [human-in-the-loop-levels.md](human-in-the-loop-levels.md)). They are independent: a step can be `full` automation level yet run under `Monitored` oversight during a pilot.

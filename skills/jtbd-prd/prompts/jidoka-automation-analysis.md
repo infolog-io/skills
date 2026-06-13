@@ -17,8 +17,7 @@ into ordered steps. Uses `references/jidoka-framework.md` and
 ## The seven questions, per step
 
 1. Separation: is this step repetitive/rule-based, or judgment/relational?
-2. Automation level: could AI do it with today's tools — assist,
-   supervise, monitor, or fully?
+2. Automation level: how much of the step can AI do with today's tools — none, partial, most, or fully?
 3. Detection: how would you know the AI got it wrong?
 4. Stop condition: when must the AI halt and hand to a human?
 5. Human role: when a human steps in, do they approve, edit,
@@ -48,6 +47,8 @@ sections, ending in a verdict:
 | pilot-with-oversight | automatable steps exist but require Supervised or Monitored oversight; high stakes or a weak detection signal |
 | human-led | judgment-dominant, high stakes with no reliable signal, or infeasible with current tools |
 
+Evaluate the verdict rule per selected workflow. The map-level verdict is the most conservative across all selected workflows, where `human-led` is more conservative than `pilot-with-oversight`, which is more conservative than `ready-to-automate`.
+
 ## Worked example
 
 Step: "QBR data pull — gather usage metrics from the dashboard."
@@ -59,10 +60,10 @@ Step: "QBR data pull — gather usage metrics from the dashboard."
 - Countermeasure: failed checks tighten the extraction query.
 - Scores: automation potential High · feasibility High · stakes Low.
 
-This step alone supports `ready-to-automate` for the QBR-prep workflow.
+This step qualifies the QBR-prep workflow as `ready-to-automate` on its own. The map verdict still takes the most conservative across the selected workflows.
 
 ## Negative case
 
 A step like "decide whether to escalate a churn risk to the exec team" is
 judgment, high stakes, with no reliable detection signal. Mark it Manual.
-Do not assign an automation level above Assisted.
+Do not assign a HITL rung above Assisted.

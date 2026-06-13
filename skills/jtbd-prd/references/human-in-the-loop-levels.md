@@ -10,8 +10,8 @@ level" and "human role" answers in the Jidoka analysis. See
 
 | Rung | AI does | Human does | Fits when |
 |---|---|---|---|
-| Manual | nothing | everything | judgment-dominant; high stakes; no detection signal |
-| Assisted | drafts a suggestion | does the work | low trust; creative or relational step |
+| Manual | nothing | everything | judgment-dominant with no useful AI draft; or high stakes with no detection signal |
+| Assisted | drafts a suggestion | does the work | judgment or relational step where AI can draft input a human finalizes |
 | Supervised (HITL) | acts | approves each action before it lands | medium stakes; detection signal exists |
 | Monitored (HOTL) | acts and lands | spot-checks; can intervene | low-medium stakes; reliable signal |
 | Autonomous | acts and lands | audits samples periodically | low stakes; strong signal; reversible action |

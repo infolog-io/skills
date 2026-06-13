@@ -64,7 +64,7 @@
           "workflow": { "type": "string" },
           "step": { "type": "string" },
           "nature": { "enum": ["repetitive", "judgment"] },
-          "automation_level": { "enum": ["assist", "supervise", "monitor", "full"] },
+          "automation_level": { "enum": ["none", "partial", "most", "full"] },
           "detection_signal": { "type": "string" },
           "stop_condition": { "type": "string" },
           "human_role": { "enum": ["approve", "edit", "exception-handle", "audit"] },

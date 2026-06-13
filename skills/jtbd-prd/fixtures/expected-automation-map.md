@@ -23,7 +23,7 @@ Expected Automation Map for `input-workflow-sample.md`.
 ### Account onboarding → prep account config
 
 - Nature: repetitive
-- Automation level: supervise
+- Automation level: most
 - Detection signal: config validated against an account-type checklist
 - Stop condition: a required field is missing or conflicts with the plan
 - Human role: approve
@@ -34,7 +34,7 @@ Expected Automation Map for `input-workflow-sample.md`.
 ### Account onboarding → run kickoff call
 
 - Nature: judgment
-- Automation level: assist
+- Automation level: partial
 - Detection signal: none reliable
 - Stop condition: always human-led
 - Human role: edit

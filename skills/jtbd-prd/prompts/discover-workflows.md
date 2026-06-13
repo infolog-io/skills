@@ -31,9 +31,10 @@ A Workflow Inventory table (section 1 of `templates/automation-map.md`):
 one row per workflow with frequency, time per run, pain (H/M/L),
 feasibility (H/M/L), and a leverage rank.
 
-Leverage rank = order by frequency × time × pain × feasibility, highest
-first. The top one to three workflows pass to
+Leverage rank: treat High=3, Medium=2, Low=1, and normalize frequency to per-month. Leverage = (frequency per month) × (time per run in hours) × pain × feasibility. Rank descending. The top one to three workflows pass to
 `prompts/jidoka-automation-analysis.md`.
+
+Capture each step's mistake cost from question 8; it carries into the Jidoka analysis as the step's stakes — do not discard it.
 
 ## Worked example
 
