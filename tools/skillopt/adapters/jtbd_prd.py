@@ -7,8 +7,13 @@ writes a file; the PREAMBLE asks for the article inline (ALLOWED_TOOLS=[]).
 Scoring anchors on the programmatic signal this skill exposes: verdict terms
 (validated / under-evidenced / unvalidated), confidence levels, the 7 fixed
 Job-Article section headers, and the "When... I want to... so I can..." grammar.
+The workflow-automation mode adds its own anchors: the readiness verdicts
+(ready-to-automate / pilot-with-oversight / human-led), the six Automation-Map
+section headers, and the human-in-the-loop rungs (Manual / Assisted /
+Supervised / Monitored / Autonomous).
 LLM judge covers content quality. Word-boundary regex avoids the
-"validated" ⊂ "unvalidated" and "low" ⊂ "below" substring traps.
+"validated" ⊂ "unvalidated", "low" ⊂ "below", and "full" ⊂ "fully" substring
+traps.
 """
 from __future__ import annotations
 import re
@@ -31,7 +36,8 @@ PREAMBLE = (
 _GRAMMAR = r"(?s)when\b.*?i want to.*?so\b"   # When... I want to... so (I can)...
 
 
-# 12 tasks: 7 train / 3 val / 2 test. Mined from TESTS.md T1–T7.
+# 18 tasks: 10 train / 5 val / 3 test. Mined from TESTS.md T1–T13
+# (T9–T13 cover the workflow-automation mode).
 _TASKS: list[Task] = [
     # ── train ─────────────────────────────────────
     Task(id="T01", split="train",
@@ -108,6 +114,47 @@ _TASKS: list[Task] = [
                        "emotional (fear/peace of mind), social (team trust) — each "
                        "grounded in the quote.",
          }),
+    Task(id="T08", split="train",
+         input="Workflow-automation mode. Review this person's workflows and rank "
+               "them for automation leverage. A customer success manager:\n"
+               "- Account onboarding: runs 8 times/month, ~6 hrs each, high pain, "
+               "medium feasibility.\n"
+               "- QBR prep: runs 20 per quarter, ~3 hrs each, medium pain, high "
+               "feasibility.\n"
+               "Produce the Workflow Inventory with a leverage rank.",
+         expected_pattern={
+             "must_include": ["onboarding", "QBR"],
+             "regex_any": [r"leverage|rank"],
+             "rubric": "Builds a Workflow Inventory and ranks account onboarding "
+                       "above QBR prep by leverage = frequency × time × pain × "
+                       "feasibility with High=3/Medium=2/Low=1 and frequency "
+                       "normalized to per-month (onboarding 288 > QBR 120).",
+         }),
+    Task(id="T09", split="train",
+         input="Workflow-automation mode. Run the Jidoka analysis on two onboarding "
+               "steps and classify each by nature and human-in-the-loop rung:\n"
+               "(a) prep account config — same fields every time, but a wrong config "
+               "churns the customer;\n"
+               "(b) run the kickoff call — needs judgment and relationship, though AI "
+               "can draft prep notes.",
+         expected_pattern={
+             "must_include": ["repetitive", "judgment", "Supervised", "Assisted"],
+             "rubric": "Config = repetitive, high stakes → Supervised rung (human "
+                       "approves each). Kickoff = judgment → Assisted rung (AI drafts "
+                       "prep, the human runs and finalizes the call).",
+         }),
+    Task(id="T10", split="train",
+         input="Workflow-automation mode. Give the automation-readiness verdict for a "
+               "workflow whose key step — pull weekly usage metrics from the "
+               "dashboard — is repetitive, fully feasible today, low stakes, with a "
+               "clear detection signal (row-count and date-range checks).",
+         expected_pattern={
+             "must_include": ["ready-to-automate"],
+             "must_not": ["pilot-with-oversight", "human-led"],
+             "rubric": "Verdict ready-to-automate: a repetitive, High-feasibility, "
+                       "low-stakes step with a defined detection signal meets the "
+                       "rule.",
+         }),
 
     # ── val ───────────────────────────────────────
     Task(id="V01", split="val",
@@ -137,6 +184,32 @@ _TASKS: list[Task] = [
              "rubric": "Confidence low: a single source with one quote falls below "
                        "the medium threshold (which needs >=3 sources, >=3 quotes).",
          }),
+    Task(id="V04", split="val",
+         input="Workflow-automation mode. Give the verdict for a workflow dominated "
+               "by one step: deciding whether to escalate a churn risk to the exec "
+               "team — pure judgment, high stakes, no reliable detection signal.",
+         expected_pattern={
+             "must_include": ["human-led"],
+             "rubric": "Verdict human-led: judgment-dominant, high stakes, and no "
+                       "reliable detection signal, so it is not safe to automate.",
+         }),
+    Task(id="V05", split="val",
+         input="Workflow-automation mode. Produce the full Automation Map for a CSM "
+               "with two selected workflows:\n"
+               "- Onboarding (mixed): the config step is repetitive but high-stakes; "
+               "the kickoff call is judgment.\n"
+               "- QBR prep: the data-pull step is repetitive, low-stakes, feasible, "
+               "with a detection signal.\n"
+               "Include every section and the map-level verdict.",
+         expected_pattern={
+             "must_include": ["Workflow Inventory", "Selected Workflows",
+                              "Step Analysis", "Automation Shortlist",
+                              "Human-in-the-Loop", "Verdict", "pilot-with-oversight"],
+             "rubric": "Renders all six Automation-Map sections in order. Map verdict "
+                       "is pilot-with-oversight: QBR alone is ready-to-automate, but "
+                       "onboarding's high-stakes config needs supervision, and the "
+                       "map takes the most conservative verdict across workflows.",
+         }),
 
     # ── test ──────────────────────────────────────
     Task(id="X01", split="test",
@@ -155,6 +228,18 @@ _TASKS: list[Task] = [
              "regex_any": [r"minimize|reduce|increase|decrease|likelihood|time to"],
              "rubric": "Emits Ulwick-form outcome statements (minimize/reduce/"
                        "increase the time, effort, or likelihood of X), measurable.",
+         }),
+    Task(id="X03", split="test",
+         input="Workflow-automation mode. For a step where AI can do the entire task "
+               "today, but the action is high-value and we are still piloting, give "
+               "the automation level and the human-in-the-loop rung, and explain why "
+               "they differ.",
+         expected_pattern={
+             "must_include": ["Monitored"],
+             "regex_any": [r"\bfull\b"],
+             "rubric": "Automation level = full (AI can do the whole step), but the "
+                       "HITL rung is Monitored during the pilot. Capability and "
+                       "deployed oversight are independent axes.",
          }),
 ]
 
