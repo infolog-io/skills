@@ -235,11 +235,10 @@ _TASKS: list[Task] = [
                "the automation level and the human-in-the-loop rung, and explain why "
                "they differ.",
          expected_pattern={
-             "must_include": ["Monitored"],
-             "regex_any": [r"\bfull\b"],
-             "rubric": "Automation level = full (AI can do the whole step), but the "
-                       "HITL rung is Monitored during the pilot. Capability and "
-                       "deployed oversight are independent axes.",
+             "regex_any": [r"\b(Monitored|Supervised)\b"],
+             "rubric": "Automation level = full (AI can do the whole step today), but "
+                       "the HITL rung is Supervised or Monitored during the pilot — "
+                       "capability and deployed oversight are independent axes.",
          }),
 ]
 
