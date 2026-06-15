@@ -7,6 +7,9 @@ PREAMBLE frames it as no-lookup reasoning (ALLOWED_TOOLS=[]).
 
 Scoring checks the rubric vocabulary (8 dimension labels, verdicts, canonical
 paths) programmatically, plus an LLM judge for audit/migration correctness.
+The reference-integrity gate (from the OKF-alignment work) is also exercised:
+a dead reference forces `broken` even when all eight dimensions score well,
+while placeholders, globs, and resolvable cross-skill references are exempt.
 Note: SKILL.md and TESTS.md use two verdict taxonomies; the verdict regex
 accepts either so we measure quality, not vocabulary choice.
 """
@@ -20,7 +23,7 @@ from lib.budget import Budget
 NAME = "semantic-organization"
 SKILL_PATH = Path(__file__).resolve().parents[3] / "skills" / "semantic-organization" / "SKILL.md"
 ALLOWED_TOOLS: list[str] = []
-MAX_TURNS = 5
+MAX_TURNS = 6
 
 PREAMBLE = (
     "You do not have filesystem access in this exercise. Reason only from the "
@@ -33,7 +36,8 @@ _VERDICT_HEALTHY = r"spec-compliant|marketplace-ready|semantically-healthy|healt
 _VERDICT_DRIFT = r"drift|drifting"
 
 
-# 12 tasks: 7 train / 3 val / 2 test. Mined from TESTS.md T1–T8.
+# 17 tasks: 9 train / 5 val / 3 test. Mined from TESTS.md T1–T11
+# (T09 / V05 cover the reference-integrity gate from the OKF-alignment work).
 _TASKS: list[Task] = [
     # ── train ─────────────────────────────────────
     Task(id="T01", split="train",
@@ -105,6 +109,32 @@ _TASKS: list[Task] = [
              "rubric": "Rejects ExtractFromInterview.md: not kebab-case. Prompts "
                        "must be kebab-case and verb-led, e.g. extract-from-interview.md.",
          }),
+    Task(id="T08", split="train",
+         input="Scaffold a new skill named one-rule, profile single-rule, "
+               "target_host infolog-marketplace, description 'enforces one rule'.",
+         expected_pattern={
+             "must_include": ["skills/one-rule/", "SKILL.md",
+                              ".claude-plugin/plugin.json", "README.md", "TESTS.md"],
+             "rubric": "Emits a minimal single-rule scaffold with only identity "
+                       "files; does not create empty placeholder folders such as "
+                       "references/, prompts/, templates/, schemas/, or fixtures/.",
+         }),
+    Task(id="T09", split="train",
+         input="Audit this skill for reference integrity.\n"
+               "skills/qux/ has .claude-plugin/plugin.json, SKILL.md, README.md, "
+               "TESTS.md, references/core.md.\n"
+               "All eight dimensions look healthy, BUT SKILL.md cites "
+               "`references/missing-rubric.md` and a link [the workflow]"
+               "(references/workflow.md) — neither file exists.",
+         expected_pattern={
+             "must_include": ["broken"],
+             "regex_any": [r"reference-integrity|dead reference|missing-rubric"],
+             "rubric": "All eight scored dimensions are fine, but the "
+                       "reference-integrity gate fails on dead references "
+                       "(references/missing-rubric.md and references/workflow.md). "
+                       "Verdict broken — the gate is a peer of the forbidden-layout "
+                       "check, not a ninth scored dimension.",
+         }),
 
     # ── val ───────────────────────────────────────
     Task(id="V01", split="val",
@@ -140,6 +170,28 @@ _TASKS: list[Task] = [
                        "broken out); flags an S3 body-discipline violation because "
                        "SKILL.md exceeds 500 lines.",
          }),
+    Task(id="V04", split="val",
+         input="Scaffold a Codex repo-local skill named release-notes. "
+               "target_host codex-repo-skill. It is instruction-only.",
+         expected_pattern={
+             "must_include": [".agents/skills/release-notes/", "SKILL.md",
+                              "codex-repo-skill"],
+             "rubric": "Targets Codex repo-local structure under .agents/skills/; "
+                       "omits Claude marketplace files unless packaging is requested.",
+         }),
+    Task(id="V05", split="val",
+         input="Audit this skill for reference integrity. SKILL.md references "
+               "`<theme>/references/tokens.md` (a placeholder), `assets/template-*.json` "
+               "(a glob), and `generator-critic/references/loop-protocol.md` (a sibling "
+               "skill whose file exists under skills/). All real files are present.",
+         expected_pattern={
+             "regex_any": [r"pass|spec-compliant|marketplace-ready|exempt"],
+             "must_not": ["broken"],
+             "rubric": "The reference-integrity gate passes: placeholders (<...>), "
+                       "globs (*), and resolvable cross-skill references are exempt "
+                       "and must not trigger a dead-reference failure or a broken "
+                       "verdict.",
+         }),
 
     # ── test ──────────────────────────────────────
     Task(id="X01", split="test",
@@ -160,6 +212,18 @@ _TASKS: list[Task] = [
              "regex_any": [r"refuse|canonical|do not|don't|cannot"],
              "rubric": "Refuses to rename references/ to docs/: references/ is a "
                        "spec-canonical folder. Keeps references/.",
+         }),
+    Task(id="X03", split="test",
+         input="Audit this skill for context fit. It has prompts/background-reading.md "
+               "with long theory, references/run-audit.md with step-by-step procedure, "
+               "and templates/notes.md with prose notes.",
+         expected_pattern={
+             "must_include": ["Context-fit", "prompts/background-reading.md",
+                              "references/run-audit.md", "templates/notes.md"],
+             "regex_any": [r"advisory|suggest|move"],
+             "rubric": "Emits a context-fit advisory: theory belongs in references/, "
+                       "procedure belongs in prompts/, and prose notes should move out "
+                       "of templates/. Does not force broken solely for this advisory.",
          }),
 ]
 
