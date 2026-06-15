@@ -28,6 +28,7 @@ Means are in `[0,1]`. `Δ val` = best minus incumbent on the val split.
 | 2026-05-28 | atomic-brand | 0.806 | 0.867 | +0.061 | 1.000 | 0 | $3.22 |
 | 2026-05-28 | spraypixel | 0.883 | 0.883 | +0.000 | 0.903 | 0 | $3.84 |
 | 2026-05-29 | jtbd-prd | 0.794 | 0.794 | +0.000 | 0.500 | 0 | $3.07 |
+| 2026-06-15 | jtbd-prd | 0.784 | 0.784 | +0.000 | 1.000 | 0 | $5.11 |
 
 <!-- AUTO:end -->
 
@@ -35,7 +36,7 @@ Means are in `[0,1]`. `Δ val` = best minus incumbent on the val split.
 
 | Date | Skill | Split | Mean | Per-task | Cost | Notes |
 |---|---|---|---|---|---|---|
-| 2026-06-14 | jtbd-prd | test (3) | 0.781 | X01 0.88 · X02 1.00 · X03 0.47 | $0.72 | First run after adding the workflow-automation tasks. X03 grader then relaxed to accept Supervised\|Monitored; re-run pending. |
+| 2026-06-14 | jtbd-prd | test (3) | 0.781 | X01 0.88 · X02 1.00 · X03 0.47 | $0.72 | First run after adding the workflow-automation tasks. X03 was too strict; grader relaxed to accept Supervised\|Monitored. Re-confirmed by the 2026-06-15 optimize run (test 1.000). |
 
 ## How to update
 
