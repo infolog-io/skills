@@ -33,7 +33,7 @@ Wargaming and red-teaming are judgment-dense and token-light: strongest availabl
 
 You are not executing the mission. You are wargaming it. A cheaper executor runs the brief later; your job is the route it will follow.
 
-Recon first, read-only. Read everything the mission's Materials list names. Run nothing that changes state.
+Recon first, read-only. Read everything the mission's Materials list names. Run nothing that changes state. Every load-bearing claim carries a verbatim disk quote; a summary is not evidence.
 
 Then fight the mission on paper, move by move:
 
@@ -51,7 +51,7 @@ Two grades, both against the repo's SUCCESS.md, both pass/fail per point. No par
 
 ## Red-team protocol
 
-Attack the route before reality does. A fresh subagent plays a mid-tier executor running the route blind and reports the move where it stalls, misreads an Expect, or faces a judgment call. Patch every break. Add the branch that catches it next time. DONE requires all points passing AND one honest break attempt failing. Two consecutive fruitless cycles: stop, log what remains.
+Attack the route before reality does. A fresh subagent plays a mid-tier executor running the route blind and reports the move where it stalls, misreads an Expect, or faces a judgment call. Patch every break. A patched fact re-verifies its sibling details — syntax, format, count — with fresh disk quotes. Add the branch that catches it next time. DONE requires all points passing AND one honest break attempt failing. Two consecutive fruitless cycles: stop, log what remains.
 
 ## BLOCKED discipline
 

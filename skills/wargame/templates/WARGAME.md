@@ -11,9 +11,9 @@ You are not executing this mission. You are wargaming it. A cheaper executor run
 
 ## Recon findings
 
-Facts only, each with its source. No recommendations here; routes belong in Moves.
+Facts only, each with its source. Load-bearing facts quote the disk verbatim; a summary is not evidence. No recommendations here; routes belong in Moves.
 
-- {{fact}} — {{source path or command}}
+- {{fact}} — {{source path or command}} — quote: {{verbatim disk line, for load-bearing facts}}
 
 ## Moves
 
@@ -28,7 +28,7 @@ Numbered, in execution order. The executor performs them top to bottom unless a 
 
 ## Forks
 
-No judgment calls left to the executor. Every branch has an observable trigger.
+No judgment calls left to the executor. Every branch has an observable trigger. A fork that changes an accepted terminal state restates every downstream Expect, assertion, and verification row it alters.
 
 - If you observe {{X}} at Move {{N}}, take route: {{B — the moves that replace or follow}}.
 
