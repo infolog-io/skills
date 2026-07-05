@@ -25,6 +25,8 @@ BRIEF → WARGAME → GRADE → RED-TEAM → EXECUTE → VERIFY → RETRO
 
 A task with 3+ steps or an architectural decision runs the loop. Below that threshold, skip it and add a one-line `skip_note` entry to LEDGER.md. The law: no execution without a graded wargame, or that one-line note.
 
+One wargamer per mission: before GRADE, claim the mission in its ledger entry (`claimed_by:` plus session identity). A session observing a live claim stands down to audit-only.
+
 ## Effort routing
 
 Wargaming and red-teaming are judgment-dense and token-light: strongest available model, maximum reasoning effort, no edit loops. Grading needs adversarial reading, not genius: any capable model, but always a fresh subagent with no authoring context. Execution goes to the cheapest model that passes verification: Sonnet via build-loop-claude-code, or Codex via HANDOFF-CODEX.
@@ -33,7 +35,7 @@ Wargaming and red-teaming are judgment-dense and token-light: strongest availabl
 
 You are not executing the mission. You are wargaming it. A cheaper executor runs the brief later; your job is the route it will follow.
 
-Recon first, read-only. Read everything the mission's Materials list names. Run nothing that changes state. Every load-bearing claim carries a verbatim disk quote; a summary is not evidence.
+Recon first, read-only. Read everything the mission's Materials list names. Run nothing that changes state. Every load-bearing claim carries a verbatim disk quote; a summary is not evidence. A symbol a move orders the executor to use carries its providing import line, quoted from disk.
 
 Then fight the mission on paper, move by move:
 

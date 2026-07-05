@@ -7,6 +7,7 @@ One entry per mission, appended in mission order. Grades, refinement patches, ex
 ```yaml
 mission: docs/missions/001-example-mission.md
 wargame: docs/wargames/001-example-mission.md
+claimed_by: null # wargamer session identity; set BEFORE grade; other sessions stand down to audit-only
 dates:
   drafted: 2026-07-05
   graded: 2026-07-05
