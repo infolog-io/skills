@@ -6,7 +6,7 @@
     "url": "https://github.com/infolog-io"
   },
   "metadata": {
-    "description": "Information Logistics plugin marketplace. Twelve engineering and design skills: process discipline, JTBD validation, sizing, structural audit, agent orchestration, type scales, brand audits, and the HTML composition family (generator-critic loop, component-composer, infolog-io + infolog-terminal themes, html-sketch).",
+    "description": "Information Logistics plugin marketplace. Thirteen engineering and design skills: process discipline, the wargame meta loop, JTBD validation, sizing, structural audit, agent orchestration, type scales, brand audits, and the HTML composition family (generator-critic loop, component-composer, infolog-io + infolog-terminal themes, html-sketch).",
     "version": "0.5.0"
   },
   "plugins": [
@@ -126,6 +126,16 @@
       "source": "./skills/html-sketch",
       "version": "0.0.1",
       "category": "design",
+      "author": {
+        "name": "Information Logistics"
+      }
+    },
+    {
+      "name": "wargame",
+      "description": "Meta loop + eval system for product engineering. Wargame missions on paper before execution: BRIEF, WARGAME, GRADE, RED-TEAM, EXECUTE, VERIFY, RETRO. Plans graded pass/fail against an 8-point rubric plus repo extensions, red-teamed until an honest break attempt fails, then handed to a cheaper executor. Ledger tracks predicted-vs-actual; retros patch the system itself.",
+      "source": "./skills/wargame",
+      "version": "0.0.1",
+      "category": "engineering",
       "author": {
         "name": "Information Logistics"
       }

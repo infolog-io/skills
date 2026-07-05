@@ -1,0 +1,9 @@
+{
+  "name": "wargame",
+  "version": "0.0.1",
+  "description": "Meta loop + eval system for product engineering. Wargame missions on paper before execution: BRIEF, WARGAME, GRADE, RED-TEAM, EXECUTE, VERIFY, RETRO. Plans graded pass/fail against an 8-point rubric plus repo extensions, red-teamed until an honest break attempt fails, then handed to a cheaper executor. Ledger tracks predicted-vs-actual; retros patch the system itself.",
+  "author": {
+    "name": "Information Logistics",
+    "url": "https://github.com/infolog-io"
+  }
+}
