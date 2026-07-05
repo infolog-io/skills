@@ -10,7 +10,7 @@ executor: "{{cheapest capable model + harness, e.g. Sonnet via build-loop-claude
 
 # Mission {{NNN}}: {{Name}}
 
-Any unfilled `{{...}}` below puts this mission in status BLOCKED. Write what is missing into the ledger entry. Never invent inputs.
+Any unfilled double-brace placeholder below puts this mission in status BLOCKED. Write what is missing into the ledger entry. Never invent inputs. The readiness check is mechanical: a filled brief contains zero double-brace sequences.
 
 ## Context
 
