@@ -5,12 +5,14 @@ description: >
   rule's full lifecycle. CLAUDE PIP locks a behavioral rule into the
   project's CLAUDE-PIP.md. LOCAL PIP scopes a rule to the current
   working directory. OFF THE PIP removes a rule by id or keyword.
-  PRUNE THE PIP audits the rules for staleness; default verdict is
-  keep, drops require concrete defects. PROMOTE THE PIP graduates
-  stable rules to their canonical homes (project CLAUDE.md, DESIGN.md,
-  or the user-global CLAUDE.md) — the user calls out which to
-  promote. Every PIP-added rule is wrapped in HTML-comment markers so
-  it can be cleanly removed later. Activates on any all-caps occurrence
+  PRUNE THE PIP audits the rules for staleness and reports the context
+  tax (per-rule token cost, hits, caps); default verdict is keep, drops
+  require concrete defects. PROMOTE THE PIP graduates stable rules to
+  their canonical homes (project CLAUDE.md, DESIGN.md, user-global
+  CLAUDE.md, or ~/.claude/rules/lessons.md) — the user calls out which
+  to promote. PIP is the single lifecycle engine for both the project
+  PIP file and the global lessons.md store. Every PIP-added rule is
+  wrapped in HTML-comment markers so it can be cleanly removed later. Activates on any all-caps occurrence
   of `CLAUDE PIP`, `LOCAL PIP`, `OFF THE PIP`, `PRUNE THE PIP`, or
   `PROMOTE THE PIP` in a message. Also activates on phrases like
   "before compact", "audit PIP", "graduate PIP rule".
@@ -105,7 +107,7 @@ Examples:
 Every rule the skill adds is wrapped in HTML-comment markers:
 
 ```
-<!-- pip:start id=ab12cd34 trigger="CLAUDE PIP TDD" added=2026-05-12 -->
+<!-- pip:start id=ab12cd34 trigger="CLAUDE PIP TDD" added=2026-05-12 hits=0 last-hit=- -->
 - **Write a failing test FIRST** for any user-visible behavior, before writing code. Confirm the test fails for the right reason. Only then write the minimum code to make it pass.
 <!-- pip:end id=ab12cd34 -->
 ```
@@ -115,6 +117,11 @@ Every rule the skill adds is wrapped in HTML-comment markers:
 | `id` | 8-character lowercase hex; generated from a hash of (timestamp + first three words of rule body). Stable enough to reference by `OFF THE PIP <id>` |
 | `trigger` | The original user-typed trigger phrase, verbatim (e.g., `"CLAUDE PIP TDD"`, `"LOCAL PIP always lint before commit"`) — preserved for audit |
 | `added` | ISO date of when the rule was added (YYYY-MM-DD) |
+| `hits` | Count of sessions where the rule visibly fired — caught a would-be violation or gated an action. Bump it in place when it happens. Missing field reads as `0` (pre-0.4.0 rule). |
+| `last-hit` | ISO date of the most recent hit; `-` when never. Bump alongside `hits`. |
+
+`hits` and `last-hit` feed the prune economics: a rule's token cost is
+justified by evidence it fires, not by how reasonable it sounds.
 
 Markers are required. A rule added without markers cannot be cleanly
 removed later.
@@ -174,21 +181,24 @@ directory.
 
 ## Procedure — `PRUNE THE PIP`
 
-1. **Read state.** Load `<project-root>/.claude/CLAUDE-PIP.md`. Also read neighbors for duplication checks: `CLAUDE.md`, `DESIGN.md`, `tasks/lessons.md`, `~/.claude/CLAUDE.md`, `~/.claude/rules/*.md`.
-2. **Render the rules as a categorized table** (see "Rule categorization" below). One row per rule. Short name 4–6 words; terse enforcement column ≤ 25 words.
-3. **Evaluate each rule** against four checks:
+1. **Read state.** Load `<project-root>/.claude/CLAUDE-PIP.md` and the global store `~/.claude/rules/lessons.md`. Also read neighbors for duplication checks: `CLAUDE.md`, `DESIGN.md`, `tasks/lessons.md`, `~/.claude/CLAUDE.md`, `~/.claude/rules/*.md`.
+2. **Render the rules as a categorized table** (see "Rule categorization" below). One row per rule. Short name 4–6 words; terse enforcement column ≤ 25 words. Add three accounting columns: `tokens` (rule chars ÷ 4, rounded), `hits`, `last-hit`.
+3. **Report the context tax.** Sum the token column and print: `Context tax: ~N tokens per session across R rules.` Every rule loads on every session; the file is a recurring spend, not free storage.
+4. **Evaluate each rule** against five checks:
    - **File references resolve?** Every `src/...`, `docs/...`, or `~/...` path must exist.
    - **Component references resolve?** Named components must still exist in the codebase (grep).
    - **Duplicated elsewhere?** Search the neighbor files for the rule's substance.
    - **Hedge words snuck in?** Find "should", "consider", "usually", "probably", "might".
-4. **Assign verdicts. Default is `keep`** — carry-forward wins.
+   - **Earning its tokens?** `hits=0` AND `added` more than 60 days ago AND cost above 100 tokens → flag `⚠ cost` in the table. The flag informs the user; it is NOT a drop verdict on its own.
+5. **Assign verdicts. Default is `keep`** — carry-forward wins.
    - `keep` (default): rule is current, or no concrete reason to drop.
    - `refine`: wording needs tightening; the substance is right.
-   - `drop`: concrete signal of staleness (broken file ref, exact duplicate elsewhere). "Feels stale" or "haven't seen it fire" do not qualify.
+   - `drop`: concrete signal of staleness (broken file ref, exact duplicate elsewhere). "Feels stale" or "haven't seen it fire" do not qualify — the `⚠ cost` flag surfaces the economics, the user makes the drop call.
    - `move-elsewhere`: hint only — tell the user to invoke `PROMOTE THE PIP`. Prune does not act on this verdict.
-5. **Show the diff** as a markdown report; group by verdict. Wait for approval.
-6. **On approve, apply** in place (refine = rewrite preserving id; drop = delete the full pip:start/pip:end range).
-7. **Report** the post-prune count.
+6. **Enforce the caps.** 40 rules per store; 600 chars per rule. Over either cap, prune must resolve the excess before adding is allowed again.
+7. **Show the diff** as a markdown report; group by verdict. Wait for approval.
+8. **On approve, apply** in place (refine = rewrite preserving id; drop = delete the full pip:start/pip:end range).
+9. **Report** the post-prune count and the new context tax.
 
 If unsure between keep and drop, choose keep. PIP rules pass forward to the next context by default; dropping them is the destructive choice.
 
@@ -266,7 +276,7 @@ When the user invokes `CLAUDE PIP <topic>`, prefer the phrasing here over invent
 | **Adversarial review** | **Run an adversarial review** before claiming any feature shipped. 2-minute hostile pass: where could this break, what was tested vs. assumed, what classes of silent failure exist. |
 | **End-to-end verification** | **Fetch the deployed page** and grep for the thing the feature is supposed to produce (anchor IDs, button labels, schema markup, expected text) before claiming shipped. "Build green" is not a proxy for "feature works." |
 | **Smoke test all paths** | **Smoke-test every affected path**, not just the one most likely to be interesting. If a change touches N pages, check N pages. |
-| **Lessons captured** | **Update `tasks/lessons.md`** after every user correction. Name the failure, the fix, the guardrail. |
+| **Lessons captured** | **Add a one-line lesson to `~/.claude/rules/lessons.md`** on any user correction or self-caught mistake, before continuing work. Repo-specific facts go to `<repo>/tasks/lessons.md` instead. |
 | **Test the test** | **Watch the test fail first.** A passing test before the implementation exists means the test is vacuously passing — tighten the assertion. |
 | **No defensive null guards on required fields** | **NEVER paper over a missing required schema field with a null guard.** Fix the source: the seed is wrong, the schema is wrong, or the locale write orphaned data. |
 | **No build-green-as-done** | **NEVER claim "shipped" because the build is green.** The build only proves the code compiles. The test gate is what proves the feature works. |
@@ -289,7 +299,7 @@ Every PIP rule maps to exactly one category. Categorization drives `PRUNE THE PI
 
 | Category | Heuristic — what the rule looks like | Promote destination |
 |---|---|---|
-| **Behavioral / process** | Cross-project disciplines. "Write a failing test FIRST", "Enter plan mode", "Dispatch a sub-agent for X". Not tied to a specific file or component. | `~/.claude/CLAUDE.md` (user-global) or `~/.claude/rules/<topic>.md` |
+| **Behavioral / process** | Cross-project disciplines. "Write a failing test FIRST", "Enter plan mode", "Dispatch a sub-agent for X". Not tied to a specific file or component. | `~/.claude/rules/lessons.md` (one-line lessons, auto-loaded) or `~/.claude/CLAUDE.md` / `~/.claude/rules/<topic>.md` for structured rule sets |
 | **Payload landmine** | Specific Payload-CMS gotchas. `_status: "published"`, `NODE_ENV=production` prefix, locale fallback, redeploy after `cms:*` script. References `payload`, collections, or `cms:*` package scripts. | Project `CLAUDE.md` under "Working with Payload" |
 | **Design lock** | "X is the canonical Y. Locked design contract: ... Any visual change requires explicit user approval." References a specific component file (`src/components/...`) and pins geometry, tokens, typography, or motion. | Project `DESIGN.md` under "Locked components" |
 | **Spec-frozen** | "Before editing X, read the spec at Y." Gates a work-in-progress surface against an approved design doc. | Project `DESIGN.md` under "Locked components" or removed once the spec has fully shipped |
@@ -312,7 +322,17 @@ If the same rule should apply in every project, not just this one, also append i
 
 Four points in a rule's life. The default at every handoff is **carry-forward**: PIP is the per-project context that survives `/compact` and session boundaries. Only explicit prune or promote actions remove a rule.
 
-- **Capture** — `CLAUDE PIP` / `LOCAL PIP`. Writes the rule wrapped in markers. Most rules start here.
+PIP is the single lifecycle engine for two stores with two entry points:
+
+| Store | Scope | Entry point |
+|---|---|---|
+| `<project>/.claude/CLAUDE-PIP.md` | Project-scoped deterministic gates | User types a PIP trigger |
+| `~/.claude/rules/lessons.md` | Cross-project one-line lessons, auto-loaded every session | Claude self-catches a mistake or receives a correction, per that file's protocol |
+
+`PRUNE THE PIP` and `PROMOTE THE PIP` operate on both stores with the same
+verdicts, token accounting, and caps. One engine, no drift between the two.
+
+- **Capture** — `CLAUDE PIP` / `LOCAL PIP`, or the lessons.md self-catch protocol. Writes the rule wrapped in markers (PIP files) or as a dated one-liner (lessons.md). Most rules start here.
 - **Carry-forward (default)** — at the end of a context window, rules stay in CLAUDE-PIP.md unless the user explicitly prunes or promotes them. The file loads on every future session in this project. Prune + promote run at handoff to *select* what changes; everything else persists.
 - **Prune** — `PRUNE THE PIP`. Audits for concrete defects (broken refs, exact duplicates, hedge words). Default verdict is `keep`. Silence wins.
 - **Promote** — `PROMOTE THE PIP`. Renders the categorized table; the user calls out which rules to graduate. The skill never auto-graduates.
