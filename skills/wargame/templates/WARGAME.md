@@ -11,7 +11,7 @@ You are not executing this mission. You are wargaming it. A cheaper executor run
 
 ## Recon findings
 
-Facts only, each with its source. Load-bearing facts quote the disk verbatim; a summary is not evidence. A route editing a union, enum, or registry lists every consumer (grep it), each a wiring site or an explicit non-site. No recommendations here; routes belong in Moves.
+Facts only, each with its source. Load-bearing facts quote the disk verbatim; a summary is not evidence. A route editing a union, enum, or registry lists every consumer (grep it), each a wiring site or an explicit non-site. A claim that is the output of a regex/transform applied to corpus data (a count, a resolved/unresolved split) is verified by running that transform against every matching instance, not by reading samples. A route spawning a new external process or binary searches the whole codebase for prior art solving the same problem class before designing its own solution. No recommendations here; routes belong in Moves.
 
 - {{fact}} — {{source path or command}} — quote: {{verbatim disk line, for load-bearing facts}}
 
