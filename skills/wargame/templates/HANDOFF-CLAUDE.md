@@ -21,7 +21,7 @@ The contract:
 3. At forks, obey the trigger exactly. If you observe X, take route B. Do not weigh options the wargame already weighed.
 4. Run every RECON NEEDED check before depending on its assumption, and record the outcome.
 5. Never ask a question. Write it to the ledger entry under `questions_logged` and continue if a counter-move or fork covers the situation. If nothing covers it, that is an abort.
-6. At any abort condition: stop, write current state to the ledger entry, hand back. Never improvise past an abort. One exception: a route patched mid-execution by its own wargamer is a resume order from the current move, not an abort.
+6. At any abort condition: stop, write current state to the ledger entry, hand back. Never improvise past an abort. Two exceptions: a route patched mid-execution by its own wargamer is a resume order from the current move, not an abort; and a route gap whose fix is an exactly-symmetric, already-sanctioned pattern in the same binary may be bridged by mirroring it, logged as a deviation naming the mirrored site — anything less symmetric stays an abort.
 7. Run every verification run at its stated time. Log each result under `actuals.verification` exactly as pass or fail.
 8. Before reporting done, fill every `actuals` field in `LEDGER.md`: `executor_model`, `questions_logged`, `deviations` (every departure from the route, with move numbers), `forks_predicted`, `forks_fired`, `forks_unpredicted`, `verification`, `rework_count`.
 

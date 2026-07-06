@@ -49,7 +49,7 @@ Write it so the executor runs the brief end to end without asking a single quest
 
 ## Grading protocol
 
-Two grades, both against the repo's SUCCESS.md, both pass/fail per point. No partial credit. First a self-grade, logged honestly in the ledger. Then a fresh subagent with no authoring context grades blind and quotes the failing line for every fail. A wargame is not done until every point passes.
+Two grades, both against the repo's SUCCESS.md, both pass/fail per point. No partial credit. First a self-grade, logged honestly in the ledger. Then a fresh subagent with no authoring context grades blind and quotes the failing line for every fail. A wargame is not done until every point passes. Every decision the brief delegates to the wargamer gets an explicit disposition line: SETTLED, citing the section that settles it, or DROPPED, with the reason. A self-grade claiming a decision settled cites that section — a paraphrase or a neighboring rule does not satisfy a distinct requirement.
 
 ## Red-team protocol
 
