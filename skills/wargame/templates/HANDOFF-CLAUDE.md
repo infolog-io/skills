@@ -6,6 +6,8 @@ Launch: `cd {{repo path}} && claude --model {{sonnet or per routing}}`
 
 Fallback when the CLI cannot authenticate: an agent-tool subagent on the same model tier, or HANDOFF-CODEX. Nested `claude -p` calls inherit the parent session's auth env (`ANTHROPIC_BASE_URL`); strip it before retrying.
 
+A verification step needing interactive GUI/desktop consent (computer-use, a clicked-through app session) cannot run in a blind background execution. Routes name it as an explicit HUMAN step — the exact click path and expected observation — never as an executor move.
+
 ---
 
 EXECUTION ORDER. You are the executor. The route was wargamed and red-teamed; your job is running it, not improving it.
