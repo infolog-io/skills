@@ -10,10 +10,13 @@ emit a Semantic Organization Audit with a verdict.
 
 ## Input contract
 
-A path to a skill directory (e.g., `skills/<skill-name>/`). The skill
-folder contains both the spec-required files (SKILL.md, optional
-scripts/references/assets) and the marketplace files (plugin.json,
-README.md, TESTS.md) in one place — no wrapper directory.
+A path to a skill directory (e.g., `skills/<skill-name>/`) and an optional
+target host. Default target host in this repo: `infolog-marketplace`.
+
+For `infolog-marketplace`, the skill folder contains both the spec-required
+files (SKILL.md, optional scripts/references/assets) and the marketplace
+files (plugin.json, README.md, TESTS.md) in one place — no wrapper
+directory.
 
 ## Output contract
 
@@ -38,6 +41,10 @@ Resolve every reference in SKILL.md and in each `references/` and
 `prompts/` file. A dead reference forces `broken`. Exempt placeholders
 (`<...>`), globs (`*`), and illustrative example paths. Resolve cross-skill
 tokens (`<skill-name>/references/<file>`) against the `skills/` root.
+
+Finally, identify the host-standard facet per `references/host-standards.md`.
+State the target host and whether the path/manifest conventions pass, need
+advisory notes, or fail for that target.
 
 ### 2. Detect profile
 
@@ -66,6 +73,20 @@ skills are not penalized for absent sub-folders.
 | P2. README discipline | `README.md` present; ≤200 words; what/when/install |
 | P3. TESTS.md presence/quality | `TESTS.md` present; end conditions; ≥3 test cases; out-of-scope listed |
 | P4. Migration health | No folders meeting migration triggers without action |
+
+### 4a. Emit context-fit advisory
+
+Map each file or folder to the five context layers from
+`references/context-layers.md`:
+
+- Identity: SKILL.md, README, plugin metadata
+- Routing: triggers, operating modes, folder indexes
+- Stage contract: prompts and mode procedures
+- Reference material: background knowledge
+- Working artifact: templates, schemas, fixtures, assets, scripts
+
+If a file lives in the wrong layer, list it as an advisory finding with the
+recommended destination. Do not force `broken` for context-fit alone.
 
 ### 5. Apply verdict thresholds
 
@@ -111,6 +132,8 @@ Marketplace-layer:
 - P4. Migration health:            [1-5] — [reason]
 
 Reference-integrity gate:          pass | FAIL (dead: <file → token>)
+Host-standard facet:               target=<host>; pass | advisory | FAIL
+Context-fit advisory:              pass | advisory (<file → suggested layer>)
 Recommended next change:           [single highest-leverage fix]
 Verdict:                           [one of four]
 Confidence:                        High | Medium | Low
@@ -154,6 +177,9 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   5 — End conditions + 7 test cases + out-of-scope
 - P4. Migration health:            5 — Sized appropriately
 
+Reference-integrity gate:          pass
+Host-standard facet:               target=infolog-marketplace; pass
+Context-fit advisory:              pass
 Recommended next change:           none — skill is canonical
 Verdict:                           spec-compliant + marketplace-ready
 Confidence:                        High
@@ -181,6 +207,9 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   1 — File does not exist
 - P4. Migration health:            5 — No folders to evaluate
 
+Reference-integrity gate:          pass
+Host-standard facet:               target=infolog-marketplace; advisory — marketplace file missing
+Context-fit advisory:              pass
 Recommended next change:           Add TESTS.md with end conditions and test cases
 Verdict:                           spec-compliant + marketplace-drift
 Confidence:                        High
@@ -229,3 +258,5 @@ Recommended next change:           Rename to comply with spec; update all four n
 - Findings cite specific file paths
 - Recommended next change is concrete and immediately actionable
 - Profile (single-rule vs. full-shape) is declared upfront
+- Host target is explicit
+- Context-fit advisory is present, even if it says pass

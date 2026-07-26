@@ -24,7 +24,8 @@
     --tonal-success-fill: #ddf9df; --tonal-success-ink: #008104;
     --tonal-info-fill: #def2ff;    --tonal-info-ink: #0063e6;    --tonal-danger-fill: #ffe6df;  --tonal-danger-ink: #da0000;
     --accent-warm: var(--success);
-    --radius-panel: 10px;
+    /* Corner radius — two tiers (style rule): --radius-ui for crisp components (buttons, alerts, stat tiles); --radius-panel for larger surfaces/cards. */
+    --radius-ui: 4px; --radius-panel: 10px;
     --border: 1px solid var(--gray-300);
     --grid-cols: 4; --grid-gutter: var(--space-3); --grid-margin: var(--space-4); --grid-max-width: 1280px;
     /* Elevation — C-hybrid: light = soft shadow (locked 2026-05-31) */
@@ -152,7 +153,7 @@
 
   /* --- Buttons --------------------------------------------------------- */
   .btn-row { display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: center; }
-  .btn { font-family: var(--sans); font-size: 0.9375rem; font-weight: var(--weight-medium); padding: var(--space-2) var(--space-4); border-radius: 16px; border: 1px solid transparent; cursor: pointer; transition: opacity var(--dur-fast) var(--ease-standard); }
+  .btn { font-family: var(--sans); font-size: 0.9375rem; font-weight: var(--weight-medium); padding: var(--space-2) var(--space-4); border: 1px solid transparent; cursor: pointer; transition: opacity var(--dur-fast) var(--ease-standard); border-radius: var(--radius-ui); }
   .btn:hover { opacity: 0.92; }
   .btn.primary { background: var(--success); color: #fff; }
   .btn.info    { background: var(--info);    color: var(--paper); }  .btn.danger  { background: var(--danger);  color: var(--paper); }
@@ -168,7 +169,7 @@
   .pill.info    { background: var(--tonal-info-fill);    color: var(--tonal-info-ink); }  .pill.danger  { background: var(--tonal-danger-fill);  color: var(--tonal-danger-ink); }
 
   /* --- Alerts (semantic, no stripe) ----------------------------------- */
-  .alert { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-radius: 4px; font-size: var(--font-size-body); margin-bottom: var(--space-2); }
+  .alert { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-radius: var(--radius-ui); font-family: var(--sans); font-size: 0.9375rem; font-weight: var(--weight-medium); margin-bottom: var(--space-2); }
   .alert > .alert-body { flex: 1; }
   .alert-close { flex: 0 0 auto; background: transparent; border: 0; cursor: pointer; color: currentColor; font-family: var(--sans); font-size: 1.15rem; line-height: 1; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 5px; opacity: 0.55; margin: -3px -5px -3px 0; }
   .alert-close:hover { opacity: 1; background: color-mix(in srgb, currentColor 14%, transparent); }
@@ -188,7 +189,7 @@
   .dot.info { background: var(--info); }  .dot.danger { background: var(--danger); }
 
   /* --- Stat tiles ----------------------------------------------------- */
-  .stat-tile { padding: var(--space-4); background: var(--paper-soft); border-radius: var(--radius-panel); display: flex; flex-direction: column; gap: var(--space-1); }
+  .stat-tile { padding: var(--space-4); background: var(--paper-soft); border-radius: var(--radius-ui); display: flex; flex-direction: column; gap: var(--space-1); }
   .stat-tile.success { background: var(--tonal-success-fill); }
   .stat-tile.success .metric, .stat-tile.success .unit, .stat-tile.success .label { color: var(--tonal-success-ink); }
   .stat-tile.info    { background: var(--tonal-info-fill); }

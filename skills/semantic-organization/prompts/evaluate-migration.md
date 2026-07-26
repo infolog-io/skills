@@ -132,7 +132,7 @@ separate audit. No own rubric. No own verdict. Anti-triggers dominate.
 | Folder has 5 prompts but they are stages of a single pipeline | `stay-as-folder` — staged pipelines are one verdict, one skill |
 | Folder has 4 prompts and a rubric | `promote-to-sibling-skill` — rubric is decisive |
 | Folder has 10 prompts but no rubric and no trigger | Strong promote signal but flag for review; the parent may be overloaded |
-| Folder has nothing but `.gitkeep` | `stay-as-folder`, marked as empty placeholder |
+| Folder has nothing but `.gitkeep` | `stay-as-folder`, but recommend deleting or omitting the empty placeholder |
 
 ## Verification before returning output
 

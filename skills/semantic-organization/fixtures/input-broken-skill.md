@@ -61,6 +61,9 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   1 — file does not exist
 - P4. Migration health:            N/A — cannot evaluate
 
+Reference-integrity gate:          FAIL (cannot resolve from broken layout)
+Host-standard facet:               target=infolog-marketplace; FAIL — root path and manifest placement violate this repo's host profile
+Context-fit advisory:              advisory (src/ → scripts/ if executable support remains; docs/ → README.md or references/)
 Recommended next change:           Run the scaffold prompt for a new skill at skills/example-broken/, then migrate content
 Verdict:                           broken (forbidden layout + S1 at 1)
 Confidence:                        High

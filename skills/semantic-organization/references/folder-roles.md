@@ -8,6 +8,8 @@ The Agent Skills spec at https://agentskills.io/specification is the source
 of truth for what a skill is. The Anthropic reference repo at
 https://github.com/anthropics/skills shows the canonical directory shape.
 This reference applies both to the infolog-io marketplace.
+For host-specific alternatives such as Codex repo-local skills, see
+[host-standards.md](host-standards.md).
 
 ## The canonical layout
 
@@ -97,7 +99,7 @@ is also why `legacy/` is forbidden below.
 
 ## Forbidden layouts
 
-The audit returns `broken` if any of these appear:
+For this marketplace, the audit returns `broken` if any of these appear:
 
 | Forbidden | Why | Replacement |
 |---|---|---|

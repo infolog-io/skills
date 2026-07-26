@@ -66,6 +66,9 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   3 — exists but thin on specifics
 - P4. Migration health:            5 — no overgrown folders
 
+Reference-integrity gate:          pass
+Host-standard facet:               target=infolog-marketplace; advisory — marketplace docs need cleanup
+Context-fit advisory:              advisory (references/HelperFunctions.md → references/helper-functions.md; prompts/extract.md → prompts/extract-from-<source-name>.md)
 Recommended next change:           Add templates/ and schemas/, rename files per naming-rules.md
 Verdict:                           spec-compliant, marketplace-drift
 Confidence:                        High

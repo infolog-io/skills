@@ -6,6 +6,7 @@ type: reference
 
 Two distinct sources of authority govern a skill in this marketplace.
 Confusing them produces over-engineered standards or non-portable skills.
+For host-specific alternatives, use [host-standards.md](host-standards.md).
 
 The clean answer: **both live in the same folder.** There is no separate
 plugin-wrapper directory. A skill is simultaneously spec-compliant AND
@@ -80,7 +81,8 @@ added inside each skill folder to enable Claude Code plugin install.
 
 ## Forbidden layouts
 
-The audit returns `broken` on these (regressions to old wrapper forms):
+For this marketplace, the audit returns `broken` on these (regressions to
+old wrapper forms):
 
 | Forbidden | Why |
 |---|---|

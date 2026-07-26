@@ -4,13 +4,13 @@ description: >
   Governs how every skill in this marketplace is structured. Codifies the
   Anthropic Agent Skills directory convention (skills/<name>/SKILL.md at
   the repo root — no plugin wrapper), folder roles, naming rules, and
-  migration triggers. Scaffolds new skills against the canonical layout,
-  audits existing skills, and recommends when a folder should become its
-  own sibling skill. Applies Unix philosophy: one skill = one purpose,
-  compose via plain text, prefer small over large. Activates on "scaffold
-  a new skill", "/new-skill", "audit this skill", "/semantic-audit",
-  "should this be a folder or its own skill", or any time a skill
-  structure is being designed or evaluated.
+  migration triggers, context layers, and host-specific structure profiles.
+  Scaffolds new skills against the chosen target host, audits existing
+  skills, and recommends when a folder should become its own sibling skill.
+  Applies Unix philosophy: one skill = one purpose, compose via plain text,
+  prefer small over large. Activates on "scaffold a new skill", "/new-skill",
+  "audit this skill", "/semantic-audit", "should this be a folder or its own
+  skill", or any time a skill structure is being designed or evaluated.
 ---
 
 # semantic-organization
@@ -19,7 +19,10 @@ description: >
 
 Every skill in this marketplace must match the Anthropic Agent Skills
 directory convention at https://github.com/anthropics/skills. This skill
-encodes that convention and audits against it.
+encodes that convention and audits against it. For generation and audits,
+the default target host in this repo is `infolog-marketplace`; see
+`references/host-standards.md` before targeting Codex or an external
+Claude Code plugin package.
 
 ## Canonical layout
 
@@ -94,6 +97,22 @@ Required: same as single-rule, plus at least one of `references/`,
 A skill is full-shape when it has multiple operating modes, references
 broken out from SKILL.md, and (usually) prompts or assets.
 
+## Context layers
+
+Every file should serve one interpretable context layer:
+
+| Layer | Role | Typical home |
+|---|---|---|
+| Identity | What this capability is and when it activates | `SKILL.md`, `README.md`, `plugin.json` |
+| Routing | Which mode should run | SKILL.md triggers and operating modes |
+| Stage contract | Exact procedure for a mode | `prompts/` |
+| Reference material | Knowledge loaded on demand | `references/` |
+| Working artifact | Output shape, examples, resources, or executable support | `templates/`, `schemas/`, `fixtures/`, `assets/`, `scripts/` |
+
+See `references/context-layers.md` for context-fit checks. Do not create
+empty context folders "just in case"; profile-aware scaffolds include only
+folders that carry a real layer.
+
 ## The eight audit dimensions
 
 See `references/audit-rubric.md`.
@@ -131,8 +150,9 @@ See `references/audit-rubric.md`.
 
 See `references/index.md` for the folder map. References:
 `spec-vs-conventions.md`, `folder-roles.md`, `naming-rules.md`,
-`migration-triggers.md`, `audit-rubric.md`, `unix-philosophy.md`,
-`okf-alignment.md` (Open Knowledge Format alignment; pinned OKF version).
+`context-layers.md`, `host-standards.md`, `migration-triggers.md`,
+`audit-rubric.md`, `unix-philosophy.md`, `okf-alignment.md` (Open Knowledge
+Format alignment; pinned OKF version).
 
 ## Triggers
 
@@ -156,17 +176,20 @@ Every mode must produce complete, untruncated output.
 1. **Profile detection** — state single-rule or full-shape
 2. **Forbidden layout check** — pass/fail with evidence
 3. **Reference-integrity gate** — pass/fail; on fail, list each dead reference (`file → token`). See `references/audit-rubric.md`.
-4. **8-dimension table** — all 8 rows, each with dimension ID, score (1-5), and one-line rationale
-5. **Verdict line** — one of the four verdicts from the Verdicts table, verbatim
+4. **Host-standard facet** — target host, pass/advisory/fail, and path/manifest notes
+5. **Context-fit advisory** — identity/routing/stage/reference/artifact mismatches, if any
+6. **8-dimension table** — all 8 rows, each with dimension ID, score (1-5), and one-line rationale
+7. **Verdict line** — one of the four verdicts from the Verdicts table, verbatim
 
 Do not stop mid-table. If context limits approach, summarize rather than truncate.
 
 ### Scaffold output
 
 Emit the full directory tree, then each required file's complete content:
-- `plugin.json` — valid JSON with name, description, version
 - `SKILL.md` — frontmatter + placeholder body
-- `README.md` — three sections: what, when, install
-- `TESTS.md` — at least one end-condition and one test case
+- For `infolog-marketplace`: `plugin.json` with name, description, version; `README.md` with what/when/install; `TESTS.md` with at least one end-condition and one test case
+- For `codex-repo-skill`: omit Claude marketplace files unless the user asks for packaging too
 
-Do not emit partial files.
+For single-rule skills, emit only the identity files. For full-shape skills,
+emit only folders that contain a named first file or an index that explains
+what belongs there. Do not emit empty placeholder folders.

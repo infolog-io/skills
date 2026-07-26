@@ -1,82 +1,122 @@
 # Contributing
 
-How to add a new plugin to the Information Logistics marketplace.
+How to add or update a skill in the Information Logistics marketplace.
 
-## Add a plugin in five steps
+## Canonical Layout
 
-### 1. Create the plugin directory
+This repository uses the flat Agent Skills layout:
 
-```
-plugins/<plugin-name>/
+```text
+skills/<skill-name>/
 ├── .claude-plugin/
 │   └── plugin.json
-└── skills/
-    └── <skill-name>/
-        └── SKILL.md
+├── SKILL.md
+├── README.md
+└── TESTS.md
 ```
 
-Plugin and skill names use kebab-case (e.g., `lexicon-check`, `seo-audit`). The `@infolog-io` marketplace suffix already namespaces them, so no prefix is required.
+Optional folders are added only when needed:
 
-### 2. Write `plugin.json`
-
-Minimum schema:
-
-```json
-{
-  "name": "<plugin-name>",
-  "version": "0.1.0",
-  "description": "One sentence describing what this plugin does.",
-  "author": { "name": "Information Logistics", "url": "https://github.com/infolog-io" }
-}
+```text
+references/   background knowledge
+prompts/      mode-specific stage contracts
+templates/    canonical output shapes
+schemas/      JSON Schema contracts
+fixtures/     test inputs and expected outputs
+assets/       static resources
+scripts/      executable support code
 ```
 
-### 3. Write each `SKILL.md`
+Do not create a `plugins/<name>/skills/<name>/` wrapper in this repo.
 
-Frontmatter must include `name` and `description`. The `description` ends with the activation phrases users will type.
+## Add A Skill
 
-```markdown
----
-name: <skill-name>
-description: "What it does in one sentence. Activate with '<phrase one>', '<phrase two>', or '/<slash-command>'."
----
+1. Scaffold with `semantic-organization`.
 
-# <skill-name>
+   ```text
+   scaffold a new skill called <skill-name>
+   ```
 
-Body of the skill — workflow, inputs, outputs, failure modes.
-```
+2. Keep the profile honest.
 
-### 4. Register in `marketplace.json`
+   - Single-rule skills should usually contain only `SKILL.md`,
+     `.claude-plugin/plugin.json`, `README.md`, and `TESTS.md`.
+   - Full-shape skills may add `references/`, `prompts/`, `templates/`,
+     `schemas/`, `fixtures/`, `assets/`, or `scripts/` when those folders
+     carry a real context layer.
 
-Append to the `plugins` array in `.claude-plugin/marketplace.json`:
+3. Write `SKILL.md`.
 
-```json
-{
-  "name": "<plugin-name>",
-  "description": "One sentence summary.",
-  "source": "./plugins/<plugin-name>",
-  "version": "0.1.0",
-  "category": "<marketing|design|seo|engineering|...>",
-  "author": { "name": "Information Logistics" }
-}
-```
+   Frontmatter must include `name` and `description`. The `description`
+   should say what the skill does and when to use it.
 
-### 5. Open a PR
+4. Write `.claude-plugin/plugin.json`.
 
-Title: `Add <plugin-name> plugin`. The PR must include all four pieces above and update the README's "Available plugins" table.
+   ```json
+   {
+     "name": "<skill-name>",
+     "version": "0.1.0",
+     "description": "One sentence describing what this skill does.",
+     "author": {
+       "name": "Information Logistics",
+       "url": "https://github.com/infolog-io"
+     }
+   }
+   ```
 
-## Versioning
+5. Write `README.md` and `TESTS.md`.
 
-SemVer per plugin. Bump the patch version on any `SKILL.md` body change. Bump the minor version on a behavior change. Bump the major version on a breaking interface change (renamed activation phrase, removed flag, changed output schema).
+   `README.md` is the marketplace listing and should stay at or under 200
+   words. `TESTS.md` records end conditions, concrete test cases, and
+   out-of-scope items.
 
-Bump the marketplace `metadata.version` when adding or removing a plugin.
+6. Register the skill in `.claude-plugin/marketplace.json`.
+
+   Add a plugin entry whose `source` is `./skills/<skill-name>`.
+
+7. Run a semantic audit.
+
+   ```text
+   /semantic-audit skills/<skill-name>
+   ```
+
+   The target verdict for shipping is `spec-compliant + marketplace-ready`.
+
+## Update A Skill
+
+For behavior changes:
+
+- update `SKILL.md`
+- update affected references, prompts, templates, schemas, or fixtures
+- update `TESTS.md`
+- update the skill `README.md` if triggers or usage changed
+- bump the skill version in `skills/<name>/.claude-plugin/plugin.json`
+- bump the matching version in `.claude-plugin/marketplace.json`
 
 ## Validation
 
-Before opening a PR, validate locally:
+Before opening a PR or handing off:
 
 ```bash
 jq empty .claude-plugin/marketplace.json
-jq empty plugins/<plugin-name>/.claude-plugin/plugin.json
+jq empty skills/<skill-name>/.claude-plugin/plugin.json
 ```
 
-Both commands must exit 0 with no output.
+For semantic-organization changes, also run:
+
+```bash
+tools/skillopt/.venv/bin/python -m pytest tools/skillopt/tests -q
+```
+
+## Pull Requests
+
+Use a concise title:
+
+```text
+feat(<skill-name>): add <capability>
+fix(<skill-name>): clarify <behavior>
+docs(<skill-name>): update <topic>
+```
+
+Keep unrelated docs, generated artifacts, and local run outputs out of the
+PR unless they are part of the change.

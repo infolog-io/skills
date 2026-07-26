@@ -2,11 +2,31 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://infolog.io/schemas/skill-structure.json",
   "title": "Skill Structure",
-  "description": "Validates the canonical structure of a skill in the infolog-io marketplace. Flat layout matching the Anthropic Agent Skills convention at https://github.com/anthropics/skills — skills live at skills/<name>/ with no plugin wrapper.",
+  "description": "Validates the canonical structure of a skill for a declared target host. The infolog marketplace default is a flat layout matching the Anthropic Agent Skills convention at skills/<name>/ with no plugin wrapper.",
   "type": "object",
-  "required": ["skill_name", "skill_root", "manifest", "readme", "tests_md", "skill_md", "folders"],
+  "required": ["skill_name", "target_host", "skill_root", "skill_md", "folders"],
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": { "target_host": { "const": "infolog-marketplace" } }
+      },
+      "then": {
+        "required": ["manifest", "readme", "tests_md"]
+      }
+    }
+  ],
   "properties": {
+    "target_host": {
+      "type": "string",
+      "enum": [
+        "agent-skills-portable",
+        "infolog-marketplace",
+        "codex-repo-skill",
+        "claude-code-plugin-package"
+      ],
+      "description": "The host standard this structure targets. Default for this repo is infolog-marketplace."
+    },
     "skill_name": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]{1,28}[a-z0-9]$",
@@ -14,8 +34,8 @@
     },
     "skill_root": {
       "type": "string",
-      "pattern": "^skills/[a-z][a-z0-9-]+$",
-      "description": "Path relative to marketplace repo root, e.g., skills/<skill-name>. No 'plugins/' wrapper."
+      "pattern": "^(skills/[a-z][a-z0-9-]+|\\.agents/skills/[a-z][a-z0-9-]+|[a-z][a-z0-9-]+)$",
+      "description": "Path relative to the target host root: skills/<name> for infolog-marketplace, .agents/skills/<name> for Codex repo-local skills, or <name> for portable Agent Skills."
     },
     "manifest": {
       "type": "object",
@@ -76,8 +96,8 @@
         "has_triggers": { "const": true },
         "path": {
           "type": "string",
-          "pattern": "^skills/[a-z][a-z0-9-]+/SKILL\\.md$",
-          "description": "SKILL.md MUST be one level deep, at skills/<name>/SKILL.md. No nested skills/ wrapper."
+          "pattern": "^(skills/[a-z][a-z0-9-]+|\\.agents/skills/[a-z][a-z0-9-]+|[a-z][a-z0-9-]+)/SKILL\\.md$",
+          "description": "SKILL.md MUST be one level deep under the target host root. No nested skills/ wrapper for infolog-marketplace."
         }
       }
     },
@@ -96,14 +116,27 @@
       },
       "description": "All folders optional. Spec folders: scripts/, references/, assets/. Marketplace conventions: prompts/, templates/, schemas/, fixtures/."
     },
+    "context_layers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity", "routing", "stage_contracts", "reference_material", "working_artifacts"],
+      "properties": {
+        "identity": { "$ref": "#/$defs/layer_files" },
+        "routing": { "$ref": "#/$defs/layer_files" },
+        "stage_contracts": { "$ref": "#/$defs/layer_files" },
+        "reference_material": { "$ref": "#/$defs/layer_files" },
+        "working_artifacts": { "$ref": "#/$defs/layer_files" }
+      },
+      "description": "Maps files and folders to the interpretable context layers in references/context-layers.md."
+    },
     "forbidden_layouts_present": {
       "type": "array",
       "items": {
         "enum": [
           "plugins-wrapper-directory",
           "double-nested-skills",
-          "plugin-manifest-at-repo-root",
-          "skill-md-at-repo-root"
+        "plugin-manifest-at-repo-root",
+        "skill-md-at-repo-root"
         ]
       },
       "description": "List of forbidden layout violations. MUST be empty for a healthy skill."
@@ -130,6 +163,11 @@
           }
         }
       }
+    },
+    "layer_files": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Files or folders serving one context layer."
     }
   }
 }

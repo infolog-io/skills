@@ -57,6 +57,8 @@ Marketplace-layer:
 - P4. Migration health:            5 — folders sized appropriately
 
 Reference-integrity gate:          FAIL (dead: SKILL.md → references/missing-rubric.md; SKILL.md → references/workflow.md)
+Host-standard facet:               target=infolog-marketplace; pass
+Context-fit advisory:              pass
 Recommended next change:           Create the two missing references or remove the dead tokens from SKILL.md
 Verdict:                           broken (reference-integrity gate fails)
 Confidence:                        High

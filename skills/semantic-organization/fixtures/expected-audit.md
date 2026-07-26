@@ -25,6 +25,9 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   5 — end conditions stated; 6 concrete test cases; out-of-scope listed
 - P4. Migration health:            5 — no overgrown folders; no migration triggers met
 
+Reference-integrity gate:          pass
+Host-standard facet:               target=infolog-marketplace; pass
+Context-fit advisory:              pass
 Recommended next change:           none — skill is canonical
 Verdict:                           spec-compliant + marketplace-ready
 Confidence:                        High
@@ -49,6 +52,9 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   3 — exists but thin on specific test cases
 - P4. Migration health:            5 — no overgrown folders
 
+Reference-integrity gate:          pass
+Host-standard facet:               target=infolog-marketplace; advisory — marketplace docs need cleanup
+Context-fit advisory:              advisory (references/HelperFunctions.md → references/helper-functions.md; prompts/extract.md → prompts/extract-from-<source-name>.md)
 Recommended next change:           Add templates/ and schemas/, rename files per naming-rules.md
 Verdict:                           spec-compliant, marketplace-drift
 Confidence:                        High
@@ -96,6 +102,8 @@ Marketplace-layer:
 - P4. Migration health:            5 — folders sized appropriately
 
 Reference-integrity gate:          FAIL (dead: SKILL.md → references/missing-rubric.md; SKILL.md → references/workflow.md)
+Host-standard facet:               target=infolog-marketplace; pass
+Context-fit advisory:              pass
 Recommended next change:           Create the two missing references or remove the dead tokens
 Verdict:                           broken (reference-integrity gate fails)
 Confidence:                        High
@@ -124,6 +132,9 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   1 — TESTS.md does not exist
 - P4. Migration health:            N/A — cannot evaluate; skill is broken
 
+Reference-integrity gate:          FAIL (cannot resolve from broken layout)
+Host-standard facet:               target=infolog-marketplace; FAIL — root path and manifest placement violate this repo's host profile
+Context-fit advisory:              advisory (src/ → scripts/ if executable support remains; docs/ → README.md or references/)
 Recommended next change:           Run scaffold-new-skill to generate the canonical flat structure at skills/example-broken/, then migrate content
 Verdict:                           broken (forbidden layout: plugins/ wrapper; multiple dims at 1)
 Confidence:                        High

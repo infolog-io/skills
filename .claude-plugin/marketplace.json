@@ -52,7 +52,7 @@
     },
     {
       "name": "semantic-organization",
-      "description": "Meta-skill that governs how every skill is structured. Codifies the Anthropic Agent Skills directory convention (skills/<name>/SKILL.md flat — no plugin wrapper), folder roles, naming rules, migration triggers. Scaffolds, audits, recommends migrations.",
+      "description": "Meta-skill that governs how every skill is structured. Codifies the Anthropic Agent Skills directory convention (skills/<name>/SKILL.md flat \u2014 no plugin wrapper), folder roles, naming rules, migration triggers. Scaffolds, audits, recommends migrations.",
       "source": "./skills/semantic-organization",
       "version": "0.3.0",
       "category": "engineering",
@@ -62,7 +62,7 @@
     },
     {
       "name": "atomic-brand",
-      "description": "Audits web projects against atomic design discipline and brand-token coherence. Detects token violations, atomic hierarchy drift, naming by appearance, scattered components, brand drift, and scale violations. Emits a scored audit plus a refactor plan or build-out plan. Failover chain: explicit tokens → image parse → URL scrape. Web medium first; native and other mediums spin out as sibling skills.",
+      "description": "Audits web projects against atomic design discipline and brand-token coherence. Detects token violations, atomic hierarchy drift, naming by appearance, scattered components, brand drift, and scale violations. Emits a scored audit plus a refactor plan or build-out plan. Failover chain: explicit tokens \u2192 image parse \u2192 URL scrape. Web medium first; native and other mediums spin out as sibling skills.",
       "source": "./skills/atomic-brand",
       "version": "0.1.0",
       "category": "design",
@@ -92,7 +92,7 @@
     },
     {
       "name": "component-composer",
-      "description": "Production-grade single-file HTML data graphics via generator-critic loop (depends on the generator-critic skill). Use when consistency across artifacts, themes, viewports, and time matters. Do NOT use for casual or throwaway HTML — see html-sketch or just ask Claude.",
+      "description": "Production-grade single-file HTML data graphics via generator-critic loop (depends on the generator-critic skill). Use when consistency across artifacts, themes, viewports, and time matters. Do NOT use for casual or throwaway HTML \u2014 see html-sketch or just ask Claude.",
       "source": "./skills/component-composer",
       "version": "0.0.2",
       "category": "design",
@@ -136,6 +136,16 @@
       "source": "./skills/wargame",
       "version": "0.0.1",
       "category": "engineering",
+      "author": {
+        "name": "Information Logistics"
+      }
+    },
+    {
+      "name": "wireframe2eval",
+      "description": "Turn a redesign into a content contract. Extracts headings, CTAs, and copy from the live source into a versioned inventory, then generates an eval that fails when the redesign silently drops any of it.",
+      "source": "./skills/wireframe2eval",
+      "version": "0.1.0",
+      "category": "design",
       "author": {
         "name": "Information Logistics"
       }

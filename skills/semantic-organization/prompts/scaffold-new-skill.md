@@ -14,14 +14,19 @@ The user provides (or the model asks for):
 
 - **`skill_name`** — kebab-case, unique within the marketplace, ≤30 chars
 - **`description`** — one sentence, what the skill does and when to use it
-- **`marketplace_path`** — default `infolog-io/skills` (the path under `skills/`)
+- **`profile`** — `single-rule` or `full-shape`; default to `single-rule` unless multiple modes, references, scripts, or artifacts are already known
+- **`target_host`** — default `infolog-marketplace`; see `references/host-standards.md`
+- **`marketplace_path`** — default `infolog-io/skills` when target host is `infolog-marketplace`
 - **`triggers`** (optional) — list of activation phrases; default to a generic set
 - **`primary_artifact`** (optional) — name of the canonical output (e.g., "Job Article")
 
 ## Output contract
 
-A complete folder tree at `skills/<skill_name>/` — flat, matching the
-Anthropic Agent Skills convention. No `plugins/` wrapper.
+A complete profile-aware folder tree for the chosen target host. In this
+repo, default to `skills/<skill_name>/` — flat, matching the Anthropic
+Agent Skills convention. No `plugins/` wrapper for `infolog-marketplace`.
+
+For single-rule skills, emit only the identity files:
 
 ```
 skills/<skill_name>/
@@ -29,18 +34,28 @@ skills/<skill_name>/
 │   └── plugin.json                       # pre-filled manifest
 ├── SKILL.md                              # frontmatter + flow skeleton
 ├── README.md                             # skeleton ≤200 words
-├── TESTS.md                              # skeleton with end-conditions section
-├── references/
-│   └── .gitkeep                          # placeholder until first reference
-├── prompts/
-│   └── .gitkeep
-├── templates/
-│   └── .gitkeep
-├── schemas/
-│   └── .gitkeep
-└── fixtures/
-    └── .gitkeep
+└── TESTS.md                              # skeleton with end-conditions section
 ```
+
+For full-shape skills, add only folders that contain a named first file or
+an `index.md` explaining the layer:
+
+```
+skills/<skill_name>/
+├── .claude-plugin/
+│   └── plugin.json
+├── SKILL.md
+├── README.md
+├── TESTS.md
+├── references/
+│   └── index.md                          # folder map
+├── prompts/
+│   └── <verb-led-mode>.md                 # first stage contract
+└── templates/ | schemas/ | fixtures/      # only when a primary artifact exists
+```
+
+For `codex-repo-skill`, root the tree at `.agents/skills/<skill_name>/`
+and omit Claude marketplace files unless explicitly requested.
 
 ## Pre-filled content
 
@@ -86,6 +101,11 @@ See references/index.md for the folder map.
 |---|---|
 | <phrase> | <mode> |
 ```
+
+For single-rule skills, omit the Operating modes and References sections
+unless a real mode or reference exists. For `codex-repo-skill`, omit
+`.claude-plugin/plugin.json`, README.md, and TESTS.md unless the user asks
+for marketplace packaging too.
 
 ### `README.md`
 
@@ -154,9 +174,10 @@ description: A starter skill that prints a greeting.
 
 ### Output
 
-A new directory `skills/hello-world/` with the full scaffold, pre-filled
-with the skill name and description, ready for the author to add real
-references, prompts, templates, schemas, and fixtures.
+A new directory `skills/hello-world/` with a profile-aware scaffold,
+pre-filled with the skill name and description. If the skill is
+single-rule, it contains only the identity files. If it is full-shape, it
+contains only folders with real first files or an index.
 
 ## Verification before returning
 
@@ -167,6 +188,8 @@ Run a self-audit on the scaffold:
 - No forbidden folders present
 - Naming consistent (kebab-case throughout)
 - Plugin name matches across `plugin.json`, directory, and `SKILL.md`
+- Host-standard facet passes for the chosen `target_host`
+- Context-fit advisory passes: each emitted folder carries one real layer
 
 If any check fails, fix the scaffold before returning.
 

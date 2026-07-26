@@ -77,6 +77,9 @@ Marketplace-layer:
 - P3. TESTS.md presence/quality:   5 — end conditions + 6 test cases + out-of-scope
 - P4. Migration health:            5 — folders sized appropriately
 
+Reference-integrity gate:          pass
+Host-standard facet:               target=infolog-marketplace; pass
+Context-fit advisory:              pass
 Recommended next change:           none — skill is canonical
 Verdict:                           spec-compliant + marketplace-ready
 Confidence:                        High

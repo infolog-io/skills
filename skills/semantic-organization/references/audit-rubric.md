@@ -54,6 +54,7 @@ Score:
 - If any optional folders exist, they are `scripts/`, `references/`, or `assets/`.
 - Non-canonical folder names exist only when no spec folder fits.
 - Forbidden folders (`src/`, `utils/`, `docs/`, etc.) absent.
+- Each folder has a clear context-layer role per [context-layers.md](context-layers.md).
 
 Score:
 - 1: Forbidden folders present.
@@ -63,6 +64,38 @@ Score:
 Bonus signal, not scored against: companion files carrying `type:`
 frontmatter per [okf-alignment.md](okf-alignment.md) confirm a 5. Absence
 is never penalized.
+
+## Host-standard facet
+
+A non-scored facet, peer to the reference-integrity gate and context-fit
+advisory. It answers: "Does this structure satisfy the host it claims to
+target?" See [host-standards.md](host-standards.md).
+
+| Target host | Healthy path signal | Marketplace expectations |
+|---|---|---|
+| `agent-skills-portable` | `<skill-name>/SKILL.md` | None |
+| `infolog-marketplace` | `skills/<skill-name>/SKILL.md` | `.claude-plugin/plugin.json`, README, TESTS, root marketplace entry |
+| `codex-repo-skill` | `.agents/skills/<skill-name>/SKILL.md` | No Claude marketplace files required |
+| `claude-code-plugin-package` | Manifest-declared skill path | `.claude-plugin/plugin.json` at plugin package layer |
+
+The default in this repo is `infolog-marketplace`. Under that target, a
+portable skill missing README, TESTS, or plugin manifest is spec-compliant
+but not marketplace-ready. Under `agent-skills-portable`, those same files
+are out of scope.
+
+## Context-fit advisory
+
+This advisory does not change the eight scores by itself. It names files
+whose folder role and context layer disagree. Use it to reduce future drift
+without over-promoting advisory findings to `broken`.
+
+| Finding | Advisory |
+|---|---|
+| Theory or background in `prompts/` | Move to `references/` |
+| Step-by-step procedure in `references/` | Move to `prompts/` |
+| Output artifact shape in `SKILL.md` | Move to `templates/` or `schemas/` |
+| Empty folders created for future use | Remove until a real file exists |
+| Executable logic in prose folders | Move to `scripts/` |
 
 ## Marketplace-layer rubric (conventions)
 
@@ -213,6 +246,8 @@ Marketplace-layer:
 - P4. Migration health:            [1-5] — [reason]
 
 Reference-integrity gate:          pass | FAIL (dead: <file → token>)
+Host-standard facet:               target=<host>; pass | advisory | FAIL
+Context-fit advisory:              pass | advisory (<file → suggested layer>)
 Recommended next change:           [single highest-leverage fix]
 Verdict:                           spec-compliant + marketplace-ready
                                    | spec-compliant, marketplace-drift

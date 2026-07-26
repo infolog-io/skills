@@ -4,14 +4,42 @@ type: template
 
 # Skill Scaffold Template
 
-This template is the canonical shape every new skill must conform to.
-Used by the scaffold prompt to generate a new skill skeleton.
+This template is the canonical shape every new skill must conform to for
+its target host. Used by the scaffold prompt to generate a profile-aware
+skill skeleton.
 
-## Tree
+## Target host
 
-Flat structure at `skills/<name>/` — matches the Anthropic Agent Skills
-convention. All marketplace files (plugin.json, README, TESTS) live in
-the same folder as SKILL.md. No wrapper.
+Default in this repo: `infolog-marketplace`.
+
+| Target | Root |
+|---|---|
+| `agent-skills-portable` | `{{skill_name}}/` |
+| `infolog-marketplace` | `skills/{{skill_name}}/` |
+| `codex-repo-skill` | `.agents/skills/{{skill_name}}/` |
+
+Do not use a `plugins/<name>/skills/<name>/` wrapper for
+`infolog-marketplace`.
+
+## Tree — single-rule profile
+
+Use this when SKILL.md carries the whole durable rule and no mode-specific
+stage contracts are needed.
+
+```
+skills/{{skill_name}}/
+├── .claude-plugin/
+│   └── plugin.json
+├── SKILL.md
+├── README.md
+└── TESTS.md
+```
+
+## Tree — full-shape profile
+
+Use this only when the skill has multiple modes, references, scripts, or a
+canonical output artifact. Omit any folder whose first real file is not yet
+known.
 
 ```
 skills/{{skill_name}}/
@@ -21,15 +49,18 @@ skills/{{skill_name}}/
 ├── README.md
 ├── TESTS.md
 ├── references/
-│   └── .gitkeep
+│   └── index.md
 ├── prompts/
-│   └── .gitkeep
-├── templates/
-│   └── .gitkeep
-├── schemas/
-│   └── .gitkeep
-└── fixtures/
-    └── .gitkeep
+│   └── {{mode_prompt_file}}.md
+└── templates/
+    └── {{primary_artifact_template}}.md
+```
+
+If the target host is `codex-repo-skill`, replace the root with:
+
+```
+.agents/skills/{{skill_name}}/
+└── SKILL.md
 ```
 
 ## File: `.claude-plugin/plugin.json`
@@ -148,11 +179,20 @@ See `prompts/{{mode_1_prompt_file}}.md`.
 | `{{trigger_2}}` | {{mode_2_name}} |
 ```
 
-## File placeholders for each canonical folder
+For single-rule skills, omit the Operating modes and References sections
+unless a real mode or reference exists. Report the target host in the
+scaffold response, not inside the generated SKILL.md, unless the generated
+skill carries its own host-standards reference. For `codex-repo-skill`,
+omit `.claude-plugin/plugin.json`, README.md, and TESTS.md unless the user
+asks for marketplace packaging too.
+
+## First files for each canonical folder
 
 Each real file carries `type:` frontmatter naming its role (OKF alignment;
 see `references/okf-alignment.md`). A folder above five files gains an
 `index.md` (`type: reference`) mapping its contents.
+
+Never create empty placeholder folders just to reserve future structure.
 
 | Folder | First file (created later, not by scaffold) | `type:` |
 |---|---|---|
@@ -167,10 +207,11 @@ see `references/okf-alignment.md`). A folder above five files gains an
 After scaffolding, immediately run the audit prompt against the new
 skill. Required result: ≥4 on every dimension.
 
-If any dimension scores <4 on the empty scaffold, the scaffold itself is
+If any dimension scores <4 on the emitted scaffold, the scaffold itself is
 broken — fix the template.
 
 ## Self-test
 
 This template scaffolds a skill that, when populated, must pass the audit
-rubric at 5/5 on every dimension. If not, the template needs revision.
+rubric at 5/5 on every dimension for its target host. If not, the template
+needs revision.
