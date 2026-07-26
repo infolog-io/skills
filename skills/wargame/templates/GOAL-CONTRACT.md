@@ -10,7 +10,7 @@ The contract:
 
 1. Each file in `docs/missions/` is a mission. The mission text is the executor's definition of done. You do not execute any mission in this session; you wargame it.
 2. Recon is read-only. Read anything the Materials list names; run nothing that changes state.
-3. For each mission, write `docs/wargames/<id>.md` per the wargame template: expected observation per move, most likely failure with the cause it signals and the counter-move, triggered forks, RECON NEEDED marks with settling checks, abort conditions, and the executor's verification runs with pass states.
+3. For each mission, write `docs/wargames/<id>.md` per the wargame template: expected observation per move, most likely failure with the cause it signals and the counter-move, triggered forks, RECON NEEDED marks with settling checks, abort conditions, and the executor's verification runs with pass states. Each verification command carries its validation: seen to pass on a known-good input and fail on a known-bad one.
 4. Draft all missions before polishing any. Breadth first; the refinement loop owns depth.
 5. After each draft, append a `LEDGER.md` entry: mission, draft location, honest point-by-point self-grade against every SUCCESS.md point.
 6. A mission with an unfilled `{{PLACEHOLDER}}` is BLOCKED. Write what you need in the ledger entry and move on. Never invent the missing input.

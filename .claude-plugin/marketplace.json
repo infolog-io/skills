@@ -132,9 +132,9 @@
     },
     {
       "name": "wargame",
-      "description": "Meta loop + eval system for product engineering. Wargame missions on paper before execution: BRIEF, WARGAME, GRADE, RED-TEAM, EXECUTE, VERIFY, RETRO. Plans graded pass/fail against an 8-point rubric plus repo extensions, red-teamed until an honest break attempt fails, then handed to a cheaper executor. Ledger tracks predicted-vs-actual; retros patch the system itself.",
+      "description": "Meta loop + eval system for product engineering. Wargame missions on paper before execution: BRIEF, WARGAME, GRADE, RED-TEAM, EXECUTE, VERIFY, RETRO. Plans graded pass/fail against a 9-point rubric plus repo extensions, red-teamed until an honest break attempt fails, then handed to a cheaper executor. Every artifact the executor is graded against is read-only to it; every verification command is validated against known-good and known-bad input before the route trusts it. Ledger tracks predicted-vs-actual; retros patch the system itself.",
       "source": "./skills/wargame",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "category": "engineering",
       "author": {
         "name": "Information Logistics"
@@ -144,7 +144,7 @@
       "name": "wireframe2eval",
       "description": "Turn a redesign into a content contract. Extracts headings, CTAs, and copy from the live source into a versioned inventory, then generates an eval that fails when the redesign silently drops any of it.",
       "source": "./skills/wireframe2eval",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "category": "design",
       "author": {
         "name": "Information Logistics"

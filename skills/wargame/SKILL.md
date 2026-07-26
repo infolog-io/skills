@@ -35,7 +35,7 @@ Wargaming and red-teaming are judgment-dense and token-light: strongest availabl
 
 You are not executing the mission. You are wargaming it. A cheaper executor runs the brief later; your job is the route it will follow.
 
-Recon first, read-only. Read everything the mission's Materials list names. Run nothing that changes state. Every load-bearing claim carries a verbatim disk quote; a summary is not evidence. A symbol a move orders the executor to use carries its providing import line, quoted from disk. A claim that is the OUTPUT of a regex or string transform applied to corpus data (a count, a resolved/unresolved split) is verified by running that exact transform against every matching instance, not by reading representative samples — samples prove a shape is plausible, not a count. The same run-don't-infer rule covers branch-behavior claims: an assertion about which code path produces which observable state (a field value, an error variant, an exit code) names and quotes the producing constructor site, or is traced/executed against the real code — never inferred from surrounding code. Before routing a new external-process spawn or binary invocation, search the WHOLE codebase for prior art solving the same problem class, not only the modules the mission's Materials already name — a solved-elsewhere precedent must be reused or explicitly rejected with a stated reason. A wargame consuming a contract from a sibling wargame (a split mission, a dependency mission) quotes the providing wargame's exact move text, same as a disk quote — a paraphrased contract is not evidence. Before routing, read every prior retro's "Patches applied" list for the repo: each established discipline (collision-abort-before-write, zero-mutation-before-refusal, grant-site naming, chrome escaping, fixture reachability, …) is a checklist item — applied to this route, or explicitly N/A with a reason. A discipline a prior mission earned through a real break is never rediscovered per mission. An agent's scratch-cleanup reverts ONLY files it created or modified itself; an uncommitted change it did not author is another session's live work.
+Recon first, read-only. Read everything the mission's Materials list names. Run nothing that changes state. Every load-bearing claim carries a verbatim disk quote; a summary is not evidence. A symbol a move orders the executor to use carries its providing import line, quoted from disk. A claim that is the OUTPUT of a regex or string transform applied to corpus data (a count, a resolved/unresolved split) is verified by running that exact transform against every matching instance, not by reading representative samples — samples prove a shape is plausible, not a count. The same run-don't-infer rule covers branch-behavior claims: an assertion about which code path produces which observable state (a field value, an error variant, an exit code) names and quotes the producing constructor site, or is traced/executed against the real code — never inferred from surrounding code. Before routing a new external-process spawn or binary invocation, search the WHOLE codebase for prior art solving the same problem class, not only the modules the mission's Materials already name — a solved-elsewhere precedent must be reused or explicitly rejected with a stated reason. A wargame consuming a contract from a sibling wargame (a split mission, a dependency mission) quotes the providing wargame's exact move text, same as a disk quote — a paraphrased contract is not evidence. Before routing, read every prior retro's "Patches applied" list for the repo: each established discipline (collision-abort-before-write, zero-mutation-before-refusal, grant-site naming, chrome escaping, fixture reachability, …) is a checklist item — applied to this route, or explicitly N/A with a reason. A discipline a prior mission earned through a real break is never rediscovered per mission. When a route depends on a CLI, recon records the exact working invocation, verified by running it, including the flags that fail SILENTLY (a viewport flag ignored because a page is already open; a screenshot that reports success and writes no file when handed a relative path). A tool that reports success without doing the work is the most expensive class of recon miss, because every downstream observation is mislabeled rather than missing. An agent's scratch-cleanup reverts ONLY files it created or modified itself; an uncommitted change it did not author is another session's live work.
 
 Then fight the mission on paper, move by move:
 
@@ -43,9 +43,14 @@ Then fight the mission on paper, move by move:
 - Every move carries its most likely failure, the cause that failure signals, and the counter-move.
 - Every fork gets a trigger: if you observe X, take route B.
 - Every assumption recon could not settle gets marked RECON NEEDED with the exact check that settles it.
+- Every verification command is validated before the route trusts it: run it against a known-good input and a known-bad input, and record both outcomes. A check never seen to fail is not a check. A DOM count on a page holding hidden variants, or a grep over a regenerated file, passes a correct target and a broken one alike.
 - End with abort conditions, and the verification runs the executor performs, with what pass looks like for each.
 
 Write it so the executor runs the brief end to end without asking a single question.
+
+## Versioning a wargame
+
+A wargame whose route changes materially before GRADE is rewritten and versioned, not patched. Bump `version:` in the frontmatter and open the body with what changed, why it changed, and which parts of the prior version survive. Patching a changed route leaves one document describing two incompatible plans, and the executor runs whichever half it reads first.
 
 ## Grading protocol
 
@@ -59,9 +64,13 @@ Attack the route before reality does. A fresh subagent plays a mid-tier executor
 
 An unfilled `{{PLACEHOLDER}}` means the mission is BLOCKED. Never invent the missing input. Write what you need in the ledger entry and move on.
 
+## Contract immutability
+
+Any artifact the executor is graded against is READ-ONLY to the executor: the rubric, the content inventory, the fixture set, the golden file, the mission brief. An executor that can edit its contract has no contract. A failing check gets logged and handed back; it is never silenced by editing the check. The wargame names these artifacts and makes editing one an abort condition, so the law is enforced by the route rather than by the executor's restraint.
+
 ## Decomposition rule
 
-A mission the wargame cannot route in one executor session splits into phased missions. Each phase gets its own acceptance check the executor runs before starting the next. Sequence phases by risk retired per unit of work.
+A mission the wargame cannot route in one executor session splits into phased missions. Each phase gets its own acceptance check the executor runs before starting the next. Sequence phases by risk retired per unit of work. A phase that defers work records the EXACT remaining count, measured not estimated, and names the mission that closes it. A deferral with a number is a plan; a deferral without one is a loss disguised as scope.
 
 ## Template law
 
@@ -73,7 +82,7 @@ Ask for artifacts, findings, quotes, and rewrites. Never ask a model to reproduc
 |---|---|
 | `templates/MISSION.md` | The brief: executor's definition of done |
 | `templates/WARGAME.md` | The battle plan |
-| `templates/SUCCESS-BASE.md` | Base 8-point rubric + repo extension mechanism |
+| `templates/SUCCESS-BASE.md` | Base 9-point rubric + repo extension mechanism |
 | `templates/LEDGER.md` | Run log: grades, patches, execution actuals |
 | `templates/RETRO.md` | Miss → system patch |
 | `templates/HANDOFF-CLAUDE.md` | Executor prompt, Claude Code |

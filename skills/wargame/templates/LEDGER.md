@@ -7,20 +7,22 @@ One entry per mission, appended in mission order. Grades, refinement patches, ex
 ```yaml
 mission: docs/missions/001-example-mission.md
 wargame: docs/wargames/001-example-mission.md
+wargame_version: 1 # the version that was graded; a materially changed route is rewritten at version+1 and re-graded
 claimed_by: null # wargamer session identity; set BEFORE grade; other sessions stand down to audit-only
 dates:
   drafted: 2026-07-05
   graded: 2026-07-05
   executed: null
-grades: # pass|fail per SUCCESS.md point, base 8 + repo extensions
+grades: # pass|fail per SUCCESS.md point, base 9 + repo extensions
   1: pass
   2: pass
   3: fail
   4: pass
   5: pass
   6: pass
-  7: fail
-  8: pass
+  7: pass
+  8: fail
+  9: pass
 patches:
   - "Move 4 Expect was vague; rewrote with exact command output"
   - "Added fork for missing dependency at Move 2 after red-team break"
@@ -32,6 +34,7 @@ actuals: # filled by the executor at VERIFY; null until executed
   forks_fired: 0
   forks_unpredicted: [] # each one is a named wargame blind spot
   verification: {} # run -> pass|fail
+  deferred: [] # each deferral: what remains, its exact count, the mission that closes it; a deferral without a number is a loss
   rework_count: 0
 retro: null # docs/retros/001-example-mission.md once written
 ```
