@@ -44,3 +44,62 @@ Means are in `[0,1]`. `Δ val` = best minus incumbent on the val split.
   refreshes the generated table from the run dirs.
 - After `eval`: add one row to the Eval log by hand (date, skill, split,
   mean, per-task, cost, one-line note).
+
+## A0 — val-split variance, 2026-07-26 — BLOCKED, no verdict
+
+Mission `docs/missions/001-a0-power-eval-sets.md`, wargame v3, graded 14/14.
+
+**No measurement was obtained. No required-n figure exists. Do not cite one.**
+
+Run 1 of 5 executed and voided. Every one of the five val tasks failed
+identically:
+
+```
+VAL mean: 0.000
+  V01..V05: 0.00
+    rollout failed: Exception: Claude Code returned an error result: success
+Cost: $0.0000
+```
+
+Command:
+`.venv/bin/python harness.py eval semantic-organization --split val --max-cost-usd 2.00`
+
+Classified `void:rollout-failed` by `a0_stats.py`. Log retained at
+`runs/semantic-organization/a0-variance/void-run1.log`.
+
+Root cause, isolated with a direct `claude_agent_sdk` probe: the `claude` CLI
+the SDK spawns cannot authenticate.
+
+```
+AssistantMessage(text='Failed to authenticate: OAuth session expired and
+  could not be refreshed', error='authentication_failed')
+ResultMessage(subtype='success', is_error=True, total_cost_usd=0)
+```
+
+The failure is deterministic, so the mission's single retry was not spent.
+Runs 2 through 5 were not attempted. Actual spend: $0.00 of the $12.00 ceiling.
+
+**To unblock:** re-authenticate the Claude Code CLI, then re-run mission 001
+from Move 2. Nothing else in the route changes; Moves 1, 6, and 7 already passed.
+
+Two findings the failed run settled, both recorded for mission 002:
+
+1. `ResultMessage.total_cost_usd` is `0` under this auth path, and `lib/sdk.py`
+   only assigns cost when that field is not None. The `--max-cost-usd` cap is
+   therefore inert here and cannot bound spend. Run count is the only real bound.
+2. `ResultMessage` arrives with `subtype='success'` while `is_error=True`.
+   `lib/sdk.py` never inspects `is_error`, which is why the error text reads
+   "error result: success". A rollout that returns an empty body without
+   raising would be scored rather than caught.
+
+Stated limitation for whenever the measurement does run: `harness.py eval` uses
+`max_concurrent=3`, while the gate it powers runs inside `_optimize` at
+`max_concurrent=1` against a budget shared across baseline and every epoch.
+Concurrency and budget pressure differ between the measurement and the apparatus.
+
+### Registry change
+
+estimatrix retired from `REGISTERED` 2026-07-26 — floor-effect grader; three
+logged optimize runs (2026-05-27), best val 0.267, best test 0.240. Adapter file
+`adapters/estimatrix.py` retained; re-register after a grader rewrite.
+`REGISTERED` is now 6 entries and every one still loads.

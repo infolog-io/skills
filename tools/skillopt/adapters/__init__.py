@@ -2,7 +2,9 @@
 from importlib import import_module
 
 REGISTERED = [
-    "estimatrix",
+    # estimatrix retired 2026-07-26 (mission 001): floor-effect grader, three
+    # logged optimize runs, best val 0.267. adapters/estimatrix.py retained;
+    # re-register after a grader rewrite.
     "learn2kern",
     "github-issues-kanban",
     "semantic-organization",
