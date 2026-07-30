@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Draw Like Brendan Grade",
+  "type": "object",
+  "required": [
+    "attempt",
+    "source_compared",
+    "source_ids",
+    "requirement_review",
+    "style_scores",
+    "prohibited_drift",
+    "revision_instructions"
+  ],
+  "properties": {
+    "attempt": {"type": "integer", "minimum": 1},
+    "source_compared": {"type": "boolean"},
+    "source_ids": {"type": "array", "items": {"type": "string"}},
+    "structure_used_as_style": {"type": "boolean"},
+    "requirement_review": {
+      "type": "object",
+      "required": ["useful", "coherent", "must_include_met", "exact_text_met", "special_criteria_met"],
+      "properties": {
+        "useful": {"type": "boolean"},
+        "coherent": {"type": "boolean"},
+        "must_include_met": {"type": "boolean"},
+        "exact_text_met": {"type": "boolean"},
+        "special_criteria_met": {"type": "boolean"},
+        "missing_or_wrong": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "style_scores": {
+      "type": "object",
+      "required": ["source_composition", "lettering", "shape_language", "palette", "semantic_clarity"],
+      "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 5}
+    },
+    "mechanical_lint": {"type": "object"},
+    "prohibited_drift": {"type": "array", "items": {"type": "string"}},
+    "failure_tags": {"type": "array", "items": {"type": "string"}},
+    "revision_instructions": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"}
+  }
+}

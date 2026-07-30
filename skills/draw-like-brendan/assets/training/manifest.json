@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "purpose": "Compact, inspectable provenance for the learned process. None of these files train model weights.",
+  "authority": {
+    "active_rules": "../../references/learned-rules.md",
+    "feedback_history": "feedback.jsonl",
+    "inactive_candidates": "candidate-rules.md",
+    "style_authority": "../source-manifest.json"
+  },
+  "structure_references": [
+    {
+      "id": "P001",
+      "path": "structure-references/agent-lifecycle.png",
+      "sha256": "06b131e1c6e3480a8f1c4f1019d69797df146875c332835b66c5146982f232d5",
+      "role": "systems-poster composition only",
+      "style_authority": false
+    },
+    {
+      "id": "P002",
+      "path": "structure-references/portrait-composition.png",
+      "sha256": "fcb619d25288405b4884bb5fc6878b9b94fb4cfef9901e4fb2bf8d5566bdb8f4",
+      "role": "portrait composition only",
+      "style_authority": false
+    }
+  ],
+  "diagnostics": [
+    "diagnostics/agent-lifecycle.json",
+    "diagnostics/agent-lifecycle-after-rewrite.json",
+    "diagnostics/portrait.json",
+    "diagnostics/portrait-after-rewrite.json"
+  ],
+  "excluded": {
+    "generated_runs": "Previous generations and composite candidates are evaluation output and never style or training authority.",
+    "duplicate_sources": "Approved source additions already represented byte-for-byte in assets/source-art are not duplicated."
+  }
+}

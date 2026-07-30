@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Brendan Drawing Array",
+  "type": "object",
+  "required": ["title", "rows", "columns", "cells"],
+  "properties": {
+    "title": {"type": "string", "minLength": 1},
+    "concept": {"type": "string"},
+    "rows": {"$ref": "#/$defs/axis"},
+    "columns": {"$ref": "#/$defs/axis"},
+    "layers": {"$ref": "#/$defs/axis"},
+    "cells": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["row", "column", "concept"],
+        "properties": {
+          "layer": {"type": "string"},
+          "row": {"type": "string"},
+          "column": {"type": "string"},
+          "concept": {"type": "string", "minLength": 1},
+          "must_include": {"type": "array", "items": {"type": "string"}},
+          "exact_text": {"type": "array", "items": {"type": "string"}},
+          "composition": {"type": "string"},
+          "special_criteria": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "allow_empty_cells": {"type": "boolean"},
+    "cell_size": {
+      "type": "array",
+      "prefixItems": [{"type": "integer", "minimum": 256}, {"type": "integer", "minimum": 256}],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "gutter": {"type": "integer", "minimum": 0},
+    "margin": {"type": "integer", "minimum": 0},
+    "jitter": {"type": "integer", "minimum": 0},
+    "composite_background": {"type": "string"}
+  },
+  "$defs": {
+    "axis": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "label": {"type": "string"}
+        }
+      }
+    }
+  }
+}

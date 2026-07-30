@@ -1,0 +1,21 @@
+{
+  "available": true,
+  "path": "../structure-references/portrait-composition.png",
+  "size": [
+    1122,
+    1402
+  ],
+  "near_white_ratio": 0.5047,
+  "near_black_ratio": 0.2894,
+  "colored_ratio": 0.1389,
+  "bold_color_ratio": 0.0482,
+  "bold_share_of_colored": 0.3472,
+  "cream_ratio": 0.084,
+  "white_corner_count": 4,
+  "quantized_color_count": 162,
+  "hard_failures": [
+    "cream-or-parchment-drift"
+  ],
+  "warnings": [],
+  "note": "Mechanical evidence only; typography, motifs, semantics, and slop require visual review."
+}

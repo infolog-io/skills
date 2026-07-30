@@ -1,0 +1,574 @@
+{
+  "version": 1,
+  "authority": "Original Brendan-Drawing-Style-Skill art and user-approved additions only. Generated outputs are never style authority.",
+  "licensing": "Source artwork is not covered by the repository MIT license. Copyright remains with its original creator.",
+  "sources": [
+    {
+      "id": "S01",
+      "kind": "style",
+      "path": "source-art/style/611C744C-B9A1-4329-9223-85C45D18520F.jpeg",
+      "sha256": "70ccdf2544601c63aa3907cc5254c4ba7898f57602ddfcb4a88d5557c7b1d9e5",
+      "tags": [
+        "white-background",
+        "icon-rich",
+        "sign",
+        "rough-line",
+        "bold-color"
+      ],
+      "background": "white",
+      "note": "eye/will/dice poster",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S02",
+      "kind": "style",
+      "path": "source-art/style/56E65108-668D-4A3B-BCD4-A39BE74D3E98.jpeg",
+      "sha256": "22140cb8c119cef81d6369d8f69f9026cc5ada1886eb911eb90804449fea3b7a",
+      "tags": [
+        "poster",
+        "bold-color",
+        "icon-rich",
+        "sign"
+      ],
+      "background": "pink",
+      "note": "webmaster poster",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S03",
+      "kind": "style",
+      "path": "source-art/style/367CA318-E028-4DEE-BA62-705A60194A26.jpeg",
+      "sha256": "2f68cbd4acc4bd7a9dcd5ea0c6e3d49bc85283c088d98508acf0956d32ef836e",
+      "tags": [
+        "poster",
+        "bold-color",
+        "sign"
+      ],
+      "background": "black",
+      "note": "ancient aliens",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S04",
+      "kind": "style",
+      "path": "source-art/style/84AB6545-C5CA-4FD5-A079-9D2C1E54F52E.jpeg",
+      "sha256": "9fe41ee8d95c2caacb9bc1f0d818fb71301a84c0c7abdee5c437ea87ef27e3b0",
+      "tags": [
+        "white-background",
+        "sign",
+        "rough-line",
+        "bold-color"
+      ],
+      "background": "white",
+      "note": "warning sign",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S05",
+      "kind": "style",
+      "path": "source-art/style/758491A4-9D67-4DFA-8D95-6735A7E56CE2.jpeg",
+      "sha256": "75ad916d97056ab09196286c9133625badba3da8c7d606b427ff8ebb9963475b",
+      "tags": [
+        "white-background",
+        "poster",
+        "character",
+        "rough-line"
+      ],
+      "background": "white",
+      "note": "proposal joke",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S06",
+      "kind": "style",
+      "path": "source-art/style/1756B4EB-8CBD-4F35-BCE4-8D3BFCBF49A3.jpeg",
+      "sha256": "fbd65d52931b1701c8c88be043244c062c424293aadc4fc9110384e113667248",
+      "tags": [
+        "poster",
+        "icon-rich",
+        "bold-color"
+      ],
+      "background": "black",
+      "note": "sticker collage",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S07",
+      "kind": "style",
+      "path": "source-art/style/263615B3-4143-4F39-8F19-0564BC6BE73E.jpeg",
+      "sha256": "f322c31fa731854c76e9946d92c8efce4ccf7317235561de0051232dd875ef9f",
+      "tags": [
+        "poster",
+        "bold-color",
+        "sign"
+      ],
+      "background": "black",
+      "note": "problem today",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S08",
+      "kind": "style",
+      "path": "source-art/style/F4FA3BA5-88D7-4C52-9651-311CDA2FB2B3.jpeg",
+      "sha256": "55bf341e04c35438f2d9d1a59ef6deb37a7909e7de28e804e290227d97861b43",
+      "tags": [
+        "sign",
+        "rough-line"
+      ],
+      "background": "black",
+      "note": "battery badge",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S09",
+      "kind": "style",
+      "path": "source-art/style/A78F75BE-995C-42A8-9FB5-F74FABBD9C9B.jpeg",
+      "sha256": "4fbb8ef5832b5e4457513852e75dba7747a773d6c639b0a8899835e299cffaa3",
+      "tags": [
+        "poster",
+        "bold-color",
+        "character"
+      ],
+      "background": "green",
+      "note": "tiger effort",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S10",
+      "kind": "style",
+      "path": "source-art/style/29897A24-41E8-4BAA-B8A9-B6EC3D6CDDFE.jpeg",
+      "sha256": "37c3e556e23fc31f92457f98f4e0faeb5b2c7af0cde6d5e9ff3132cebc000617",
+      "tags": [
+        "white-background",
+        "diagram",
+        "sign",
+        "bold-color"
+      ],
+      "background": "white",
+      "note": "venn danger zone",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S11",
+      "kind": "style",
+      "path": "source-art/style/AE443626-9A1E-418F-BC3F-BE6EE51B53C9.jpeg",
+      "sha256": "436a927c1ca4b6c23de802034adb42055e42557e9a2252df7706f087a3cefc49",
+      "tags": [
+        "poster",
+        "bold-color",
+        "sign"
+      ],
+      "background": "red",
+      "note": "electric funeral",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S12",
+      "kind": "style",
+      "path": "source-art/style/15C264E6-0609-45D3-B31C-A36BF07F2BFD.jpeg",
+      "sha256": "8ba84e4c293048d4b354416b2c1b946a395f6b4421bc26ccd12009b9c62478eb",
+      "tags": [
+        "poster",
+        "bold-color",
+        "sign"
+      ],
+      "background": "black",
+      "note": "planet earth",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S13",
+      "kind": "style",
+      "path": "source-art/style/5516EFA6-5D0F-49DD-9356-60F02764D60B.jpeg",
+      "sha256": "c6612fd900269b048988d27802ef611a6e448e5a8db22627ff1183aac597a185",
+      "tags": [
+        "white-background",
+        "character",
+        "icon-rich",
+        "rough-line"
+      ],
+      "background": "white",
+      "note": "baseball character",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S14",
+      "kind": "style",
+      "path": "source-art/style/8EEDFB03-2C61-488E-9859-A2D2F2E5A623.jpeg",
+      "sha256": "2c66b61bc0ddb655ed452bf1a069aacdfe3093befce4578d12c4af8c8eaa4806",
+      "tags": [
+        "poster",
+        "bold-color",
+        "icon-rich"
+      ],
+      "background": "cyan",
+      "note": "cactus league",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S15",
+      "kind": "style",
+      "path": "source-art/style/F2652D9D-A235-451B-A7D9-5E83C8DD7264.jpeg",
+      "sha256": "5282f671c190f966f07463d866039a23d1d22720b587ccc39473e1548edb798b",
+      "tags": [
+        "white-background",
+        "sign",
+        "rough-line"
+      ],
+      "background": "white",
+      "note": "speed kills",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S16",
+      "kind": "style",
+      "path": "source-art/style/DD0123E3-0F38-4126-A520-79753BEA0A64.jpeg",
+      "sha256": "ea5101cc1685da9b437143b0bbe32a3c364b18fa4fa870ad9d28467a718cf6f5",
+      "tags": [
+        "poster",
+        "sign",
+        "rough-line"
+      ],
+      "background": "black",
+      "note": "everything takes forever",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S17",
+      "kind": "style",
+      "path": "source-art/style/73A7A761-A8C0-46D7-A1DB-393873A1CCDD.jpeg",
+      "sha256": "a496d7890a006dcc630f101835165396c3fed7ccae22ebbc38d1fc6fca162b07",
+      "tags": [
+        "poster",
+        "bold-color",
+        "icon-rich"
+      ],
+      "background": "black",
+      "note": "galaxy poster",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S18",
+      "kind": "style",
+      "path": "source-art/style/9F23895A-F56A-4E27-9B4A-7EB20BF4A86C.jpeg",
+      "sha256": "51b0b2b5039be6507b5d12814420a6c720d331a8bbe9f574a4f499e50cbca727",
+      "tags": [
+        "white-background",
+        "diagram",
+        "icon-rich",
+        "rough-line"
+      ],
+      "background": "white",
+      "note": "push danger zone drawing",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S19",
+      "kind": "style",
+      "path": "source-art/style/7E634933-5C55-4261-9FED-807DA86DD244.jpeg",
+      "sha256": "60ef8808d069f95907ba33823b42368b4cdc87332ef0a847ac5fa3d10a1c7459",
+      "tags": [
+        "poster",
+        "bold-color",
+        "sign",
+        "icon-rich"
+      ],
+      "background": "yellow",
+      "note": "no step snake",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S20",
+      "kind": "style",
+      "path": "source-art/style/2AF45F5E-7C66-4C99-9157-737B9EE8A185.jpeg",
+      "sha256": "7b9e0d5ba97938605e096123732632989841cf9c7abbeb1c6f200f97148103a6",
+      "tags": [
+        "poster",
+        "bold-color",
+        "character"
+      ],
+      "background": "red",
+      "note": "blood meridian",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S21",
+      "kind": "style",
+      "path": "source-art/style/743C0582-8DB5-4028-B717-99B5A73921A7.jpeg",
+      "sha256": "60ef8808d069f95907ba33823b42368b4cdc87332ef0a847ac5fa3d10a1c7459",
+      "tags": [
+        "poster",
+        "bold-color",
+        "sign",
+        "icon-rich"
+      ],
+      "background": "yellow",
+      "note": "no step snake variant",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S22",
+      "kind": "style",
+      "path": "source-art/style/24E6BCDA-9048-4235-AD54-385705995C5E.jpeg",
+      "sha256": "b83db2cad5b50addeed48ca00d59ce1e31e8c303d9a030c17dbcaf66c6e9dca2",
+      "tags": [
+        "poster",
+        "bold-color",
+        "sign"
+      ],
+      "background": "green",
+      "note": "mega late capitalism",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S23",
+      "kind": "style",
+      "path": "source-art/style/36EF9FB0-CC55-408D-864E-360F1B1C49CC.jpeg",
+      "sha256": "ead35c29f4c62990d058983c442b544f8fa9ad86ca3b3ca8dde18df52513b3c0",
+      "tags": [
+        "poster",
+        "bold-color",
+        "icon-rich"
+      ],
+      "background": "cyan",
+      "note": "deadly meteor",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S24",
+      "kind": "style",
+      "path": "source-art/style/4095181C-A88F-4B0E-BEB2-E90196F26DA2.jpeg",
+      "sha256": "36c49534826237d47245c54ce64696d573d6c5ec2c6a5f99711aeb92733601b7",
+      "tags": [
+        "white-background",
+        "diagram",
+        "icon-rich",
+        "rough-line"
+      ],
+      "background": "white",
+      "note": "circus towers",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S25",
+      "kind": "style",
+      "path": "source-art/style/59286CE5-8824-4708-9989-0F828FB5DC74.jpeg",
+      "sha256": "dfa5f21907d2dfa174b100a4714f7895f8f1c95976772b874c05c6a21600afa1",
+      "tags": [
+        "poster",
+        "bold-color",
+        "sign"
+      ],
+      "background": "purple",
+      "note": "tombstone poster",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S26",
+      "kind": "style",
+      "path": "source-art/style/9747EB72-5065-4EDC-AE31-ACE57C1808CF.jpeg",
+      "sha256": "a1edaefb4ce101aeacafd1a54cfee2325e26ab88528cd52d1a67a283492ec791",
+      "tags": [
+        "white-background",
+        "poster",
+        "bold-color",
+        "rough-line"
+      ],
+      "background": "white",
+      "note": "dumpster fire",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S27",
+      "kind": "style",
+      "path": "source-art/style/BA80308F-C56A-4E9C-A46F-0270FC396C3A.jpeg",
+      "sha256": "d321089e3463d4fda369475a7a5be8ddab4c4188483969172029fe70b3dd61e3",
+      "tags": [
+        "sign",
+        "rough-line",
+        "lettering-heavy"
+      ],
+      "background": "white",
+      "note": "secret society sign",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S28",
+      "kind": "style",
+      "path": "source-art/style/5F357854-399C-441E-9DB5-FAFAE7DEF2CF.jpeg",
+      "sha256": "b9108a229bb7d0303f500a76a6395399c669e0a43675a2e9395b82ef624a4dbb",
+      "tags": [
+        "white-background",
+        "diagram",
+        "sign",
+        "bold-color"
+      ],
+      "background": "white",
+      "note": "net brothers diagram",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S29",
+      "kind": "style",
+      "path": "source-art/style/3EBE9AB2-2305-4154-AD93-C74036C8B338.jpeg",
+      "sha256": "c0fef3bbefad3f5fc12c4ec6d3da936f2e5f0f59842dc843248e486de569a0bd",
+      "tags": [
+        "lettering-heavy",
+        "bold-color"
+      ],
+      "background": "black",
+      "note": "lowercase and title lettering",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S30",
+      "kind": "style",
+      "path": "source-art/style/3E809A85-937E-4BBB-85D7-A9FE536FB341.jpeg",
+      "sha256": "29dcbf2857530db2a05566434d189e6c7fdc935380695d448699bf2131241b0e",
+      "tags": [
+        "lettering-heavy",
+        "bold-color"
+      ],
+      "background": "black",
+      "note": "uppercase numerals punctuation",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "S31",
+      "kind": "style",
+      "path": "source-art/style/6DBDB9BB-9206-4BE8-A999-53DA57D7457F.jpeg",
+      "sha256": "827a6e551c0fd34fb7b66a04196eab4b0af1108843bad03746665565109f2d98",
+      "tags": [
+        "white-background",
+        "poster",
+        "icon-rich",
+        "bold-color"
+      ],
+      "background": "white",
+      "note": "Brendan-Drawing-Style-Skill emblem",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "L01",
+      "kind": "lettering",
+      "path": "source-art/lettering/ADA631B8-9626-4C6A-B152-E0991C748550.jpeg",
+      "sha256": "2cb00fcbab98d22179a858025175171991344a2011f0539ef14a944888e9ff25",
+      "tags": [
+        "uppercase",
+        "lowercase",
+        "glyph-anatomy"
+      ],
+      "background": "white",
+      "note": "black on white",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "L02",
+      "kind": "lettering",
+      "path": "source-art/lettering/D9BFE45F-895E-4B49-A419-EE247668A03E.jpeg",
+      "sha256": "6741ecee011b010eaedf63b07ddff0613d3f0b78a703dada35255ac788c8210c",
+      "tags": [
+        "uppercase",
+        "lowercase",
+        "glyph-anatomy"
+      ],
+      "background": "white",
+      "note": "black on white",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "L03",
+      "kind": "lettering",
+      "path": "source-art/lettering/DE895008-9532-4500-870F-A1B5F8EC86D6.jpeg",
+      "sha256": "03a7fa9d88567bb56808aca6b850558594391851cf4a657db9667bbe3d27ce21",
+      "tags": [
+        "uppercase",
+        "lowercase",
+        "glyph-anatomy"
+      ],
+      "background": "white",
+      "note": "black on white",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "L04",
+      "kind": "lettering",
+      "path": "source-art/lettering/78C4FDBC-8F14-43FA-B01B-E4575997681A.jpeg",
+      "sha256": "2df67958706fe3343b21d67dae4ec7043870cf8299a38a58d49c99d36f5ceb24",
+      "tags": [
+        "uppercase",
+        "lowercase",
+        "numerals",
+        "glyph-anatomy"
+      ],
+      "background": "white",
+      "note": "black on white",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "L05",
+      "kind": "lettering",
+      "path": "source-art/lettering/6579A386-170D-4122-BFFD-0EA80B9F83B0.jpeg",
+      "sha256": "d17ead2f2a2079ade5bd1ea30368041e8fc1fcc5dd258cb203b0b5b443119f1b",
+      "tags": [
+        "numerals",
+        "punctuation",
+        "glyph-anatomy"
+      ],
+      "background": "white",
+      "note": "black on white",
+      "generated": false,
+      "user_provided": true
+    },
+    {
+      "id": "L06",
+      "kind": "lettering",
+      "path": "source-art/lettering/8C8B5B67-2A2E-4F06-A9BA-99C55CA20375.jpeg",
+      "sha256": "6dd3ee138ab9843ddc1b52496e2c309b26ca216907d4b4ab4a18374af7f6b375",
+      "tags": [
+        "zine-lettering",
+        "bold-color",
+        "composition"
+      ],
+      "background": "teal",
+      "note": "yellow on teal",
+      "generated": false,
+      "user_provided": true
+    }
+  ]
+}

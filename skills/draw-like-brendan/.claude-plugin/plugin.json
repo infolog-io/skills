@@ -1,0 +1,9 @@
+{
+  "name": "draw-like-brendan",
+  "version": "0.1.0",
+  "description": "Creates source-locked Brendan Hand drawings, posters, portraits, diagrams, and composite arrays from bundled original artwork and an originals-first workflow.",
+  "author": {
+    "name": "Information Logistics",
+    "url": "https://github.com/infolog-io"
+  }
+}

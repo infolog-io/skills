@@ -16,6 +16,6 @@ See `.claude/CLAUDE-PIP.md` for the locked-in conventions.
 
 ## What this repo provides
 
-8 plugins covering process discipline, JTBD validation, sizing,
+9 plugins covering process discipline, JTBD validation, sizing,
 structural audit, agent orchestration, type scales, brand audits, data
-viz audits.
+viz audits, and source-locked illustration.

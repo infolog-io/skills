@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Draw Like Brendan Illustration Brief",
+  "type": "object",
+  "required": [
+    "concept",
+    "audience",
+    "mode",
+    "purpose",
+    "must_include",
+    "exact_text",
+    "special_criteria",
+    "palette",
+    "background",
+    "aspect_ratio",
+    "eye_usage",
+    "max_attempts"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "concept": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "systems",
+        "systems-poster",
+        "explainer",
+        "poster",
+        "portrait",
+        "redraw",
+        "palette-match"
+      ]
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "style_profile": {
+      "enum": [
+        "explainer",
+        "systems-poster",
+        "poster",
+        "portrait",
+        "redraw",
+        "palette-match"
+      ]
+    },
+    "must_include": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exact_text": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "special_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "palette": {
+      "type": "object",
+      "required": [
+        "colors",
+        "allow_exception"
+      ],
+      "properties": {
+        "colors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allow_exception": {
+          "type": "boolean"
+        },
+        "exception_reason": {
+          "type": "string"
+        }
+      }
+    },
+    "background": {
+      "type": "string"
+    },
+    "background_override_reason": {
+      "type": "string"
+    },
+    "composition": {
+      "type": "string"
+    },
+    "aspect_ratio": {
+      "type": "string"
+    },
+    "major_modules": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "eye_usage": {
+      "type": "object",
+      "required": [
+        "requested",
+        "justification"
+      ],
+      "properties": {
+        "requested": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "justification": {
+          "type": "string"
+        }
+      }
+    },
+    "reference_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "max_attempts": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3
+    }
+  }
+}

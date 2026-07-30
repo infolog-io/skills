@@ -45,6 +45,7 @@ Or via slash commands:
 | [`tufte-love`](skills/tufte-love) | Tufte-style audits, redesigns, and reviews for data visualizations, dashboards, and quantitative UI. Nine-dimension scored audit including color and formatting. | `/plugin install tufte-love@infolog-io` |
 | [`atomic-brand`](skills/atomic-brand) | Audits web projects against atomic design discipline and brand-token coherence. Detects token violations, hierarchy drift, naming-by-appearance. Emits refactor or build-out plan. Failover chain: explicit tokens → image parse → URL scrape. | `/plugin install atomic-brand@infolog-io` |
 | [`learn2kern`](skills/learn2kern) | Typography. Generates modular type scales (eight named ratios from Minor Second to Golden Ratio) with BODY and HEADINGS as separate token families. Emits CSS + Tailwind. | `/plugin install learn2kern@infolog-io` |
+| [`draw-like-brendan`](skills/draw-like-brendan) | Creates source-locked Brendan Hand drawings, posters, portraits, diagrams, and composite arrays from bundled original artwork and an originals-first workflow. | `/plugin install draw-like-brendan@infolog-io` |
 
 ## How the skills compose
 
@@ -67,7 +68,8 @@ infolog-io/skills/
 │   ├── github-issues-kanban/
 │   ├── tufte-love/
 │   ├── atomic-brand/
-│   └── learn2kern/
+│   ├── learn2kern/
+│   └── draw-like-brendan/
 ├── CLAUDE.md                    # agent guidance
 ├── README.md                    # this file
 ├── CONTRIBUTING.md              # how to add a skill
@@ -106,4 +108,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for PR conventions.
 
 ## License
 
-[MIT](LICENSE).
+Code and documentation are licensed under [MIT](LICENSE).
+
+The original artwork under
+`skills/draw-like-brendan/assets/source-art/` is excluded from the MIT
+license. Copyright remains with its original creator.

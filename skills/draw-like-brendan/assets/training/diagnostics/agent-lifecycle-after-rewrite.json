@@ -1,0 +1,20 @@
+{
+  "available": true,
+  "style_profile": "systems-poster",
+  "path": "../structure-references/agent-lifecycle.png",
+  "size": [
+    1122,
+    1402
+  ],
+  "near_white_ratio": 0.7432,
+  "near_black_ratio": 0.0926,
+  "colored_ratio": 0.033,
+  "bold_color_ratio": 0.0073,
+  "bold_share_of_colored": 0.221,
+  "cream_ratio": 0.0001,
+  "white_corner_count": 4,
+  "quantized_color_count": 162,
+  "hard_failures": [],
+  "warnings": [],
+  "note": "Mechanical evidence only; typography, motifs, semantics, and slop require visual review."
+}

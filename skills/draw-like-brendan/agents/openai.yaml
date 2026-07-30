@@ -1,0 +1,4 @@
+interface:
+  display_name: "Draw Like Brendan"
+  short_description: "Source-locked Brendan drawings and arrays"
+  default_prompt: "Use $draw-like-brendan to turn this idea into a source-locked drawing or multidimensional drawing array."
